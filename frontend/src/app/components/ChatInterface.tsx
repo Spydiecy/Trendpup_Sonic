@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
-import { FaDog, FaUser } from 'react-icons/fa';
+import { FaDog, FaUser, FaMicrophone, FaMicrophoneSlash, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 import Image from 'next/image';
 import { io, Socket } from 'socket.io-client';
 
@@ -17,14 +17,39 @@ interface ChatInterfaceProps {
   agentId?: string; // Allow specifying which agent to connect to
 }
 
+// Extend Window interface for speech recognition
+declare global {
+  interface Window {
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
+  }
+}
+
 export default function ChatInterface({ fullPage = false, agentId }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      type: 'assistant',
+      content: 'Welcome to TrendPup! 🐕 I can help you discover trending memecoins on Flow and Near protocols. You can type your questions or use the microphone button for voice input. Enable the speaker button for voice responses and select your preferred voice from the dropdown!',
+      timestamp: new Date()
+    }
+  ]);
   const [input, setInput] = useState('');
   const [socket, setSocket] = useState<Socket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  
+  // Voice features state
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [speechEnabled, setSpeechEnabled] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
+  
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const speechSynthesisRef = useRef<SpeechSynthesis | null>(null);
   
   // Generate a consistent UUID for this client session (like Eliza's official client)
   const clientUserId = useRef(() => {
@@ -241,6 +266,185 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
     scrollToBottom();
   }, [messages]);
 
+  // Initialize voice features
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Check if speech recognition is supported
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        setSpeechSupported(true);
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = () => {
+          setIsListening(true);
+        };
+
+        recognition.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          setInput(transcript);
+          setIsListening(false);
+        };
+
+        recognition.onerror = (event: any) => {
+          console.error('Speech recognition error:', event.error);
+          setIsListening(false);
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        recognitionRef.current = recognition;
+      }
+
+      // Initialize speech synthesis
+      if ('speechSynthesis' in window) {
+        speechSynthesisRef.current = window.speechSynthesis;
+        
+        // Ensure voices are loaded
+        const loadVoices = () => {
+          const voices = speechSynthesisRef.current?.getVoices() || [];
+          if (voices.length > 0) {
+            console.log('Available voices loaded:', voices.map(v => v.name));
+            setAvailableVoices(voices);
+            
+            // Auto-select a good female voice if none is selected
+            if (!selectedVoice) {
+              const preferredVoiceNames = [
+                'Microsoft Zira',
+                'Google UK English Female',
+                'Microsoft Hazel',
+                'Samantha',
+                'Victoria',
+                'Karen',
+                'Tessa'
+              ];
+              
+              let autoSelectedVoice = null;
+              for (const voiceName of preferredVoiceNames) {
+                autoSelectedVoice = voices.find(voice => 
+                  voice.name.toLowerCase().includes(voiceName.toLowerCase())
+                );
+                if (autoSelectedVoice) break;
+              }
+              
+              // Fallback to any English female voice
+              if (!autoSelectedVoice) {
+                autoSelectedVoice = voices.find(voice => 
+                  voice.lang.startsWith('en') && 
+                  (voice.name.toLowerCase().includes('female') || 
+                   voice.name.toLowerCase().includes('zira') ||
+                   voice.name.toLowerCase().includes('hazel'))
+                );
+              }
+              
+              // Final fallback to any English voice
+              if (!autoSelectedVoice) {
+                autoSelectedVoice = voices.find(voice => voice.lang.startsWith('en'));
+              }
+              
+              if (autoSelectedVoice) {
+                setSelectedVoice(autoSelectedVoice);
+                console.log('Auto-selected voice:', autoSelectedVoice.name);
+              }
+            }
+          }
+        };
+        
+        // Load voices immediately if available
+        loadVoices();
+        
+        // Also listen for voice changes (some browsers load voices asynchronously)
+        if (speechSynthesisRef.current) {
+          speechSynthesisRef.current.onvoiceschanged = loadVoices;
+        }
+      }
+    }
+  }, []);
+
+  // Voice input functions
+  const startListening = () => {
+    if (recognitionRef.current && speechSupported) {
+      recognitionRef.current.start();
+    }
+  };
+
+  const stopListening = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+  };
+
+  // Voice output functions
+  const speakMessage = (text: string) => {
+    if (speechSynthesisRef.current && speechEnabled) {
+      // Stop any ongoing speech
+      speechSynthesisRef.current.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      
+      // Use selected voice or auto-select
+      if (selectedVoice) {
+        utterance.voice = selectedVoice;
+        console.log('Using selected voice:', selectedVoice.name);
+      } else {
+        // Fallback to auto-selection if no voice is selected
+        const voices = speechSynthesisRef.current.getVoices();
+        const autoVoice = voices.find(voice => 
+          voice.lang.startsWith('en') && 
+          voice.name.toLowerCase().includes('zira')
+        ) || voices.find(voice => voice.lang.startsWith('en'));
+        
+        if (autoVoice) {
+          utterance.voice = autoVoice;
+          console.log('Using fallback voice:', autoVoice.name);
+        }
+      }
+      
+      // Configure for calm, pleasant speech
+      utterance.rate = 0.85; // Slightly slower for calm effect
+      utterance.pitch = 1.1; // Slightly higher pitch for female voice
+      utterance.volume = 0.8;
+      
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+      };
+      
+      utterance.onend = () => {
+        setIsSpeaking(false);
+      };
+      
+      utterance.onerror = (error) => {
+        console.error('Speech synthesis error:', error);
+        setIsSpeaking(false);
+      };
+      
+      speechSynthesisRef.current.speak(utterance);
+    }
+  };
+
+  const toggleSpeech = () => {
+    setSpeechEnabled(!speechEnabled);
+    if (speechEnabled) {
+      // If disabling, stop any ongoing speech
+      speechSynthesisRef.current?.cancel();
+      setIsSpeaking(false);
+    }
+  };
+
+  // Auto-speak new assistant messages if speech is enabled
+  useEffect(() => {
+    if (speechEnabled && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.type === 'assistant') {
+        speakMessage(lastMessage.content);
+      }
+    }
+  }, [messages, speechEnabled]);
+
   const sendMessage = () => {
     if (!socket || !input.trim() || !isConnected) return;
 
@@ -312,20 +516,62 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
   return (
     <div className={`flex flex-col ${containerHeight} max-w-4xl mx-auto rounded-xl shadow-xl overflow-hidden border border-trendpup-brown/20 bg-white`}>
       {!fullPage && (
-        <div className="bg-trendpup-dark text-white p-4 flex items-center">
-          <div className="flex-shrink-0 mr-3">
-            <Image 
-              src="/trendpup-logo.png" 
-              alt="TrendPup Logo" 
-              width={32} 
-              height={32}
-            />
+        <div className="bg-trendpup-dark text-white p-4 flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="flex-shrink-0 mr-3">
+              <Image 
+                src="/trendpup-logo.png" 
+                alt="TrendPup Logo" 
+                width={32} 
+                height={32}
+              />
+            </div>
+            <div>
+              <h1 className="text-xl font-semibold">TrendPup Assistant</h1>
+              <p className="text-sm opacity-75">
+                {isConnected ? `Connected to ${targetAgentId ? 'Agent ' + targetAgentId.slice(0, 8) + '...' : 'TrendPup'} - Ready to chat` : 'Connecting...'}
+              </p>
+            </div>
           </div>
-          <div>
-            <h1 className="text-xl font-semibold">TrendPup Assistant</h1>
-            <p className="text-sm opacity-75">
-              {isConnected ? `Connected to ${targetAgentId ? 'Agent ' + targetAgentId.slice(0, 8) + '...' : 'TrendPup'} - Ready to chat` : 'Connecting...'}
-            </p>
+          
+          {/* Voice Controls */}
+          <div className="flex items-center gap-2">
+            {speechSupported && (
+              <button
+                onClick={toggleSpeech}
+                className={`p-2 rounded-lg transition-colors ${
+                  speechEnabled 
+                    ? 'bg-trendpup-orange text-white hover:bg-trendpup-orange/80' 
+                    : 'bg-gray-600 text-white hover:bg-gray-500'
+                }`}
+                title={speechEnabled ? 'Disable voice output' : 'Enable voice output'}
+                disabled={isSpeaking}
+              >
+                {speechEnabled ? <FaVolumeUp size={16} /> : <FaVolumeMute size={16} />}
+              </button>
+            )}
+            
+            {/* Voice Selector */}
+            {speechSupported && availableVoices.length > 0 && (
+              <select
+                value={selectedVoice?.name || ''}
+                onChange={(e) => {
+                  const voice = availableVoices.find((v: SpeechSynthesisVoice) => v.name === e.target.value);
+                  setSelectedVoice(voice || null);
+                }}
+                className="text-xs bg-gray-700 text-white rounded px-2 py-1 border border-gray-600 focus:outline-none focus:border-trendpup-orange max-w-[120px]"
+                title="Select voice"
+              >
+                <option value="">Auto</option>
+                {availableVoices
+                  .filter((voice: SpeechSynthesisVoice) => voice.lang.startsWith('en'))
+                  .map((voice: SpeechSynthesisVoice) => (
+                    <option key={voice.name} value={voice.name}>
+                      {voice.name.length > 15 ? voice.name.substring(0, 15) + '...' : voice.name}
+                    </option>
+                  ))}
+              </select>
+            )}
           </div>
         </div>
       )}
@@ -363,18 +609,26 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
               </div>
             </div>
           ))}
-          {isTyping && (
+          {(isTyping || isSpeaking) && (
             <div className="flex justify-start">
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-8 w-8 rounded-full bg-trendpup-brown mr-2 flex items-center justify-center">
                   <FaDog className="text-white text-sm" />
                 </div>
                 <div className="bg-white text-gray-800 rounded-lg p-3 border border-trendpup-brown/20">
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-trendpup-brown rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <div className="w-2 h-2 bg-trendpup-brown rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <div className="w-2 h-2 bg-trendpup-brown rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  </div>
+                  {isTyping && (
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-trendpup-brown rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-2 h-2 bg-trendpup-brown rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-2 h-2 bg-trendpup-brown rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  )}
+                  {isSpeaking && !isTyping && (
+                    <div className="flex items-center space-x-2">
+                      <FaVolumeUp className="text-trendpup-orange animate-pulse" />
+                      <span className="text-sm text-gray-600">Speaking...</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -396,6 +650,23 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
             className="flex-1 p-3 border border-trendpup-brown/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-trendpup-orange resize-none h-12 max-h-32 min-h-[3rem]"
             rows={1}
           />
+          
+          {/* Voice Input Button */}
+          {speechSupported && (
+            <button
+              onClick={isListening ? stopListening : startListening}
+              disabled={!isConnected}
+              className={`p-3 rounded-lg transition-colors ${
+                isListening 
+                  ? 'bg-red-500 text-white hover:bg-red-600 animate-pulse' 
+                  : 'bg-gray-500 text-white hover:bg-gray-600'
+              } disabled:bg-gray-400 disabled:cursor-not-allowed`}
+              title={isListening ? 'Stop listening' : 'Start voice input'}
+            >
+              {isListening ? <FaMicrophoneSlash className="text-xl" /> : <FaMicrophone className="text-xl" />}
+            </button>
+          )}
+          
           <button
             onClick={sendMessage}
             disabled={!isConnected || !input.trim()}
