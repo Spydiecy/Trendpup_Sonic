@@ -6,17 +6,28 @@ import Image from 'next/image';
 import { fetchTokenData, fetchTokenAIAnalysis, FormattedMemecoin } from '../services/TokenData';
 
 const CHAIN_OPTIONS = [
-  { label: 'FlowEVM', value: 'flowevm' },
-  { label: 'NEAR', value: 'near' },
+  { label: 'Flow', value: 'flow' },
+  { label: 'Near', value: 'near' },
 ];
 
-export default function MemecoinsExplorer() {
+interface MemecoinsExplorerProps {
+  selectedChain?: 'flow' | 'near';
+}
+
+export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: MemecoinsExplorerProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('trending');
   const [memecoins, setMemecoins] = useState<FormattedMemecoin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedChain, setSelectedChain] = useState('flowevm');
+  const [selectedChain, setSelectedChain] = useState(propSelectedChain || 'flow');
+
+  // Sync with prop changes
+  useEffect(() => {
+    if (propSelectedChain) {
+      setSelectedChain(propSelectedChain);
+    }
+  }, [propSelectedChain]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -120,22 +131,24 @@ export default function MemecoinsExplorer() {
         <p className="text-sm opacity-75">Discover trending memecoins with TrendPup intelligence</p>
       </div>
       <div className="p-4">
-        {/* Chain Toggle */}
-        <div className="flex gap-2 mb-4">
-          {CHAIN_OPTIONS.map((chain) => (
-            <button
-              key={chain.value}
-              onClick={() => setSelectedChain(chain.value)}
-              className={`px-3 py-1 rounded-lg font-medium border transition-colors duration-150 ${
-                selectedChain === chain.value
-                  ? 'bg-trendpup-orange text-white border-trendpup-orange'
-                  : 'bg-white text-trendpup-dark border-trendpup-brown/20 hover:bg-trendpup-beige'
-              }`}
-            >
-              {chain.label}
-            </button>
-          ))}
-        </div>
+        {/* Chain Toggle - Hidden when controlled by parent */}
+        {!propSelectedChain && (
+          <div className="flex gap-2 mb-4">
+            {CHAIN_OPTIONS.map((chain) => (
+              <button
+                key={chain.value}
+                onClick={() => setSelectedChain(chain.value as 'flow' | 'near')}
+                className={`px-3 py-1 rounded-lg font-medium border transition-colors duration-150 ${
+                  selectedChain === chain.value
+                    ? 'bg-trendpup-orange text-white border-trendpup-orange'
+                    : 'bg-white text-trendpup-dark border-trendpup-brown/20 hover:bg-trendpup-beige'
+                }`}
+              >
+                {chain.label}
+              </button>
+            ))}
+          </div>
+        )}
         
         <div className="relative mb-4">
           <input

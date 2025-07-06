@@ -4,16 +4,16 @@ import path from 'path';
 
 // Map chain names to their respective JSON file paths
 const CHAIN_FILE_MAP: Record<string, string> = {
-  flowevm: '/home/trendpup/Trendpup/scraper/flowevm_tokens.json',
+  flow: '/home/trendpup/Trendpup/scraper/flow_tokens.json',
   near: '/home/trendpup/Trendpup/scraper/near_tokens.json',
 };
 
 export async function GET(request: Request) {
   try {
-    // Get chain from query param, default to 'flowevm'
+    // Get chain from query param, default to 'flow'
     const url = new URL(request.url);
-    const chain = url.searchParams.get('chain') || 'flowevm';
-    const FilePath = CHAIN_FILE_MAP[chain] || CHAIN_FILE_MAP['flowevm'];
+    const chain = url.searchParams.get('chain') || 'flow';
+    const FilePath = CHAIN_FILE_MAP[chain] || CHAIN_FILE_MAP['flow'];
 
     let data;
     let jsonData;

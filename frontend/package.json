@@ -1,7 +1,8 @@
 {
-  "name": "trendpup-chat-frontend",
+  "name": "trendpup-frontend",
   "version": "0.1.0",
   "private": true,
+  "description": "Advanced Memecoin Intelligence System for Flow and Near Protocols",
   "scripts": {
     "dev": "next dev",
     "build": "npm run copy-heartbeat-worker && next build",

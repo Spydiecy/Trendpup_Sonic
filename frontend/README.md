@@ -1,28 +1,33 @@
 # TrendPup Frontend
 
-Advanced Memecoin Intelligence System for Avalanche with RainbowKit wallet integration.
+Advanced Memecoin Intelligence System for Flow and Near Protocols.
 
 ## Features
 
 - Real-time chat with AI assistant
-- Avalanche memecoin tracking and analytics
-- RainbowKit wallet connection (MetaMask, WalletConnect, etc.)
-- Memecoin explorer and tracking
+- Multi-chain memecoin tracking (Flow & Near)
+- Chain switching functionality
+- Memecoin explorer and analytics
 - Responsive UI using Tailwind CSS
 - Dashboard with multiple windows interface
 
-## Development Network
+## Supported Networks
 
-For development and testing purposes, the application connects to:
+TrendPup now supports multiple blockchain networks:
 
-**Avalanche Fuji Testnet:**
-- Network Name: Avalanche Fuji Testnet
-- RPC URL: https://api.avax-test.network/ext/bc/C/rpc
-- Chain ID: 43113
-- Currency Symbol: AVAX
-- Block Explorer: https://testnet.snowscan.xyz
+**Flow Protocol:**
+- Flow Testnet (Development)
+- Flow Mainnet (Production)
+- Block Explorer: https://testnet.flowdiver.io/
 
-> **Note:** While the development environment uses Avalanche Fuji testnet for wallet connections, TrendPup is designed to track and analyze memecoins on Avalanche mainnet in production.
+**Near Protocol:**
+- Near Testnet (Development)
+- Near Mainnet (Production)
+- Block Explorer: https://explorer.testnet.near.org/
+
+## Chain Selection
+
+Users can easily switch between supported chains using the chain selector in the main interface. The memecoin data will automatically update based on the selected chain.
 
 ## Getting Started
 

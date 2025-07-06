@@ -3,12 +3,14 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { FaTimes, FaDog, FaChartLine, FaWallet, FaFileAlt, FaComments, FaChartBar, FaPlug, FaExpand } from 'react-icons/fa';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useDisconnect } from 'wagmi';
+// Temporarily removed wallet functionality
+// import { ConnectButton } from '@rainbow-me/rainbowkit';
+// import { useAccount, useDisconnect } from 'wagmi';
 import ChatInterface from './components/ChatInterface';
 import MemecoinsExplorer from './components/MemecoinsExplorer';
-import AccessControl from './components/AccessControl';
-import AccessStatus from './components/AccessStatus';
+// Temporarily remove AccessControl for development
+// import AccessControl from './components/AccessControl';
+// import AccessStatus from './components/AccessStatus';
 
 // Window position interface
 interface WindowPosition {
@@ -31,11 +33,12 @@ interface OpenWindow {
 }
 
 export default function Home() {
-  const { address, isConnected } = useAccount();
-  const { disconnect } = useDisconnect();
+  // const { address, isConnected } = useAccount(); // Temporarily disabled
+  // const { disconnect } = useDisconnect(); // Temporarily disabled
   const [connected, setConnected] = useState(false);
   const [appStarted, setAppStarted] = useState(false);
   const [chatMode, setChatMode] = useState(false);
+  const [selectedChain, setSelectedChain] = useState<'flow' | 'near'>('flow');
   const [openWindows, setOpenWindows] = useState<OpenWindow[]>([]);
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
   const [nextZIndex, setNextZIndex] = useState(10);
@@ -45,10 +48,10 @@ export default function Home() {
   const [resizeStart, setResizeStart] = useState<{start: WindowPosition, size: WindowSize} | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Update connected state when account changes
-  useEffect(() => {
-    setConnected(isConnected);
-  }, [isConnected]);
+  // Update connected state when account changes - temporarily disabled
+  // useEffect(() => {
+  //   setConnected(isConnected);
+  // }, [isConnected]);
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <FaDog /> },
@@ -267,7 +270,6 @@ export default function Home() {
               </button>
             </div>
             <div className="p-6">
-              <AccessStatus />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Dashboard widgets */}
                 <div className="bg-gradient-to-br from-trendpup-beige/50 to-trendpup-beige p-4 rounded-xl shadow-sm">
@@ -373,7 +375,7 @@ export default function Home() {
               </button>
             </div>
             <div className="p-4 max-h-[500px] overflow-auto">
-              <MemecoinsExplorer />
+              <MemecoinsExplorer selectedChain={selectedChain} />
             </div>
             {/* Resize handle */}
             <div 
@@ -462,12 +464,12 @@ export default function Home() {
               </button>
             </div>
             <div className="p-6 overflow-auto max-h-[500px]">
-              <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Avalanche</h1>
+              <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Flow & Near Protocols</h1>
               
               <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Executive Summary</h2>
               <div className="prose prose-sm">
-                <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Avalanche ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur. By leveraging AWS Bedrock for advanced AI analysis and the Eliza Agent for conversational intelligence, TrendPup synthesizes sophisticated social media analytics with on-chain Avalanche data to identify high-potential opportunities during their inception phase, allowing users to position themselves advantageously in the market.</p>
-                <p className="mb-3">Our platform democratizes access to valuable pre-pump intelligence previously available only to well-connected insiders and sophisticated traders within the Avalanche ecosystem. Powered by AWS Bedrock and Eliza, TrendPup's unique profit-sharing business model aligns our incentives directly with user success, creating a symbiotic relationship where we only succeed when our users profit.</p>
+                <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Flow and Near ecosystems, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur. By leveraging AWS Bedrock for advanced AI analysis and the Eliza Agent for conversational intelligence, TrendPup synthesizes sophisticated social media analytics with on-chain Flow and Near data to identify high-potential opportunities during their inception phase, allowing users to position themselves advantageously in the market.</p>
+                <p className="mb-3">Our platform democratizes access to valuable pre-pump intelligence previously available only to well-connected insiders and sophisticated traders within the Flow and Near ecosystems. Powered by AWS Bedrock and Eliza, TrendPup's unique profit-sharing business model aligns our incentives directly with user success, creating a symbiotic relationship where we only succeed when our users profit.</p>
               </div>
 
               <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Technology Infrastructure</h2>
@@ -475,12 +477,12 @@ export default function Home() {
               <h3 className="text-lg font-semibold text-trendpup-dark mt-4 mb-2">Real-Time Data Acquisition Network</h3>
               <div className="prose prose-sm">
                 <ul className="list-disc pl-5 mb-4">
-                  <li><strong>Avalanche-Focused Social Listening:</strong> Proprietary system continuously monitors Twitter/X for early mentions of emerging Avalanche meme tokens</li>
+                  <li><strong>Multi-Chain Social Listening:</strong> Proprietary system continuously monitors Twitter/X for early mentions of emerging Flow and Near meme tokens</li>
                   <li><strong>Advanced Filtering Matrix:</strong>
                     <ul className="list-disc pl-5 mt-1">
                       <li>Engagement threshold verification (filtering for authentic interaction patterns)</li>
                       <li>Account credibility scoring (bot detection and influence assessment)</li>
-                      <li>Avalanche-specific semantic analysis (context-aware keyword processing)</li>
+                      <li>Flow and Near-specific semantic analysis (context-aware keyword processing)</li>
                       <li>Temporal signal amplification detection (identifying organic growth patterns)</li>
                     </ul>
                   </li>
@@ -491,13 +493,13 @@ export default function Home() {
               <h3 className="text-lg font-semibold text-trendpup-dark mt-4 mb-2">Cognitive Analysis Engine</h3>
               <div className="prose prose-sm">
                 <ul className="list-disc pl-5 mb-4">
-                  <li><strong>Data Aggregation:</strong> Scraper collects Avalanche token data from Dex Screener and scrapes Twitter for token-related tweets and sentiment.</li>
+                  <li><strong>Data Aggregation:</strong> Scraper collects Flow and Near token data from various DEXs and scrapes Twitter for token-related tweets and sentiment.</li>
                   <li><strong>AI Analysis (AWS Bedrock):</strong> Reads tweets and token data, determines risk score, investment potential, and provides rationale for each token.</li>
                   <li><strong>Eliza Agent (AWS Bedrock + RAG):</strong> Answers user queries with the latest token data and in-depth analysis using Retrieval-Augmented Generation.</li>
                 </ul>
               </div>
 
-              <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Avalanche Integration</h2>
+              <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Multi-Chain Integration</h2>
               <div className="prose prose-sm">
                 <ul className="list-disc pl-5 mb-4">
                   <li><strong>Network Details:</strong>
@@ -582,29 +584,14 @@ export default function Home() {
                 height={80}
                 className="mx-auto mb-4" 
               />
-              <h2 className="text-xl font-bold text-trendpup-dark mb-2">Connect Your Wallet</h2>
-              {isConnected ? (
-                <div className="space-y-4">
-                  <p className="text-gray-600">Connected to Avalanche Fuji Testnet</p>
-                  <p className="text-gray-600">Address:</p>
-                  <p className="font-mono text-sm bg-gray-100 p-2 rounded break-all">
-                    {address}
-                  </p>
-                  <button 
-                    onClick={() => disconnect()}
-                    className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-colors"
-                  >
-                    Disconnect
-                  </button>
+              <h2 className="text-xl font-bold text-trendpup-dark mb-2">Wallet & Portfolio</h2>
+              <div className="space-y-4">
+                <p className="text-gray-600 mb-6">Track your memecoin investments across Flow and Near protocols</p>
+                <div className="text-center text-gray-500">
+                  <p>Wallet integration coming soon!</p>
+                  <p className="text-sm mt-2">For now, use the Memecoin Explorer to discover trending tokens.</p>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  <p className="text-gray-600 mb-6">Connect your wallet to the Avalanche Fuji testnet to track your memecoin investments</p>
-                  <div className="flex justify-center">
-                    <ConnectButton />
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
             {/* Resize handle */}
             <div 
@@ -670,8 +657,36 @@ export default function Home() {
             
             <h1 className="text-3xl font-bold text-trendpup-dark mb-2">TrendPup AI</h1>
             <p className="text-gray-600 mb-8 md:mb-10 text-sm">
-              An autonomous AI agent that finds trending memecoins on Avalanche.
+              An autonomous AI agent that finds trending memecoins on Flow and Near protocols.
             </p>
+            
+            {/* Chain Selector */}
+            <div className="flex justify-center mb-6">
+              <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
+                <button
+                  onClick={() => setSelectedChain('flow')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-200 ${
+                    selectedChain === 'flow'
+                      ? 'bg-white text-trendpup-dark shadow-sm'
+                      : 'text-gray-600 hover:text-trendpup-dark'
+                  }`}
+                >
+                  <Image src="/flow.svg" alt="Flow" width={20} height={20} />
+                  Flow
+                </button>
+                <button
+                  onClick={() => setSelectedChain('near')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-200 ${
+                    selectedChain === 'near'
+                      ? 'bg-white text-trendpup-dark shadow-sm'
+                      : 'text-gray-600 hover:text-trendpup-dark'
+                  }`}
+                >
+                  <Image src="/near.svg" alt="Near" width={20} height={20} />
+                  Near
+                </button>
+              </div>
+            </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button 
@@ -708,7 +723,6 @@ export default function Home() {
   };
 
       return (
-    <AccessControl>
       <main 
         ref={containerRef}
         className="min-h-screen dashboard-bg relative overflow-hidden"
@@ -742,9 +756,9 @@ export default function Home() {
                 <span className="hidden md:inline">Whitepaper</span>
               </button>
 
-              {/* Connect Button */}
+              {/* Wallet Connect - Temporarily disabled */}
               <div className="p-2 rounded-lg shadow-lg bg-white">
-                <ConnectButton />
+                <div className="px-4 py-2 text-sm text-gray-600">Wallet features coming soon</div>
               </div>
             </div>
 
@@ -810,6 +824,5 @@ export default function Home() {
 
         {/* Debug info - remove in production */}
       </main>
-    </AccessControl>
   );
 }
