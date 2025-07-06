@@ -80,8 +80,79 @@ export const FLOW_CONTRACT = {
 
 // Near Aurora Testnet contract configuration  
 export const NEAR_CONTRACT = {
-  address: '0x0000000000000000000000000000000000000000' as `0x${string}`, // Update with actual Near contract
-  abi: [], // Will be populated with actual contract ABI
+  address: '0x151D3c8E531d9726148FF64D5e8426C03D0e91eF' as `0x${string}`,
+  abi: [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "hasPaid",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "paid",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "pay",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
   chainId: 1313161555, // Near Aurora Testnet
 } as const;
 
@@ -99,7 +170,7 @@ export const getContractByChain = (chainId: number) => {
 
 // Access fee amounts
 export const FLOW_FEE_AMOUNT = '2000000000000000000'; // 2 FLOW tokens in wei (2 * 10^18)
-export const NEAR_FEE_AMOUNT = 0; // Will be updated when Near contract is provided
+export const NEAR_FEE_AMOUNT = '100000000000000'; // 0.0001 ETH in wei (0.0001 * 10^18)
 
 // Helper function to get fee amount by chain
 export const getFeeByChain = (chainId: number) => {
@@ -134,6 +205,6 @@ export const SUPPORTED_CHAINS = {
     blockExplorer: 'https://explorer.testnet.aurora.dev/',
     currency: 'ETH',
     feeAmount: NEAR_FEE_AMOUNT,
-    feeAmountDisplay: 'TBD', // To be determined when Near contract is provided
+    feeAmountDisplay: '0.0001 ETH',
   },
 } as const;
