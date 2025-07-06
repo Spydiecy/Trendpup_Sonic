@@ -8,6 +8,8 @@ import { useAccount, useChainId, useSwitchChain } from 'wagmi';
 import { flowTestnet, nearTestnet } from '../wagmi';
 import ChatInterface from './components/ChatInterface';
 import MemecoinsExplorer from './components/MemecoinsExplorer';
+import AccessControl from './components/AccessControl';
+import AccessStatus from './components/AccessStatus';
 import { SUPPORTED_CHAINS } from './config/contract';
 
 // Window position interface
@@ -287,7 +289,8 @@ export default function Home() {
               </button>
             </div>
             <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <AccessStatus />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 {/* Dashboard widgets */}
                 <div className="bg-gradient-to-br from-trendpup-beige/50 to-trendpup-beige p-4 rounded-xl shadow-sm">
                   <h3 className="text-lg font-semibold text-trendpup-dark mb-1">Total Value</h3>
@@ -809,6 +812,7 @@ export default function Home() {
   };
 
       return (
+    <AccessControl>
       <main 
         ref={containerRef}
         className="min-h-screen dashboard-bg relative overflow-hidden"
@@ -940,5 +944,6 @@ export default function Home() {
 
         {/* Debug info - remove in production */}
       </main>
+    </AccessControl>
   );
 }

@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useChainId } from 'wagmi';
 import { parseEther } from 'viem';
-import { ACCESS_FEE_CONTRACT, FEE_AMOUNT } from '../config/contract';
+import { getContractByChain, getFeeByChain, SUPPORTED_CHAINS } from '../config/contract';
 import { FaLock, FaSpinner, FaCheckCircle, FaWallet } from 'react-icons/fa';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
@@ -14,15 +14,29 @@ interface AccessControlProps {
 
 export default function AccessControl({ children }: AccessControlProps) {
   const { address, isConnected } = useAccount();
+  const chainId = useChainId();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPayment, setShowPayment] = useState(false);
 
-  // Check if user has paid access fee
+  // Get current chain configuration
+  const currentContract = getContractByChain(chainId);
+  const currentFeeAmount = getFeeByChain(chainId);
+  const currentChain = Object.values(SUPPORTED_CHAINS).find(chain => chain.chainId === chainId) || SUPPORTED_CHAINS.FLOW;
+  
+  // Check if current chain has a valid contract setup
+  const hasValidContract = currentContract.address !== '0x0000000000000000000000000000000000000000' && 
+                          currentContract.abi.length > 0;
+
+  // Check if user has paid access fee (only for supported chains with contracts)
   const { data: hasAccess, isLoading: isCheckingAccess, refetch: refetchAccess } = useReadContract({
-    ...ACCESS_FEE_CONTRACT,
+    address: currentContract.address,
+    abi: currentContract.abi,
     functionName: 'hasPaid',
     args: address ? [address] : undefined,
+    query: {
+      enabled: !!address && hasValidContract,
+    },
   });
 
   // Write contract for payment
@@ -45,16 +59,17 @@ export default function AccessControl({ children }: AccessControlProps) {
   }, [isPaymentConfirmed, refetchAccess]);
 
   const handlePayment = async () => {
-    if (!address) return;
+    if (!address || !hasValidContract) return;
     
     setIsLoading(true);
     setError(null);
 
     try {
       writeContract({
-        ...ACCESS_FEE_CONTRACT,
+        address: currentContract.address,
+        abi: currentContract.abi,
         functionName: 'pay',
-        value: BigInt(FEE_AMOUNT),
+        value: BigInt(currentFeeAmount),
       });
     } catch (err) {
       console.error('Payment error:', err);
@@ -112,6 +127,45 @@ export default function AccessControl({ children }: AccessControlProps) {
 
   // Show payment requirement if user hasn't paid
   if (!hasAccess && !showPayment) {
+    // If current chain doesn't have a valid contract, show unsupported message
+    if (!hasValidContract) {
+      return (
+        <div className="min-h-screen dashboard-bg flex items-center justify-center">
+          <div className="bg-white/95 rounded-3xl shadow-2xl border border-trendpup-brown/10 p-8 md:p-12 max-w-md w-full text-center">
+            <div className="flex justify-center mb-6">
+              <Image 
+                src="/trendpup-logo.png" 
+                alt="TrendPup Logo" 
+                width={150} 
+                height={150}
+                priority
+                className="rounded-full"
+              />
+            </div>
+            
+            <h1 className="text-3xl font-bold text-trendpup-dark mb-2">Chain Not Supported</h1>
+            <p className="text-gray-600 mb-6 text-sm">
+              Please switch to a supported chain to access TrendPup's premium features.
+            </p>
+            
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 p-6 rounded-xl mb-6">
+              <h3 className="text-lg font-bold text-blue-800 mb-4">Supported Chains:</h3>
+              <div className="space-y-2 text-sm text-blue-700">
+                <div className="flex items-center justify-between">
+                  <span>Flow EVM Testnet</span>
+                  <span className="font-semibold">2 FLOW</span>
+                </div>
+                <div className="flex items-center justify-between text-gray-500">
+                  <span>Near Aurora Testnet</span>
+                  <span className="text-xs">Coming Soon</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="min-h-screen dashboard-bg flex items-center justify-center">
         <div className="bg-white/95 rounded-3xl shadow-2xl border border-trendpup-brown/10 p-8 md:p-12 max-w-md w-full text-center">
@@ -134,9 +188,13 @@ export default function AccessControl({ children }: AccessControlProps) {
           <div className="bg-gradient-to-br from-trendpup-beige/50 to-trendpup-beige p-6 rounded-xl mb-6">
             <div className="flex items-center justify-center mb-4">
               <FaLock className="text-trendpup-orange mr-2 text-2xl" />
-              <span className="text-xl font-bold text-trendpup-dark">0.2 AVAX</span>
+              <span className="text-xl font-bold text-trendpup-dark">
+                {currentChain.feeAmountDisplay}
+              </span>
             </div>
-            <p className="text-sm text-gray-600 mb-4">One-time access fee on Avalanche Fuji Testnet</p>
+            <p className="text-sm text-gray-600 mb-4">
+              One-time access fee on {currentChain.name}
+            </p>
             <div className="text-xs text-gray-500 space-y-1">
               <p>✓ Lifetime access to TrendPup AI</p>
               <p>✓ Real-time memecoin tracking</p>
@@ -154,7 +212,7 @@ export default function AccessControl({ children }: AccessControlProps) {
             </button>
             
             <p className="text-xs text-gray-500">
-              This payment is processed on the Avalanche Fuji testnet. Make sure you have sufficient AVAX for the transaction.
+              This payment is processed on {currentChain.name}. Make sure you have sufficient {currentChain.currency} for the transaction.
             </p>
           </div>
         </div>
@@ -180,12 +238,14 @@ export default function AccessControl({ children }: AccessControlProps) {
           
           <h1 className="text-3xl font-bold text-trendpup-dark mb-2">Confirm Payment</h1>
           <p className="text-gray-600 mb-6 text-sm">
-            You're about to pay 0.2 AVAX to gain lifetime access to TrendPup AI.
+            You're about to pay {currentChain.feeAmountDisplay} to gain lifetime access to TrendPup AI.
           </p>
           
           <div className="bg-gradient-to-br from-orange-50 to-orange-100 border border-orange-200 p-6 rounded-xl mb-6">
             <div className="flex items-center justify-center mb-4">
-              <span className="text-2xl font-bold text-orange-600">0.2 AVAX</span>
+              <span className="text-2xl font-bold text-orange-600">
+                {currentChain.feeAmountDisplay}
+              </span>
             </div>
             <p className="text-sm text-orange-700 mb-2">One-time access fee</p>
             <div className="text-xs text-orange-600 space-y-1">
@@ -215,7 +275,7 @@ export default function AccessControl({ children }: AccessControlProps) {
               ) : (
                 <>
                   <FaCheckCircle className="mr-2" />
-                  Pay 0.2 AVAX
+                  Pay {currentChain.feeAmountDisplay}
                 </>
               )}
             </button>
