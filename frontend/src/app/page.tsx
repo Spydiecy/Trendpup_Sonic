@@ -675,7 +675,7 @@ export default function Home() {
               ) : (
                 <div className="space-y-4">
                   <p className="text-gray-600 mb-6">Connect your wallet to interact with Flow and Near protocols</p>
-                  <ConnectButton />
+                  <ConnectButton chainStatus="none" />
                 </div>
               )}
             </div>
@@ -874,7 +874,7 @@ export default function Home() {
 
               {/* Wallet Connect Button */}
               <div className="bg-white rounded-lg shadow-lg">
-                <ConnectButton />
+                <ConnectButton chainStatus="none" />
               </div>
             </div>
 

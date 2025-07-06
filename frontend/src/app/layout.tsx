@@ -30,7 +30,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
-            <RainbowKitProvider>
+            <RainbowKitProvider 
+              showRecentTransactions={false}
+              modalSize="compact"
+            >
               {children}
             </RainbowKitProvider>
           </QueryClientProvider>
