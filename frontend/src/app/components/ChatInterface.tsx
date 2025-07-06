@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { IoSendSharp } from 'react-icons/io5';
-import { FaDog, FaUser, FaMicrophone, FaMicrophoneSlash, FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
+import { FaDog, FaUser, FaMicrophone, FaMicrophoneSlash, FaVolumeUp, FaVolumeMute, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import Image from 'next/image';
 import { io, Socket } from 'socket.io-client';
 
@@ -45,6 +45,7 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
   const [speechSupported, setSpeechSupported] = useState(false);
   const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [isVoiceDropdownOpen, setIsVoiceDropdownOpen] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -313,37 +314,44 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
             
             // Auto-select a good female voice if none is selected
             if (!selectedVoice) {
-              const preferredVoiceNames = [
-                'Microsoft Zira',
-                'Google UK English Female',
-                'Microsoft Hazel',
-                'Samantha',
-                'Victoria',
-                'Karen',
-                'Tessa'
+              // Prioritize the most human-sounding voices
+              const humanVoiceNames = [
+                'samantha', 'alex', 'victoria', 'karen', 'tessa', 'veena', 'fiona',
+                'zira', 'hazel', 'susan', 'linda', 'heather', 'aria', 'jenny'
               ];
               
               let autoSelectedVoice = null;
-              for (const voiceName of preferredVoiceNames) {
+              
+              // First, try to find the most human-sounding voices
+              for (const humanName of humanVoiceNames) {
                 autoSelectedVoice = voices.find(voice => 
-                  voice.name.toLowerCase().includes(voiceName.toLowerCase())
+                  voice.lang.startsWith('en') && 
+                  voice.name.toLowerCase().includes(humanName.toLowerCase())
                 );
-                if (autoSelectedVoice) break;
+                if (autoSelectedVoice) {
+                  console.log('Auto-selected human voice:', autoSelectedVoice.name);
+                  break;
+                }
               }
               
-              // Fallback to any English female voice
+              // Fallback to any natural-sounding English voice
               if (!autoSelectedVoice) {
                 autoSelectedVoice = voices.find(voice => 
                   voice.lang.startsWith('en') && 
-                  (voice.name.toLowerCase().includes('female') || 
-                   voice.name.toLowerCase().includes('zira') ||
-                   voice.name.toLowerCase().includes('hazel'))
+                  (voice.name.toLowerCase().includes('neural') ||
+                   voice.name.toLowerCase().includes('natural') ||
+                   voice.name.toLowerCase().includes('premium') ||
+                   voice.name.toLowerCase().includes('enhanced'))
                 );
               }
               
-              // Final fallback to any English voice
+              // Final fallback to any non-robotic English voice
               if (!autoSelectedVoice) {
-                autoSelectedVoice = voices.find(voice => voice.lang.startsWith('en'));
+                autoSelectedVoice = voices.find(voice => 
+                  voice.lang.startsWith('en') && 
+                  !voice.name.toLowerCase().includes('robot') &&
+                  !voice.name.toLowerCase().includes('espeak')
+                );
               }
               
               if (autoSelectedVoice) {
@@ -364,6 +372,23 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
       }
     }
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (isVoiceDropdownOpen) {
+        setIsVoiceDropdownOpen(false);
+      }
+    };
+
+    if (isVoiceDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isVoiceDropdownOpen]);
 
   // Voice input functions
   const startListening = () => {
@@ -404,10 +429,26 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
         }
       }
       
-      // Configure for calm, pleasant speech
-      utterance.rate = 0.85; // Slightly slower for calm effect
-      utterance.pitch = 1.1; // Slightly higher pitch for female voice
-      utterance.volume = 0.8;
+      // Configure for natural, human-like speech
+      utterance.rate = 0.9; // Natural speaking pace
+      utterance.pitch = 1.0; // Natural pitch
+      utterance.volume = 0.85; // Clear but not overwhelming
+      
+      // Adjust settings based on voice type for more natural sound
+      if (selectedVoice) {
+        const voiceName = selectedVoice.name.toLowerCase();
+        
+        // Fine-tune settings for specific voice types
+        if (voiceName.includes('samantha') || voiceName.includes('alex')) {
+          utterance.rate = 0.95; // These voices handle faster speech well
+        } else if (voiceName.includes('zira') || voiceName.includes('hazel')) {
+          utterance.rate = 0.85; // Microsoft voices sound better slower
+          utterance.pitch = 1.05; // Slightly higher pitch for femininity
+        } else if (voiceName.includes('neural') || voiceName.includes('natural')) {
+          utterance.rate = 0.92; // Neural voices are already optimized
+          utterance.pitch = 1.0;
+        }
+      }
       
       utterance.onstart = () => {
         setIsSpeaking(true);
@@ -551,26 +592,87 @@ export default function ChatInterface({ fullPage = false, agentId }: ChatInterfa
               </button>
             )}
             
-            {/* Voice Selector */}
-            {speechSupported && availableVoices.length > 0 && (
-              <select
-                value={selectedVoice?.name || ''}
-                onChange={(e) => {
-                  const voice = availableVoices.find((v: SpeechSynthesisVoice) => v.name === e.target.value);
-                  setSelectedVoice(voice || null);
-                }}
-                className="text-xs bg-gray-700 text-white rounded px-2 py-1 border border-gray-600 focus:outline-none focus:border-trendpup-orange max-w-[120px]"
-                title="Select voice"
-              >
-                <option value="">Auto</option>
-                {availableVoices
-                  .filter((voice: SpeechSynthesisVoice) => voice.lang.startsWith('en'))
-                  .map((voice: SpeechSynthesisVoice) => (
-                    <option key={voice.name} value={voice.name}>
-                      {voice.name.length > 15 ? voice.name.substring(0, 15) + '...' : voice.name}
-                    </option>
-                  ))}
-              </select>
+            {/* Custom Voice Selector */}
+            {speechSupported && (
+              <div className="relative">
+                <button
+                  onClick={() => availableVoices.length > 0 && setIsVoiceDropdownOpen(!isVoiceDropdownOpen)}
+                  className={`flex items-center gap-1 px-3 py-2 bg-gray-700 text-white rounded-lg text-xs transition-colors border border-gray-600 focus:outline-none focus:border-trendpup-orange min-w-[100px] ${
+                    availableVoices.length === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-600'
+                  }`}
+                  title={availableVoices.length === 0 ? 'Loading voices...' : 'Select voice'}
+                  disabled={availableVoices.length === 0}
+                >
+                  <span className="truncate">
+                    {availableVoices.length === 0 ? 'Loading...' : 
+                      selectedVoice ? 
+                        (selectedVoice.name.length > 12 ? selectedVoice.name.substring(0, 12) + '...' : selectedVoice.name) 
+                        : 'Auto Voice'
+                    }
+                  </span>
+                  {availableVoices.length > 0 && (
+                    isVoiceDropdownOpen ? <FaChevronUp size={10} /> : <FaChevronDown size={10} />
+                  )}
+                </button>
+                
+                {isVoiceDropdownOpen && availableVoices.length > 0 && (
+                  <div className="absolute top-full right-0 mt-1 w-48 bg-gray-800 border border-gray-600 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+                    <button
+                      onClick={() => {
+                        setSelectedVoice(null);
+                        setIsVoiceDropdownOpen(false);
+                      }}
+                      className="w-full text-left px-3 py-2 text-xs text-white hover:bg-trendpup-orange transition-colors border-b border-gray-600"
+                    >
+                      Auto Voice (Recommended)
+                    </button>
+                    {availableVoices
+                      .filter((voice: SpeechSynthesisVoice) => {
+                        // Only show the most human-sounding English voices
+                        const humanVoiceNames = [
+                          'samantha', 'alex', 'victoria', 'karen', 'tessa', 'veena', 'fiona',
+                          'zira', 'hazel', 'susan', 'linda', 'heather', 'aria', 'jenny',
+                          'neural', 'natural', 'premium', 'enhanced'
+                        ];
+                        
+                        const isEnglish = voice.lang.startsWith('en');
+                        const voiceName = voice.name.toLowerCase();
+                        
+                        // Check if it's a known human-sounding voice
+                        const isHumanSounding = humanVoiceNames.some(humanName => 
+                          voiceName.includes(humanName)
+                        );
+                        
+                        // Exclude obviously robotic voices
+                        const isNotRobotic = !voiceName.includes('robot') && 
+                                           !voiceName.includes('microsoft') && 
+                                           !voiceName.includes('espeak') &&
+                                           !voiceName.includes('festival');
+                        
+                        return isEnglish && (isHumanSounding || 
+                               (isNotRobotic && (voiceName.includes('female') || voiceName.includes('woman'))));
+                      })
+                      .slice(0, 5) // Limit to 5 best voices
+                      .map((voice: SpeechSynthesisVoice) => (
+                        <button
+                          key={voice.name}
+                          onClick={() => {
+                            setSelectedVoice(voice);
+                            setIsVoiceDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 text-xs transition-colors ${
+                            selectedVoice?.name === voice.name 
+                              ? 'bg-trendpup-orange text-white' 
+                              : 'text-gray-300 hover:bg-gray-700'
+                          }`}
+                        >
+                          <div className="truncate">{voice.name}</div>
+                          <div className="text-xs text-gray-400">{voice.lang}</div>
+                        </button>
+                      ))}
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
