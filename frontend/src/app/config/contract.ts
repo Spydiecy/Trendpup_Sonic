@@ -1,27 +1,48 @@
-// Smart contract configuration - Temporarily disabled for Flow/Near migration
-// Will be updated with Flow testnet and Near testnet contracts when ready
+// Smart contract configuration for Flow and Near chains
 
-export const ACCESS_FEE_CONTRACT = {
-  // Placeholder - will be updated with actual Flow contract
-  address: '0x0000000000000000000000000000000000000000' as `0x${string}`,
+// Flow Testnet contract configuration
+export const FLOW_CONTRACT = {
+  address: '0x0000000000000000000000000000000000000000' as `0x${string}`, // Update with actual Flow contract
   abi: [], // Will be populated with actual contract ABI
+  chainId: 545, // Flow EVM Testnet
 } as const;
 
-// Access fee amount - will be updated for new chains
-export const FEE_AMOUNT = 0; // Temporarily set to 0
+// Near Aurora Testnet contract configuration  
+export const NEAR_CONTRACT = {
+  address: '0x0000000000000000000000000000000000000000' as `0x${string}`, // Update with actual Near contract
+  abi: [], // Will be populated with actual contract ABI
+  chainId: 1313161555, // Near Aurora Testnet
+} as const;
+
+// Helper function to get contract config by chain
+export const getContractByChain = (chainId: number) => {
+  switch (chainId) {
+    case 545: // Flow Testnet
+      return FLOW_CONTRACT;
+    case 1313161555: // Near Aurora Testnet
+      return NEAR_CONTRACT;
+    default:
+      return FLOW_CONTRACT; // Default to Flow
+  }
+};
+
+// Access fee amount - temporarily set to 0
+export const FEE_AMOUNT = 0;
 
 // Chain configurations
 export const SUPPORTED_CHAINS = {
   FLOW: {
     name: 'Flow Testnet',
-    chainId: 'flow-testnet', // Will be updated with actual chain ID
-    rpc: '', // Will be updated with actual RPC URL
+    chainId: 545,
+    rpc: 'https://testnet.evm.nodes.onflow.org',
     blockExplorer: 'https://testnet.flowdiver.io/',
+    currency: 'FLOW',
   },
   NEAR: {
-    name: 'Near Testnet',
-    chainId: 'near-testnet',
-    rpc: 'https://rpc.testnet.near.org',
-    blockExplorer: 'https://explorer.testnet.near.org/',
+    name: 'Near Aurora Testnet',
+    chainId: 1313161555,
+    rpc: 'https://testnet.aurora.dev',
+    blockExplorer: 'https://explorer.testnet.aurora.dev/',
+    currency: 'ETH',
   },
 } as const;

@@ -1,33 +1,53 @@
 # TrendPup Frontend
 
-Advanced Memecoin Intelligence System for Flow and Near Protocols.
+Advanced Memecoin Intelligence System for Flow and Near Protocols with multi-chain wallet support.
 
 ## Features
 
 - Real-time chat with AI assistant
 - Multi-chain memecoin tracking (Flow & Near)
-- Chain switching functionality
+- Wallet connectivity for Flow and Near testnets
+- Chain switching functionality with automatic wallet network switching
 - Memecoin explorer and analytics
 - Responsive UI using Tailwind CSS
 - Dashboard with multiple windows interface
 
 ## Supported Networks
 
-TrendPup now supports multiple blockchain networks:
+TrendPup supports multiple blockchain networks with wallet connectivity:
 
 **Flow Protocol:**
-- Flow Testnet (Development)
-- Flow Mainnet (Production)
+- Flow EVM Testnet (Chain ID: 545)
+- RPC: https://testnet.evm.nodes.onflow.org
 - Block Explorer: https://testnet.flowdiver.io/
+- Currency: FLOW
 
 **Near Protocol:**
-- Near Testnet (Development)
-- Near Mainnet (Production)
-- Block Explorer: https://explorer.testnet.near.org/
+- Near Aurora Testnet (Chain ID: 1313161555)
+- RPC: https://testnet.aurora.dev
+- Block Explorer: https://explorer.testnet.aurora.dev/
+- Currency: ETH
+
+## Wallet Integration
+
+### Supported Wallets
+- MetaMask
+- WalletConnect compatible wallets
+- Any EVM-compatible wallet
+
+### Chain Switching
+Users can easily switch between supported chains using:
+1. **Main Chain Selector**: On the landing page for initial chain selection
+2. **Top Navigation Toggle**: Quick chain switching in the main interface  
+3. **Wallet Window**: Chain switching buttons within the wallet interface
+
+The application automatically prompts users to switch their wallet to the corresponding network when a different chain is selected.
 
 ## Chain Selection
 
-Users can easily switch between supported chains using the chain selector in the main interface. The memecoin data will automatically update based on the selected chain.
+The memecoin data automatically updates based on the selected chain. Each chain fetches data from its respective API endpoint:
+- Flow: `/api/token-data?chain=flow`
+- Near: `/api/token-data?chain=near`
 
 ## Getting Started
 

@@ -2,15 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { FaTimes, FaDog, FaChartLine, FaWallet, FaFileAlt, FaComments, FaChartBar, FaPlug, FaExpand } from 'react-icons/fa';
-// Temporarily removed wallet functionality
-// import { ConnectButton } from '@rainbow-me/rainbowkit';
-// import { useAccount, useDisconnect } from 'wagmi';
+import { FaTimes, FaDog, FaChartLine, FaWallet, FaFileAlt, FaComments, FaChartBar, FaPlug, FaExpand, FaExchangeAlt } from 'react-icons/fa';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { useAccount, useChainId, useSwitchChain } from 'wagmi';
+import { flowTestnet, nearTestnet } from '../wagmi';
 import ChatInterface from './components/ChatInterface';
 import MemecoinsExplorer from './components/MemecoinsExplorer';
-// Temporarily remove AccessControl for development
-// import AccessControl from './components/AccessControl';
-// import AccessStatus from './components/AccessStatus';
+import { SUPPORTED_CHAINS } from './config/contract';
 
 // Window position interface
 interface WindowPosition {
@@ -33,8 +31,9 @@ interface OpenWindow {
 }
 
 export default function Home() {
-  // const { address, isConnected } = useAccount(); // Temporarily disabled
-  // const { disconnect } = useDisconnect(); // Temporarily disabled
+  const { address, isConnected } = useAccount();
+  const chainId = useChainId();
+  const { switchChain } = useSwitchChain();
   const [connected, setConnected] = useState(false);
   const [appStarted, setAppStarted] = useState(false);
   const [chatMode, setChatMode] = useState(false);
@@ -48,10 +47,28 @@ export default function Home() {
   const [resizeStart, setResizeStart] = useState<{start: WindowPosition, size: WindowSize} | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Update connected state when account changes - temporarily disabled
-  // useEffect(() => {
-  //   setConnected(isConnected);
-  // }, [isConnected]);
+  // Update connected state when account changes
+  useEffect(() => {
+    setConnected(isConnected);
+  }, [isConnected]);
+
+  // Update selected chain based on wallet's current chain
+  useEffect(() => {
+    if (chainId === 545) { // Flow Testnet
+      setSelectedChain('flow');
+    } else if (chainId === 1313161555) { // Near Aurora Testnet
+      setSelectedChain('near');
+    }
+  }, [chainId]);
+
+  // Handle chain switching
+  const handleChainSwitch = (chain: 'flow' | 'near') => {
+    const targetChainId = chain === 'flow' ? 545 : 1313161555;
+    if (chainId !== targetChainId && switchChain) {
+      switchChain({ chainId: targetChainId });
+    }
+    setSelectedChain(chain);
+  };
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <FaDog /> },
@@ -585,13 +602,82 @@ export default function Home() {
                 className="mx-auto mb-4" 
               />
               <h2 className="text-xl font-bold text-trendpup-dark mb-2">Wallet & Portfolio</h2>
-              <div className="space-y-4">
-                <p className="text-gray-600 mb-6">Track your memecoin investments across Flow and Near protocols</p>
-                <div className="text-center text-gray-500">
-                  <p>Wallet integration coming soon!</p>
-                  <p className="text-sm mt-2">For now, use the Memecoin Explorer to discover trending tokens.</p>
+              
+              {/* Chain Info */}
+              <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <Image 
+                    src={selectedChain === 'flow' ? "/flow.svg" : "/near.svg"} 
+                    alt={selectedChain} 
+                    width={20} 
+                    height={20} 
+                  />
+                  <span className="font-medium">
+                    {selectedChain === 'flow' ? 'Flow Testnet' : 'Near Aurora Testnet'}
+                  </span>
                 </div>
+                <p className="text-xs text-gray-500">
+                  Chain ID: {selectedChain === 'flow' ? '545' : '1313161555'}
+                </p>
               </div>
+
+              {isConnected && address ? (
+                <div className="space-y-4">
+                  <div className="text-left">
+                    <p className="text-sm text-gray-600 mb-1">Connected Wallet:</p>
+                    <p className="font-mono text-xs bg-gray-100 p-2 rounded break-all">
+                      {address}
+                    </p>
+                  </div>
+                  
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-gray-600">Network:</span>
+                    <span className={`font-medium ${
+                      chainId !== 545 && chainId !== 1313161555 ? 'text-red-600' : ''
+                    }`}>
+                      {chainId === 545 ? 'Flow Testnet' : 
+                       chainId === 1313161555 ? 'Near Aurora Testnet' : 
+                       'Unsupported Network'}
+                    </span>
+                  </div>
+
+                  {/* Warning for unsupported networks */}
+                  {chainId !== 545 && chainId !== 1313161555 && (
+                    <div className="p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                      ⚠️ Please switch to Flow Testnet or Near Aurora Testnet
+                    </div>
+                  )}
+
+                  {/* Chain Switch Buttons */}
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleChainSwitch('flow')}
+                      className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
+                        chainId === 545
+                          ? 'bg-green-500 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      Flow Testnet
+                    </button>
+                    <button
+                      onClick={() => handleChainSwitch('near')}
+                      className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
+                        chainId === 1313161555
+                          ? 'bg-green-500 text-white'
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      Near Aurora
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  <p className="text-gray-600 mb-6">Connect your wallet to interact with Flow and Near protocols</p>
+                  <ConnectButton />
+                </div>
+              )}
             </div>
             {/* Resize handle */}
             <div 
@@ -664,7 +750,7 @@ export default function Home() {
             <div className="flex justify-center mb-6">
               <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
                 <button
-                  onClick={() => setSelectedChain('flow')}
+                  onClick={() => handleChainSwitch('flow')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-200 ${
                     selectedChain === 'flow'
                       ? 'bg-white text-trendpup-dark shadow-sm'
@@ -675,7 +761,7 @@ export default function Home() {
                   Flow
                 </button>
                 <button
-                  onClick={() => setSelectedChain('near')}
+                  onClick={() => handleChainSwitch('near')}
                   className={`flex items-center gap-2 px-4 py-2 rounded-md font-medium transition-all duration-200 ${
                     selectedChain === 'near'
                       ? 'bg-white text-trendpup-dark shadow-sm'
@@ -739,6 +825,36 @@ export default function Home() {
           <>
             {/* Top right buttons */}
             <div className="absolute top-4 right-4 flex items-center space-x-3 z-50">
+              {/* Chain Toggle Button */}
+              <div className="bg-white rounded-lg shadow-lg p-1">
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => handleChainSwitch('flow')}
+                    className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-all duration-200 ${
+                      selectedChain === 'flow'
+                        ? 'bg-trendpup-orange text-white'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                    title="Switch to Flow Testnet"
+                  >
+                    <Image src="/flow.svg" alt="Flow" width={16} height={16} />
+                    <span className="hidden sm:inline">Flow</span>
+                  </button>
+                  <button
+                    onClick={() => handleChainSwitch('near')}
+                    className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-all duration-200 ${
+                      selectedChain === 'near'
+                        ? 'bg-trendpup-orange text-white'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                    title="Switch to Near Aurora Testnet"
+                  >
+                    <Image src="/near.svg" alt="Near" width={16} height={16} />
+                    <span className="hidden sm:inline">Near</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Whitepaper Button */}
               <button 
                 onClick={(e) => {
@@ -756,9 +872,9 @@ export default function Home() {
                 <span className="hidden md:inline">Whitepaper</span>
               </button>
 
-              {/* Wallet Connect - Temporarily disabled */}
-              <div className="p-2 rounded-lg shadow-lg bg-white">
-                <div className="px-4 py-2 text-sm text-gray-600">Wallet features coming soon</div>
+              {/* Wallet Connect Button */}
+              <div className="bg-white rounded-lg shadow-lg">
+                <ConnectButton />
               </div>
             </div>
 
