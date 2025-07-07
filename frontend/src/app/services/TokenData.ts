@@ -116,7 +116,7 @@ const processTokenData = (data: TokenCoin[]): FormattedMemecoin[] => {
   });
 };
 
-export const fetchTokenData = async (chain: string = 'avalanche'): Promise<FormattedMemecoin[]> => {
+export const fetchTokenData = async (chain: string = 'flow'): Promise<FormattedMemecoin[]> => {
   try {
     // Add cache-busting query param and chain param
     const response = await fetch(`/api/token-data?chain=${encodeURIComponent(chain)}&_=${Date.now()}`, { cache: 'no-store' });

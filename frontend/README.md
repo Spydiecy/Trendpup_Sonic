@@ -79,19 +79,19 @@ The application will be available at [http://localhost:3000](http://localhost:30
 
 ## Wallet Integration
 
-The frontend uses RainbowKit for wallet connectivity, supporting:
+The frontend uses wagmi for wallet connectivity, supporting:
 - MetaMask
 - WalletConnect
 - And other popular Ethereum wallets
 
-Make sure your wallet is configured for the Avalanche Fuji testnet.
+Make sure your wallet is configured for Flow EVM testnet or Near Aurora testnet.
 
 ## Configuration
 
 - `next.config.cjs`: Next.js configuration
 - `tailwind.config.js`: Tailwind CSS configuration
 - `postcss.config.js`: PostCSS configuration
-- `src/wagmi.ts`: Wagmi and RainbowKit configuration for Avalanche Fuji
+- `src/wagmi.ts`: Wagmi configuration for Flow EVM and Near Aurora testnets
 
 ## Running the Server
 

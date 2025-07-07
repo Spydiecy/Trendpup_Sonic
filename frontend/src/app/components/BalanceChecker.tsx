@@ -92,7 +92,7 @@ export default function BalanceChecker() {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Avalanche Balance Checker</h1>
+      <h1 className="text-3xl font-bold mb-6">Multi-Chain Balance Checker</h1>
       
       <div className="mb-6">
         <div className="flex gap-4">
@@ -100,7 +100,7 @@ export default function BalanceChecker() {
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter Avalanche address (0x...)"
+            placeholder="Enter wallet address (0x...)"
             className="flex-1 p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button

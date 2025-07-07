@@ -516,25 +516,47 @@ export default function Home() {
                   <li><strong>Data Aggregation:</strong> Scraper collects Flow and Near token data from various DEXs and scrapes Twitter for token-related tweets and sentiment.</li>
                   <li><strong>AI Analysis (AWS Bedrock):</strong> Reads tweets and token data, determines risk score, investment potential, and provides rationale for each token.</li>
                   <li><strong>Eliza Agent (AWS Bedrock + RAG):</strong> Answers user queries with the latest token data and in-depth analysis using Retrieval-Augmented Generation.</li>
+                  <li><strong>Voice Interface:</strong> Natural speech input and output capabilities enabling hands-free interaction with AI analysis and trading insights.</li>
+                </ul>
+              </div>
+
+              <h3 className="text-lg font-semibold text-trendpup-dark mt-4 mb-2">Voice-Enabled AI Experience</h3>
+              <div className="prose prose-sm">
+                <ul className="list-disc pl-5 mb-4">
+                  <li><strong>Speech Recognition:</strong> Advanced voice input processing for natural conversations with the AI agent</li>
+                  <li><strong>Text-to-Speech:</strong> High-quality voice synthesis with customizable voice selection for natural-sounding responses</li>
+                  <li><strong>Hands-Free Trading:</strong> Query market data, get token analysis, and receive trading insights through voice commands</li>
+                  <li><strong>Multi-Modal Interaction:</strong> Seamless switching between text and voice interactions based on user preference</li>
                 </ul>
               </div>
 
               <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Multi-Chain Integration</h2>
               <div className="prose prose-sm">
                 <ul className="list-disc pl-5 mb-4">
-                  <li><strong>Network Details:</strong>
+                  <li><strong>Flow EVM Testnet:</strong>
                     <ul className="list-disc pl-5 mt-1">
-                      <li>Chain ID: 43113</li>
-                      <li>Native Currency: AVAX</li>
-                      <li>RPC URL: api.avax-test.network/ext/bc/C/rpc</li>
-                      <li>Block Explorer: testnet.snowscan.xyz</li>
+                      <li>Chain ID: 545</li>
+                      <li>Native Currency: FLOW</li>
+                      <li>RPC URL: testnet.evm.nodes.onflow.org</li>
+                      <li>Block Explorer: evm-testnet.flowscan.io</li>
+                      <li>Subscription Fee: 2 FLOW</li>
                     </ul>
                   </li>
-                  <li><strong>RainbowKit Wallet Integration:</strong>
+                  <li><strong>Near Aurora Testnet:</strong>
+                    <ul className="list-disc pl-5 mt-1">
+                      <li>Chain ID: 1313161555</li>
+                      <li>Native Currency: ETH</li>
+                      <li>RPC URL: testnet.aurora.dev</li>
+                      <li>Block Explorer: explorer.testnet.aurora.dev</li>
+                      <li>Subscription Fee: 0.0001 ETH</li>
+                    </ul>
+                  </li>
+                  <li><strong>Wagmi Wallet Integration:</strong>
                     <ul className="list-disc pl-5 mt-1">
                       <li>MetaMask, WalletConnect, and other popular wallet support</li>
-                      <li>Seamless connection to Avalanche Fuji testnet</li>
+                      <li>Seamless connection to Flow EVM and Near Aurora testnets</li>
                       <li>Real-time balance and transaction monitoring</li>
+                      <li>Dynamic chain switching between supported networks</li>
                     </ul>
                   </li>
                 </ul>
@@ -543,9 +565,10 @@ export default function Home() {
               <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Strategic Advantages</h2>
               <div className="prose prose-sm">
                 <ul className="list-disc pl-5 mb-4">
-                  <li><strong>Avalanche Exclusivity:</strong> Dedicated focus on the unique dynamics and opportunities within the AVAX ecosystem</li>
+                  <li><strong>Multi-Chain Focus:</strong> Dedicated coverage of both Flow and Near ecosystems, capturing opportunities across these innovative blockchain networks</li>
                   <li><strong>Early Signal Detection:</strong> Proprietary algorithms capable of identifying promising tokens hours or days before mainstream awareness</li>
-                  <li><strong>Integrated Data Intelligence:</strong> Unified analysis combining social indicators with on-chain Avalanche metrics</li>
+                  <li><strong>Integrated Data Intelligence:</strong> Unified analysis combining social indicators with on-chain Flow and Near metrics</li>
+                  <li><strong>Voice-Enabled AI Chat:</strong> Natural voice interaction with Eliza AI agent for hands-free trading insights and analysis</li>
                   <li><strong>Scientific Methodology:</strong> Data-driven approach eliminating emotional decision-making</li>
                   <li><strong>Aligned Success Incentives:</strong> Business model that ensures we win only when our users win</li>
                 </ul>
