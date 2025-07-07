@@ -4,7 +4,7 @@ import path from 'path';
 
 export async function GET() {
   try {
-    const FilePath = '/home/trendpup/Trendpup/scraper/ai_analyzer.json';
+    const FilePath = '/home/trendpup/Trendpup_PL_Genesis/scraper/ai_analyzer.json';
 
     let data;
     let jsonData;

@@ -4,8 +4,8 @@ import path from 'path';
 
 // Map chain names to their respective JSON file paths
 const CHAIN_FILE_MAP: Record<string, string> = {
-  flow: '/home/trendpup/Trendpup/scraper/flow_tokens.json',
-  near: '/home/trendpup/Trendpup/scraper/near_tokens.json',
+  flow: '/home/trendpup/Trendpup_PL_Genesis/scraper/flowevm_tokens.json',
+  near: '/home/trendpup/Trendpup_PL_Genesis/scraper/near_tokens.json',
 };
 
 export async function GET(request: Request) {

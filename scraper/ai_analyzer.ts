@@ -235,7 +235,7 @@ function watchTweetsFile() {
 }
 
 // --- Efficiently copy files to knowledge base on update ---
-const KNOWLEDGE_DEST = '/home/trendpup/Trendpup/eliza/trendpup/docs';
+const KNOWLEDGE_DEST = '/home/trendpup/Trendpup_PL_Genesis/eliza/trendpup/docs';
 
 function copyToKnowledgeBase(file: string) {
   if (!fs.existsSync(file)) return;
