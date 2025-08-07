@@ -109,7 +109,7 @@ export const SUPPORTED_CHAINS = {
   ETHEREUM: {
     name: 'Sepolia',
     chainId: 11155111,
-    rpc: 'https://sepolia.infura.io/v3/',
+    rpc: 'https://rpc.ankr.com/eth_sepolia/2bcd37b475fe8e8f8ef53b6dd6f6b3151859c4c825677067e55ab2e9e11a64aa',
     blockExplorer: 'https://sepolia.etherscan.io',
     currency: 'ETH',
     feeAmount: ETHEREUM_FEE_AMOUNT,

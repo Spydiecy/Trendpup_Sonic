@@ -915,11 +915,6 @@ export default function Home() {
                 <FaFileAlt size={18} className="mr-2" />
                 <span className="hidden md:inline">Whitepaper</span>
               </button>
-
-              {/* Wallet Connect Button */}
-              <div className="bg-white rounded-lg shadow-lg">
-                <DualWalletButton />
-              </div>
             </div>
 
             {/* Side Menu Squares - now with better styling */}
