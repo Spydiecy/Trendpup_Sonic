@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from '../wagmi';
+import { SolanaWalletProvider } from '../contexts/SolanaWalletContext';
 import { useState } from 'react';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -15,7 +16,7 @@ const inter = Inter({ subsets: ["latin"] });
 // Moved metadata to a separate file since this is now a client component
 // export const metadata: Metadata = {
 //   title: "TrendPup - Advanced Memecoin Intelligence",
-//   description: "Early access to emerging meme tokens on Flow and Near protocols before significant price movements with voice-enabled AI chat",
+//   description: "Early access to emerging meme tokens on Solana and Ethereum networks with voice-enabled AI chat",
 // };
 
 export default function RootLayout({
@@ -28,16 +29,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <WagmiProvider config={config}>
-          <QueryClientProvider client={queryClient}>
-            <RainbowKitProvider 
-              showRecentTransactions={false}
-              modalSize="compact"
-            >
-              {children}
-            </RainbowKitProvider>
-          </QueryClientProvider>
-        </WagmiProvider>
+        <SolanaWalletProvider>
+          <WagmiProvider config={config}>
+            <QueryClientProvider client={queryClient}>
+              <RainbowKitProvider 
+                showRecentTransactions={false}
+                modalSize="compact"
+              >
+                {children}
+              </RainbowKitProvider>
+            </QueryClientProvider>
+          </WagmiProvider>
+        </SolanaWalletProvider>
       </body>
     </html>
   );

@@ -6,12 +6,12 @@ import Image from 'next/image';
 import { fetchTokenData, fetchTokenAIAnalysis, FormattedMemecoin } from '../services/TokenData';
 
 const CHAIN_OPTIONS = [
-  { label: 'Flow', value: 'flow' },
-  { label: 'Near', value: 'near' },
+  { label: 'Solana', value: 'solana' },
+  { label: 'Ethereum', value: 'ethereum' },
 ];
 
 interface MemecoinsExplorerProps {
-  selectedChain?: 'flow' | 'near';
+  selectedChain?: 'solana' | 'ethereum';
 }
 
 export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: MemecoinsExplorerProps) {
@@ -20,7 +20,7 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
   const [memecoins, setMemecoins] = useState<FormattedMemecoin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedChain, setSelectedChain] = useState(propSelectedChain || 'flow');
+  const [selectedChain, setSelectedChain] = useState(propSelectedChain || 'solana');
 
   // Sync with prop changes
   useEffect(() => {
@@ -137,7 +137,7 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
             {CHAIN_OPTIONS.map((chain) => (
               <button
                 key={chain.value}
-                onClick={() => setSelectedChain(chain.value as 'flow' | 'near')}
+                onClick={() => setSelectedChain(chain.value as 'solana' | 'ethereum')}
                 className={`px-3 py-1 rounded-lg font-medium border transition-colors duration-150 ${
                   selectedChain === chain.value
                     ? 'bg-trendpup-orange text-white border-trendpup-orange'
