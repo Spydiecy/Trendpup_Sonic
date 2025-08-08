@@ -1,0 +1,9 @@
+google-adk
+python-dotenv
+requests
+mcp
+google-cloud-aiplatform
+vertexai
+llama-index
+base58
+eth-utils
