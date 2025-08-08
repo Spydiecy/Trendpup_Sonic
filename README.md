@@ -15,18 +15,18 @@
 - 💰 **Financial Advisory Services** - Authorized to give investment advice and portfolio recommendations
 - 🔗 **Multi-Chain Support** - Native Solana (SOL) and Ethereum (ETH) blockchain integration
 - � **Weallet Balance Checking** - Real-time balance queries for any wallet address
-- � **Live  Trading Execution** - Execute swaps and trades directly through the platform
+- � **Live Trading Execution** - Execute swaps and trades directly through the platform
 - 🌉 **Cross-Chain Bridging** - Bridge tokens between Solana and Ethereum
 - 📊 **Real-Time Market Data** - Live token prices, liquidity, and trading pairs
 - 🔍 **Advanced Token Search** - Find tokens by name, symbol, or contract address
 - �️ **Seucurity Analysis** - Comprehensive risk assessment and scam detection
 - 💬 **Conversational AI** - Natural language interaction with dog-themed personality
 - 🌐 **Google Search Integration** - Enhanced market intelligence and news analysis
-- ⚡ **MCP Protocol** - Professional-grade Model Context Protocol integration
+- ⚡ **MCP Protocol** - Professional-grade Model Context Protocol integration for okx dex api
 
 ## Current Capabilities & Functions
 
-### 🔧 **MCP Tools & Functions**
+### 🔧 **OKX DEX MCP Tools & Functions**
 
 **DEX Operations:**
 - `get_tokens(chainId, searchTerm)` - List supported tokens for Solana (501) or Ethereum (1)
@@ -472,7 +472,7 @@ graph TB
 
 - **AI Agent Framework (Google ADK):**  
   Multi-agent system using Google's Agent Development Kit.  
-  Gemini 2.5 Pro model for advanced natural language processing.  
+  Gemini 2.5 Pro and flash models for advanced natural language processing.  
   Coordinated agent workflow for comprehensive analysis.  
   Retrieval-Augmented Generation with README context.
 
@@ -640,3 +640,4 @@ graph TD
 ```
 
 *TrendPup - AI-powered Solana memecoin intelligence, now with voice interaction capabilities.*
+
