@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { useAccount, useChainId } from 'wagmi';
+import { useAccount, useChainId, useDisconnect } from 'wagmi';
 import { useWallet } from '@solana/wallet-adapter-react';
 import Image from 'next/image';
 
@@ -12,20 +12,49 @@ export default function DualWalletButton() {
   
   // Ethereum wallet states
   const { address: ethAddress, isConnected: isEthConnected } = useAccount();
+  const { disconnect: disconnectEth } = useDisconnect();
   const chainId = useChainId();
   
   // Solana wallet states
-  const { publicKey: solanaPublicKey, connected: isSolanaConnected } = useWallet();
+  const { publicKey: solanaPublicKey, connected: isSolanaConnected, disconnect: disconnectSol } = useWallet();
 
   const isConnected = selectedChain === 'solana' ? isSolanaConnected : isEthConnected;
   const currentAddress = selectedChain === 'solana' ? solanaPublicKey?.toString() : ethAddress;
+
+  // Handle chain switching with wallet disconnection
+  const handleChainSwitch = async (chain: 'solana' | 'ethereum') => {
+    if (chain === 'solana' && isEthConnected) {
+      // Disconnect Ethereum wallet when switching to Solana
+      disconnectEth();
+    } else if (chain === 'ethereum' && isSolanaConnected) {
+      // Disconnect Solana wallet when switching to Ethereum
+      try {
+        await disconnectSol();
+      } catch (error) {
+        console.log('Solana wallet already disconnected');
+      }
+    }
+    setSelectedChain(chain);
+  };
+
+  // Auto-disconnect the other wallet when one connects
+  useEffect(() => {
+    if (isEthConnected && isSolanaConnected) {
+      // If both are connected, disconnect the one that's not selected
+      if (selectedChain === 'ethereum' && isSolanaConnected) {
+        disconnectSol();
+      } else if (selectedChain === 'solana' && isEthConnected) {
+        disconnectEth();
+      }
+    }
+  }, [isEthConnected, isSolanaConnected, selectedChain, disconnectEth, disconnectSol]);
 
   return (
     <div className="flex flex-col gap-2">
       {/* Chain Toggle */}
       <div className="flex bg-gray-100 rounded-lg p-1">
         <button
-          onClick={() => setSelectedChain('solana')}
+          onClick={() => handleChainSwitch('solana')}
           className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all duration-200 flex items-center justify-center ${
             selectedChain === 'solana'
               ? 'bg-white text-purple-600 shadow-sm'
@@ -36,7 +65,7 @@ export default function DualWalletButton() {
           Solana
         </button>
         <button
-          onClick={() => setSelectedChain('ethereum')}
+          onClick={() => handleChainSwitch('ethereum')}
           className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-all duration-200 flex items-center justify-center ${
             selectedChain === 'ethereum'
               ? 'bg-white text-blue-600 shadow-sm'

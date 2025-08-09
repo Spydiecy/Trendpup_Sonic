@@ -9,12 +9,16 @@ import { getContractByChain, getFeeByChain, SUPPORTED_CHAINS } from '../config/c
 import { FaLock, FaSpinner, FaCheckCircle, FaWallet } from 'react-icons/fa';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
+import { useChain } from '../contexts/ChainContext';
 
 interface AccessControlProps {
   children: React.ReactNode;
 }
 
 export default function AccessControl({ children }: AccessControlProps) {
+  // Use chain context
+  const { selectedChain, setSelectedChain, resetChain } = useChain();
+  
   // Ethereum wallet states
   const { address: ethAddress, isConnected: isEthConnected } = useAccount();
   const chainId = useChainId();
@@ -28,7 +32,6 @@ export default function AccessControl({ children }: AccessControlProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPayment, setShowPayment] = useState(false);
-  const [selectedChain, setSelectedChain] = useState<'solana' | 'ethereum' | null>(null);
   const [chainSelected, setChainSelected] = useState(false);
 
   // Get current chain configuration for Ethereum
@@ -93,7 +96,7 @@ export default function AccessControl({ children }: AccessControlProps) {
 
   const handleGoBackHome = () => {
     disconnectEth();
-    setSelectedChain(null);
+    resetChain();
     setChainSelected(false);
     window.location.href = '/';
   };

@@ -3,12 +3,30 @@
 import { useState, useEffect, useCallback } from 'react';
 import { FaSearch, FaChartLine, FaRegStar, FaStar, FaInfoCircle, FaSpinner } from 'react-icons/fa';
 import Image from 'next/image';
-import { fetchTokenData, fetchTokenAIAnalysis, FormattedMemecoin } from '../services/TokenData';
 
 const CHAIN_OPTIONS = [
   { label: 'Solana', value: 'solana' },
   { label: 'Ethereum', value: 'ethereum' },
 ];
+
+interface Memecoin {
+  id: string;
+  name: string;
+  symbol: string;
+  price: string;
+  change24h: string;
+  marketCap: string;
+  volume24h: string;
+  logo: string;
+  description: string;
+  contract: string;
+  trending: boolean;
+  riskScore: number;
+  aiAnalysis: string;
+  twitterMentions: number;
+  sentiment: string;
+  favorite?: boolean;
+}
 
 interface MemecoinsExplorerProps {
   selectedChain?: 'solana' | 'ethereum';
@@ -17,7 +35,7 @@ interface MemecoinsExplorerProps {
 export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: MemecoinsExplorerProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('trending');
-  const [memecoins, setMemecoins] = useState<FormattedMemecoin[]>([]);
+  const [memecoins, setMemecoins] = useState<Memecoin[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedChain, setSelectedChain] = useState(propSelectedChain || 'solana');
@@ -30,33 +48,42 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
   }, [propSelectedChain]);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-    async function loadHelixData() {
+    async function loadMemecoinsData() {
       try {
         setIsLoading(true);
-        const data = await fetchTokenData(selectedChain);
-        // Fetch AI analysis (risk & potential) and merge into memecoins
-        const aiAnalysis = await fetchTokenAIAnalysis();
-        const dataWithAI = data.map(coin => {
-          const ai = aiAnalysis.find(a => a.symbol === coin.symbol);
-          return ai ? { ...coin, risk: ai.risk, potential: ai.potential } : coin;
-        });
-        setMemecoins(dataWithAI);
+        
+        // Load data based on selected chain
+        let data: Memecoin[];
+        if (selectedChain === 'ethereum') {
+          const response = await fetch('/data/ethereum-memecoins.json');
+          const jsonData = await response.json();
+          data = jsonData.memecoins;
+        } else {
+          const response = await fetch('/data/solana-memecoins.json');
+          const jsonData = await response.json();
+          data = jsonData.memecoins;
+        }
+        
+        // Add favorite property to each coin
+        const dataWithFavorites = data.map((coin: any) => ({
+          ...coin,
+          favorite: false
+        }));
+        
+        setMemecoins(dataWithFavorites);
         setError(null);
       } catch (err) {
-        console.error('Failed to fetch helix data:', err);
+        console.error('Failed to load memecoin data:', err);
         setError('Failed to load memecoin data. Please try again later.');
       } finally {
         setIsLoading(false);
       }
     }
 
-    loadHelixData();
-    intervalId = setInterval(loadHelixData, 60000); // Refresh every 1 minute
-    return () => clearInterval(intervalId);
+    loadMemecoinsData();
   }, [selectedChain]);
 
-  const toggleFavorite = (id: number) => {
+  const toggleFavorite = (id: string) => {
     setMemecoins(prevCoins => 
       prevCoins.map(coin => 
         coin.id === id ? { ...coin, favorite: !coin.favorite } : coin
@@ -65,46 +92,32 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
   };
 
   const filteredCoins = memecoins.filter(coin => 
-    coin.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+    coin.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    coin.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const displayedCoins = activeTab === 'trending' 
-    ? filteredCoins.sort((a, b) => b.potential - a.potential)
+    ? filteredCoins.filter(coin => coin.trending)
     : activeTab === 'favorites' 
     ? filteredCoins.filter(coin => coin.favorite)
     : activeTab === 'safe' 
-    ? filteredCoins.sort((a, b) => a.risk - b.risk)
+    ? filteredCoins.sort((a, b) => b.riskScore - a.riskScore) // Higher risk score = safer
     : filteredCoins;
 
-  // Sort by age (newest to oldest) for all tabs
-  const parseAge = (ageStr: string) => {
-    // Example: '2m', '1h', '3d', '5s', '8mo', '1y'
-    if (!ageStr) return Number.MAX_SAFE_INTEGER;
-    const match = ageStr.match(/(\d+)(mo|[smhdy])/); // 'mo' before 'm'!
-    if (!match) return Number.MAX_SAFE_INTEGER;
-    const value = parseInt(match[1], 10);
-    const unit = match[2];
-    switch (unit) {
-      case 's': return value;
-      case 'm': return value * 60;
-      case 'h': return value * 3600;
-      case 'd': return value * 86400;
-      case 'mo': return value * 2592000; // 1 month = 30 days
-      case 'y': return value * 31536000; // 1 year = 365 days
-      default: return Number.MAX_SAFE_INTEGER;
-    }
-  };
-  // Always sort by age (newest first), except for 'safe' tab which sorts by risk
-  let sortedCoins: FormattedMemecoin[];
+  // Sort based on different criteria
+  let sortedCoins: Memecoin[];
   if (activeTab === 'safe') {
-    // Sort by risk ASC (safest first), then by age (newest first)
+    // Sort by risk score DESC (safest first), then by twitter mentions
     sortedCoins = displayedCoins.slice().sort((a, b) => {
-      if (a.risk !== b.risk) return a.risk - b.risk;
-      return parseAge(a.age) - parseAge(b.age);
+      if (a.riskScore !== b.riskScore) return b.riskScore - a.riskScore;
+      return b.twitterMentions - a.twitterMentions;
     });
+  } else if (activeTab === 'trending') {
+    // Sort by twitter mentions DESC (most mentioned first)
+    sortedCoins = displayedCoins.slice().sort((a, b) => b.twitterMentions - a.twitterMentions);
   } else {
-    // Default: sort by age (newest first)
-    sortedCoins = displayedCoins.slice().sort((a, b) => parseAge(a.age) - parseAge(b.age));
+    // Default: sort by twitter mentions
+    sortedCoins = displayedCoins.slice().sort((a, b) => b.twitterMentions - a.twitterMentions);
   }
 
   // Create a helper function for opening links
@@ -211,11 +224,11 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-medium text-trendpup-dark uppercase tracking-wider">Symbol</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Price</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Volume</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Market Cap</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Volume</th>
                   <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">24h Change</th>
-                  <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Age</th>
-                  <th className="px-4 py-3 text-center text-xs font-medium text-trendpup-dark uppercase tracking-wider">Potential</th>
+                  <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Twitter</th>
+                  <th className="px-4 py-3 text-center text-xs font-medium text-trendpup-dark uppercase tracking-wider">Sentiment</th>
                   <th className="px-4 py-3 text-center text-xs font-medium text-trendpup-dark uppercase tracking-wider">Risk</th>
                   <th className="px-4 py-3 text-center text-xs font-medium text-trendpup-dark uppercase tracking-wider">Favorite</th>
                 </tr>
@@ -224,16 +237,18 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
                 {sortedCoins.length > 0 ? (
                   sortedCoins.map((coin) => (
                     <tr key={coin.id} className="hover:bg-trendpup-beige/20 cursor-pointer"
-                      onClick={() => openHelixLink(coin.href)}
+                      onClick={() => window.open(`https://www.dextools.io/app/${selectedChain}/pair-explorer/${coin.id}`, '_blank')}
                     >
-                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">{coin.symbol}{coin.symbol1 ? `/${coin.symbol1}` : ''}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">${coin.price.toFixed(coin.price < 0.001 ? 8 : 6)}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">{coin.volume}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm text-gray-500">{coin.marketCap}</td>
-                      <td className={`px-4 py-4 whitespace-nowrap text-right text-sm font-medium ${coin.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>{coin.change24h >= 0 ? '+' : ''}{coin.change24h}%</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm text-gray-500">{coin.age}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-center">{coin.potential}</td>
-                      <td className="px-4 py-4 whitespace-nowrap text-center">{coin.risk}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">{coin.symbol}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">${parseFloat(coin.price).toFixed(parseFloat(coin.price) < 0.001 ? 8 : 6)}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">{coin.marketCap}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm text-gray-500">{coin.volume24h}</td>
+                      <td className={`px-4 py-4 whitespace-nowrap text-right text-sm font-medium ${parseFloat(coin.change24h) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {parseFloat(coin.change24h) >= 0 ? '+' : ''}{coin.change24h}%
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap text-right text-sm text-gray-500">{coin.twitterMentions}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-center">{coin.sentiment}</td>
+                      <td className="px-4 py-4 whitespace-nowrap text-center">{coin.riskScore}/10</td>
                       <td className="px-4 py-4 whitespace-nowrap text-center">
                         <button 
                           onClick={(e) => {

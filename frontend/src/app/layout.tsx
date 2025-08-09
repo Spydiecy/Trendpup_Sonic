@@ -9,6 +9,7 @@ import { WagmiProvider } from 'wagmi';
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { config } from '../wagmi';
 import { SolanaWalletProvider } from '../contexts/SolanaWalletContext';
+import { ChainProvider } from './contexts/ChainContext';
 import { useState } from 'react';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,18 +30,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SolanaWalletProvider>
-          <WagmiProvider config={config}>
-            <QueryClientProvider client={queryClient}>
-              <RainbowKitProvider 
-                showRecentTransactions={false}
-                modalSize="compact"
-              >
-                {children}
-              </RainbowKitProvider>
-            </QueryClientProvider>
-          </WagmiProvider>
-        </SolanaWalletProvider>
+        <ChainProvider>
+          <SolanaWalletProvider>
+            <WagmiProvider config={config}>
+              <QueryClientProvider client={queryClient}>
+                <RainbowKitProvider 
+                  showRecentTransactions={false}
+                  modalSize="compact"
+                >
+                  {children}
+                </RainbowKitProvider>
+              </QueryClientProvider>
+            </WagmiProvider>
+          </SolanaWalletProvider>
+        </ChainProvider>
       </body>
     </html>
   );

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { FaTimes, FaDog, FaChartLine, FaWallet, FaFileAlt, FaComments, FaChartBar, FaPlug, FaExpand, FaExchangeAlt, FaHome } from 'react-icons/fa';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useAccount, useChainId, useSwitchChain } from 'wagmi';
+import { useAccount, useChainId, useSwitchChain, useDisconnect } from 'wagmi';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { sepolia } from '../wagmi';
 import ChatInterface from './components/ChatInterface';
@@ -14,6 +14,7 @@ import AccessStatus from './components/AccessStatus';
 import DualWalletButton from './components/DualWalletButton';
 import AccessControlModal from './components/AccessControlModal';
 import { useSubscriptionStatus } from './hooks/useSubscriptionStatus';
+import { useChain } from './contexts/ChainContext';
 
 // Window position interface
 interface WindowPosition {
@@ -35,19 +36,20 @@ interface OpenWindow {
   zIndex: number;
 }
 
-export default function Home() {
-  const { address: ethAddress, isConnected: isEthConnected } = useAccount();
-  // Solana wallet hooks
-  const { connected: isSolanaConnected, publicKey: solanaPublicKey } = useWallet();
-  
-  // Subscription status for Ethereum access control
-  const { hasEthereumAccess, isCheckingEthereumAccess, isCorrectChain } = useSubscriptionStatus();
-  const chainId = useChainId();
-  const { switchChain } = useSwitchChain();
-  const [connected, setConnected] = useState(false);
+interface HomeProps {
+  selectedChain: 'solana' | 'ethereum';
+}
+
+// Create the main component that gets selectedChain from context
+function HomeComponent() {
+  const { selectedChain } = useChain();
   const [appStarted, setAppStarted] = useState(false);
+  
+  // Don't render anything if chain is not selected yet
+  if (!selectedChain) {
+    return null;
+  }
   const [chatMode, setChatMode] = useState(false);
-  const [selectedChain, setSelectedChain] = useState<'solana' | 'ethereum'>('solana');
   const [openWindows, setOpenWindows] = useState<OpenWindow[]>([]);
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
   const [nextZIndex, setNextZIndex] = useState(10);
@@ -57,60 +59,6 @@ export default function Home() {
   const [resizeStart, setResizeStart] = useState<{start: WindowPosition, size: WindowSize} | null>(null);
   const [showAccessModal, setShowAccessModal] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  // Update connected state when account changes
-  useEffect(() => {
-    setConnected(isEthConnected || isSolanaConnected);
-  }, [isEthConnected, isSolanaConnected]);
-
-  // Update selected chain based on wallet's current chain
-  useEffect(() => {
-    if (chainId === 11155111) { // Sepolia
-      setSelectedChain('ethereum');
-    }
-  }, [chainId]);
-
-  // Handle chain switching with access control
-  const handleChainSwitch = (chain: 'solana' | 'ethereum') => {
-    // Allow switching to Solana freely (it's free)
-    if (chain === 'solana') {
-      setSelectedChain(chain);
-      return;
-    }
-    
-    // For Ethereum, check if user is connected and has access
-    if (chain === 'ethereum') {
-      // Only allow Ethereum switch if user is connected to Ethereum wallet
-      if (!isEthConnected) {
-        setShowAccessModal(true);
-        return;
-      }
-      
-      // Check if user is on the correct chain
-      const targetChainId = 11155111;
-      if (chainId !== targetChainId) {
-        if (switchChain) {
-          switchChain({ chainId: targetChainId });
-        }
-        setShowAccessModal(true);
-        return;
-      }
-      
-      // Check if user has paid subscription
-      if (hasEthereumAccess === false) {
-        setShowAccessModal(true);
-        return;
-      }
-      
-      // If checking subscription status, show modal
-      if (isCheckingEthereumAccess) {
-        setShowAccessModal(true);
-        return;
-      }
-      
-      setSelectedChain(chain);
-    }
-  };
 
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: <FaDog /> },
@@ -689,96 +637,29 @@ export default function Home() {
                 </p>
               </div>
 
-              {(isEthConnected && ethAddress) || (isSolanaConnected && solanaPublicKey) ? (
-                <div className="space-y-4">
-                  <div className="text-left">
-                    <p className="text-sm text-gray-600 mb-1">Connected Wallet:</p>
-                    <p className="font-mono text-xs bg-gray-100 p-2 rounded break-all">
-                      {ethAddress || solanaPublicKey?.toString()}
-                    </p>
-                  </div>
-                  
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">Network:</span>
-                    <span className={`font-medium ${
-                      isEthConnected && chainId !== 11155111 ? 'text-red-600' : ''
-                    }`}>
-                      {isSolanaConnected ? 'Solana Devnet' : 
-                       chainId === 11155111 ? 'Sepolia Testnet' : 
-                       'Unsupported Network'}
-                    </span>
-                  </div>
-
-                  {/* Warning for unsupported networks */}
-                  {isEthConnected && chainId !== 11155111 && (
-                    <div className="p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700">
-                      ⚠️ Please switch to Sepolia Testnet for Ethereum features
-                    </div>
-                  )}
-
-                  {/* Subscription Status for Ethereum */}
-                  {isEthConnected && chainId === 11155111 && (
-                    <div className={`p-2 border rounded text-xs ${
-                      isCheckingEthereumAccess 
-                        ? 'bg-blue-50 border-blue-200 text-blue-700'
-                        : hasEthereumAccess 
-                        ? 'bg-green-50 border-green-200 text-green-700'
-                        : 'bg-orange-50 border-orange-200 text-orange-700'
-                    }`}>
-                      {isCheckingEthereumAccess ? (
-                        '🔄 Checking subscription status...'
-                      ) : hasEthereumAccess ? (
-                        '✅ Ethereum features unlocked - Subscription active'
-                      ) : (
-                        '🔒 Subscription required for Ethereum features - Pay 0.01 ETH'
-                      )}
-                    </div>
-                  )}
-
-                  {/* Chain Switch Buttons */}
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleChainSwitch('solana')}
-                      className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
-                        isSolanaConnected
-                          ? 'bg-green-500 text-white'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      Solana
-                    </button>
-                    <button
-                      onClick={() => handleChainSwitch('ethereum')}
-                      disabled={!isEthConnected || chainId !== 11155111 || isCheckingEthereumAccess}
-                      className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
-                        (isEthConnected && chainId === 11155111 && hasEthereumAccess)
-                          ? 'bg-green-500 text-white'
-                          : (!isEthConnected || chainId !== 11155111 || hasEthereumAccess === false || isCheckingEthereumAccess)
-                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                      title={
-                        !isEthConnected 
-                          ? "Connect Ethereum wallet first" 
-                          : chainId !== 11155111
-                          ? "Switch to Sepolia network first"
-                          : hasEthereumAccess === false
-                          ? "Subscription required - Pay 0.01 ETH first"
-                          : isCheckingEthereumAccess
-                          ? "Checking subscription status..."
-                          : "Switch to Ethereum"
-                      }
-                    >
-                      Ethereum
-                    </button>
-                  </div>
+              {/* Simply show the selected chain info without direct wallet access */}
+              <div className="space-y-4">
+                <div className="text-left">
+                  <p className="text-sm text-gray-600 mb-1">Selected Blockchain:</p>
+                  <p className="font-mono text-xs bg-gray-100 p-2 rounded">
+                    {selectedChain === 'solana' ? 'Solana Network' : 'Ethereum Network'}
+                  </p>
                 </div>
-              ) : (
-                <div className="space-y-4">
-                  <p className="text-gray-600 mb-6">Connect your wallet to interact with Solana and Ethereum</p>
-                  <DualWalletButton />
+                
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-gray-600">Network:</span>
+                  <span className="font-medium">
+                    {selectedChain === 'solana' ? 'Solana Devnet' : 'Ethereum Sepolia'}
+                  </span>
                 </div>
-              )}
+
+                <div className="p-2 border rounded text-xs bg-blue-50 border-blue-200 text-blue-700">
+                  {selectedChain === 'solana' 
+                    ? '✅ Free access on Solana network'
+                    : '🔒 Premium access on Ethereum network'
+                  }
+                </div>
+              </div>
             </div>
             {/* Resize handle */}
             <div 
@@ -999,11 +880,19 @@ export default function Home() {
           isOpen={showAccessModal}
           onClose={() => setShowAccessModal(false)}
           onAccessGranted={() => {
-            setSelectedChain('ethereum');
             setShowAccessModal(false);
           }}
         />
       </main>
+    </AccessControl>
+  );
+}
+
+// Main export
+export default function Home() {
+  return (
+    <AccessControl>
+      <HomeComponent />
     </AccessControl>
   );
 }
