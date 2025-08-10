@@ -7,7 +7,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useChainId, useSwitchChain, useDisconnect } from 'wagmi';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { sepolia } from '../wagmi';
-import ChatInterface from './components/ChatInterface';
+import TrendPupChat from './components/TrendPupChat';
 import MemecoinsExplorer from './components/MemecoinsExplorer';
 import AccessControl from './components/AccessControl';
 import AccessStatus from './components/AccessStatus';
@@ -344,7 +344,7 @@ function HomeComponent() {
                 e.stopPropagation();
               }}
             >
-              <ChatInterface />
+              <TrendPupChat />
             </div>
             {/* Resize handle */}
             <div 

@@ -4,23 +4,25 @@
 
 ## Supported Chains & Networks
 
-- **Solana (SOL)** - Chain ID: 501 - Native SOL and SPL token support
-- **Ethereum (ETH)** - Chain ID: 1 - Native ETH and ERC-20 token support
-- **Multi-Chain Wallet Operations** - Cross-chain balance checking and trading
-- **OKX DEX Integration** - Professional-grade trading infrastructure
+- **Solana Devnet** - Network: Devnet (for testing) - Native SOL and SPL token support - **Free Access**
+- **Ethereum Sepolia Testnet** - Chain ID: 11155111 - Native ETH and ERC-20 token support - **Premium Access (0.01 ETH)**
+- **Multi-Chain Wallet Operations** - Cross-chain balance checking and trading on testnets
+- **OKX DEX Integration** - Professional-grade trading infrastructure for testnet environments
 
 ## Key Features
 
 - 🤖 **AI-Powered Investment Advice** - Provides specific memecoin recommendations and trading strategies
 - 💰 **Financial Advisory Services** - Authorized to give investment advice and portfolio recommendations
-- 🔗 **Multi-Chain Support** - Native Solana (SOL) and Ethereum (ETH) blockchain integration
-- � **Weallet Balance Checking** - Real-time balance queries for any wallet address
-- � **Live Trading Execution** - Execute swaps and trades directly through the platform
-- 🌉 **Cross-Chain Bridging** - Bridge tokens between Solana and Ethereum
+- 🔗 **Multi-Chain Support** - Native Solana Devnet and Ethereum Sepolia testnet integration
+- 💳 **Wallet Balance Checking** - Real-time balance queries for any wallet address
+- 🔄 **Live Trading Execution** - Execute swaps and trades directly through the platform
+- 🌉 **Cross-Chain Bridging** - Bridge tokens between Solana Devnet and Ethereum Sepolia testnet
 - 📊 **Real-Time Market Data** - Live token prices, liquidity, and trading pairs
 - 🔍 **Advanced Token Search** - Find tokens by name, symbol, or contract address
-- �️ **Seucurity Analysis** - Comprehensive risk assessment and scam detection
+- 🛡️ **Security Analysis** - Comprehensive risk assessment and scam detection
 - 💬 **Conversational AI** - Natural language interaction with dog-themed personality
+- 🎤 **Voice Interface** - Speech-to-text input and text-to-speech responses
+- 🔊 **Audio Feedback** - Voice mode for hands-free interaction
 - 🌐 **Google Search Integration** - Enhanced market intelligence and news analysis
 - ⚡ **MCP Protocol** - Professional-grade Model Context Protocol integration for okx dex api
 
@@ -29,7 +31,7 @@
 ### 🔧 **OKX DEX MCP Tools & Functions**
 
 **DEX Operations:**
-- `get_tokens(chainId, searchTerm)` - List supported tokens for Solana (501) or Ethereum (1)
+- `get_tokens(chainId, searchTerm)` - List supported tokens for Solana Devnet or Ethereum Sepolia (11155111)
 - `get_liquidity(chainId)` - Get available liquidity pools for trading
 - `get_chain_data(chainId)` - Retrieve chain-specific configuration and data
 - `get_quote(chainId, fromToken, toToken, amount)` - Get swap quotes for token pairs
@@ -86,15 +88,15 @@ User Query → README Context → [MCP + Google Search in parallel] → Combined
 
 ### 🔍 **Supported Wallet Address Formats**
 
-**Ethereum Addresses:**
+**Ethereum Addresses (Sepolia Testnet):**
 - Format: `0x` prefix + 40 hexadecimal characters
 - Example: `0xF977814e90dA44bFA03b6295A0616a897441aceC`
-- Chain ID: "1" for mainnet
+- Chain ID: "11155111" for Sepolia testnet
 
-**Solana Addresses:**
+**Solana Addresses (Devnet):**
 - Format: Base58 encoded, 32-44 characters
 - Example: `52C9T2T7JRojtxumYnYZhyUmrN7kqzvCLc4Ksvjk7TxD`
-- Chain ID: "501" for mainnet
+- Network: Devnet for testing
 
 ## Our Memecoin Analysis Methodology
 
@@ -179,7 +181,7 @@ Our system immediately warns users about:
 
 An **AI-powered memecoin investment assistant** that provides **specific investment recommendations** and **executes trades** across **Solana and Ethereum** ecosystems, combining live blockchain data with comprehensive market intelligence.
 
-Our **professional-grade trading platform** offers **direct financial advice** and **automated trading execution**, democratizing access to institutional-level memecoin analysis and trading capabilities.
+Our **professional-grade trading platform** offers **direct financial advice** and **automated trading execution** on testnet environments, democratizing access to institutional-level memecoin analysis and trading capabilities with **free access on Solana Devnet** and **premium access (0.01 ETH) on Ethereum Sepolia**.
 
 ## What Users Can Use It For
 
@@ -197,9 +199,11 @@ Our **professional-grade trading platform** offers **direct financial advice** a
 
 ### 🤖 **AI-Powered Features**
 - **Conversational interface** - Natural language interaction with dog-themed personality
+- **Financial advisory* - Speech-to-text input and text-to-speech responses with voice mode toggle
 - **Financial advisory** - Authorized to provide investment advice and trading recommendations
 - **Multi-agent analysis** - Combines technical blockchain data with market sentiment and news
 - **Automated research** - Parallel data gathering from MCP tools and Google Search for comprehensive analysis
+- **Real-time TTS** - AI responses are spoken aloud when voice mode is enabled
 
 ### 🔗 **Cross-Chain Operations**
 - **Bridge tokens** - Move assets between Solana and Ethereum seamlessly
