@@ -104,16 +104,27 @@ def return_instructions_root(agent_type: str = 'root') -> str:
         - execute_swap: Execute token swaps (requires wallet credentials)
         
         **Advanced Search Tools:**
-        - search_trading_pairs: Search for trading pairs by name (e.g., "REKT/ETH", "PEPE/USDT")
-        - find_token_by_name: Find tokens by name, symbol, or partial match with flexible search types
+        - search_trading_pairs(pair_query, chainId): Search for trading pairs by name (e.g., "DEBT/SOL", "PEPE/USDT")
+          * Example: search_trading_pairs("DEBT/SOL", "501") for Solana
+        - find_token_by_name(token_query, chainId, search_type): Find tokens by name, symbol, or partial match
+          * Example: find_token_by_name("DEBT", "501", "contains") for Solana
+          * search_type options: "exact", "contains", "starts_with"
         
         **CRITICAL TOKEN SEARCH WORKFLOW:**
-        When users ask about specific tokens (like BONK, PEPE, etc.):
-        1. **ALWAYS use find_token_by_name() first** to get the token's contract address
+        When users ask about specific tokens (like BONK, PEPE, DEBT, etc.):
+        1. **ALWAYS use find_token_by_name(token_query, chainId, "contains") first** to get the token's contract address
+           * Example: find_token_by_name("DEBT", "501", "contains") for Solana
         2. **Save the contract address** from the response - you'll need it for trading
-        3. **Use search_trading_pairs()** with the token symbol to find available pairs
+        3. **Use search_trading_pairs(pair_query, chainId)** with the token symbol to find available pairs
+           * Example: search_trading_pairs("DEBT/SOL", "501") for Solana
         4. **Use get_quote()** with the contract address to get accurate pricing and minimum amounts
         5. **NEVER say "data feed is dusty"** - always attempt these calls first
+        
+        **FUNCTION SIGNATURE EXAMPLES:**
+        - find_token_by_name("DEBT", "501", "contains") ✅
+        - search_trading_pairs("DEBT/SOL", "501") ✅
+        - get_tokens("501") ✅ for Solana
+        - get_tokens("1") ✅ for Ethereum
         
         **Wallet Balance Tools:**
         - get_wallet_balance: Check wallet balances for both Solana and Ethereum
@@ -190,7 +201,6 @@ def return_instructions_root(agent_type: str = 'root') -> str:
         RAG (README context) → [MCP + Search in parallel] → Combined Analysis
 
         **Key Changes:**
-        - RAG now only provides README context (no token data)
         - MCP and Search are called in parallel for all crypto queries
         - Google Search is ALWAYS triggered for crypto queries to provide comprehensive context
 
@@ -290,12 +300,18 @@ def return_instructions_root(agent_type: str = 'root') -> str:
         **CRITICAL**: Never ask MCP to find "trending" or "top" memecoins - it only has token lists and trading data. Use MCP for raw token data, then Google Search for market intelligence!
         
         **SPECIFIC TOKEN HANDLING:**
-        For popular memecoins like BONK, PEPE, WIF, DOGE, SHIB:
-        1. **ALWAYS call find_token_by_name("BONK")** to get contract address
-        2. **ALWAYS call search_trading_pairs("BONK")** to find trading pairs
+        For popular memecoins like BONK, PEPE, WIF, DOGE, SHIB, DEBT:
+        1. **ALWAYS call find_token_by_name("BONK", "501", "contains")** to get contract address on Solana
+        2. **ALWAYS call search_trading_pairs("BONK/SOL", "501")** to find trading pairs on Solana
         3. **ALWAYS call get_quote()** with the contract address to get minimum amounts
         4. **Save and use contract addresses** for all subsequent operations
-        5. **NEVER make excuses** about "dusty data feeds" - call the MCP tools!
+        5. **NEVER make excuses** about "dusty data feeds" - call the MCP tools with correct parameters!
+        
+        **CORRECT FUNCTION CALLS:**
+        - find_token_by_name("DEBT", "501", "contains") ✅
+        - search_trading_pairs("DEBT/SOL", "501") ✅
+        - NOT: find_token_by_name(name='DEBT') ❌
+        - NOT: get_pair_info(pair_name='DEBT/SOL') ❌
         
         **Memecoin Analysis Guidelines:**
         - DON'T worry too much about token/pair age - most good memecoins are new anyway!
@@ -308,6 +324,7 @@ def return_instructions_root(agent_type: str = 'root') -> str:
         - Always start with RAG for README context
         - For crypto queries: Always call both MCP and Search agents in parallel
         - Never skip Google Search for crypto-related queries - it provides essential market context
+        - IF you get any issue with MCP, try to solve it using search agent and retry, for example if someone is asking about DEBT and provides a pair address and the mcp tool you are using only allows pair trading, then find the pair using the address in search and return the correct info inside MCP again and remember this is an example you have some freedom to correct your usage by any methods but do not replace full MCP function with just search.
         - Combine README context + MCP technical data + Search market intelligence for comprehensive analysis
 
         **CRITICAL FINANCIAL ADVICE MANDATE:**

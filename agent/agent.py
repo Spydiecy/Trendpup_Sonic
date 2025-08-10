@@ -6,10 +6,10 @@ import time
 import json
 from google.adk.agents import Agent
 from dotenv import load_dotenv
-from .prompts import return_instructions_root
+from prompts import return_instructions_root
 from google.adk.tools import (google_search, FunctionTool, AgentTool)
-from .mcp.mcp_client import mcp_client
-from .mcp import mcp_tools
+from okx_mcp import mcp_client
+from okx_mcp import mcp_tools
 
 
 
@@ -98,3 +98,6 @@ root_agent = Agent(
     AgentTool(agent=mcp_agent),
     ]
 )
+
+
+app = root_agent

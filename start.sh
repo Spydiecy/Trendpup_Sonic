@@ -66,7 +66,7 @@ fi
 
 
 if ! tmux has-session -t adk-api 2>/dev/null; then
-  tmux new-session -d -s agents "bash -c 'while true; do cd $HOME/trendpup && source venv/bin/activate && adk api_server agent --allow_origins=\"*\"; echo \"adk-api crashed. Restarting in 3s...\"; sleep 3; done'"
+  tmux new-session -d -s agents "bash -c 'while true; do cd $HOME/trendpup && source venv/bin/activate && adk api_server agent --allow_origins=\"*\"; echo \"agents crashed. Restarting in 3s...\"; sleep 3; done'"
   echo "Started tmux session: agents"
 else
   echo "tmux session 'agents' already exists."
@@ -75,7 +75,7 @@ fi
 
 
 if ! tmux has-session -t okx-mcp 2>/dev/null; then
-  tmux new-session -d -s okx-mcp "bash -c 'while true; do cd $HOME/trendpup/okx-mcp && npm run build && npm start; echo \"okx-mcp crashed. Restarting in 3s...\"; sleep 3; done'"
+  tmux new-session -d -s okx-mcp "bash -c 'while true; do cd $HOME/trendpup/okx-mcp && pnpm run dev; echo \"okx-mcp crashed. Restarting in 3s...\"; sleep 3; done'"
   echo "Started tmux session: okx-mcp"
 else
   echo "tmux session 'okx-mcp' already exists."
