@@ -1,63 +1,51 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
-// Map chain names to their respective JSON file paths
-const CHAIN_FILE_MAP: Record<string, string> = {
-  flow: '/home/trendpup/Trendpup_PL_Genesis/scraper/flowevm_tokens.json',
-  near: '/home/trendpup/Trendpup_PL_Genesis/scraper/near_tokens.json',
-};
-
-export async function GET(request: Request) {
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export async function GET() {
   try {
-    // Get chain from query param, default to 'flow'
-    const url = new URL(request.url);
-    const chain = url.searchParams.get('chain') || 'flow';
-    const FilePath = CHAIN_FILE_MAP[chain] || CHAIN_FILE_MAP['flow'];
-
-    let data;
-    let jsonData;
-
-    if (fs.existsSync(FilePath)) {
-      try {
-        data = fs.readFileSync(FilePath, 'utf8');
-        jsonData = JSON.parse(data);
-        // Support both { tokens: [...] } and root array formats
-        let tokens: any[] = [];
-        if (Array.isArray(jsonData)) {
-          tokens = jsonData;
-        } else if (Array.isArray(jsonData.tokens)) {
-          tokens = jsonData.tokens;
-        } else if (Array.isArray(jsonData.data)) {
-          tokens = jsonData.data;
-        }
-        // Always return an array, even if empty
-        return new NextResponse(
-          JSON.stringify({ data: tokens }),
-          {
-            status: 200,
-            headers: { 'Cache-Control': 'no-store', 'Content-Type': 'application/json' }
-          }
-        );
-      } catch (error) {
-        console.error('Error reading or parsing Token data:', error);
-        return NextResponse.json(
-          { error: 'Failed to fetch Token data', data: [] },
-          { status: 500, headers: { 'Cache-Control': 'no-store' } }
-        );
+    const backendUrl = 'http://localhost:3001/api/token-data';
+    console.log('Fetching from backend:', backendUrl);
+    const response = await fetch(backendUrl, {
+      next: { 
+        tags: ['token-data'],
+        revalidate: 0
+      },
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
       }
-    } else {
-      console.log('File not found:', FilePath);
-      return NextResponse.json(
-        { error: 'Token data file not found', data: [] },
-        { status: 404, headers: { 'Cache-Control': 'no-store' } }
-      );
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to fetch token data: ${response.status}`);
     }
-  } catch (error) {
-    console.error('Unexpected error:', error);
+    const result = await response.json();
+    return NextResponse.json(result, {
+      headers: { 
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0, stale-while-revalidate=0, stale-if-error=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store',
+        'X-Timestamp': Date.now().toString(),
+        'X-Cache-Status': 'MISS'
+      }
+    });
+  } catch (error: any) {
+    console.error('Proxy error fetching token data:', error);
     return NextResponse.json(
-      { error: 'Unexpected server error', data: [] },
-      { status: 500, headers: { 'Cache-Control': 'no-store' } }
+      { 
+        error: 'Failed to proxy token data', 
+        results: [],
+        timestamp: Date.now()
+      },
+      { 
+        status: 500,
+        headers: {
+          'Cache-Control': 'no-store',
+        }
+      }
     );
   }
 }

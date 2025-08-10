@@ -1,15 +1,13 @@
 'use client';
 
 import { useAccount, useReadContract } from 'wagmi';
-import { ACCESS_FEE_CONTRACT } from '../config/contract';
+import { ETHEREUM_CONTRACT } from '../config/contract';
 import { FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
 
 export default function AccessStatus() {
   const { address } = useAccount();
-
-  // Check if user has paid access fee
   const { data: hasAccess } = useReadContract({
-    ...ACCESS_FEE_CONTRACT,
+    ...ETHEREUM_CONTRACT,
     functionName: 'hasPaid',
     args: address ? [address] : undefined,
   });

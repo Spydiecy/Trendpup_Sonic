@@ -23,6 +23,7 @@ export interface FormattedMemecoin {
   id: number;
   symbol: string;
   symbol1: string;
+  chain: string;
   price: number;
   volume: string;
   marketCap: string;
@@ -31,7 +32,8 @@ export interface FormattedMemecoin {
   favorite: boolean;
   potential: number;
   risk: number;
-  href: string; // add href to interface
+  href: string;
+  imageUrl?: string;
 }
 
 // Function to parse price strings, handling various formats
@@ -96,46 +98,68 @@ const parseNumericValue = (valueStr: string | undefined): number => {
   return isNaN(value) ? 0 : value;
 };
 
-const processTokenData = (data: TokenCoin[]): FormattedMemecoin[] => {
+const processTokenData = (data: any[]): FormattedMemecoin[] => {
   return data.map((coin, index) => {
-    const price = parsePrice(coin.price);
+    const price = typeof coin.price === 'number' ? coin.price : parsePrice(coin.price || '0');
     return {
-      id: index + 1,
+      id: coin.id || index + 1,
       symbol: coin.symbol,
-      symbol1: coin.symbol1, // include symbol1
+      symbol1: coin.symbol1,
+      chain: coin.chain || 'unknown',
       price,
-      volume: coin.volume,
-      marketCap: coin.mcap,
-      change24h: parseChange(coin['change-24h']),
-      age: coin.age,
-      favorite: false,
-      potential: 0, // placeholder
-      risk: 0, // placeholder
-      href: coin.href // pass href through
+      volume: coin.volume || 'N/A',
+      marketCap: coin.marketCap || 'N/A',
+      change24h: typeof coin.change24h === 'number' ? coin.change24h : parseChange(coin['change-24h'] || '0'),
+      age: coin.age || 'N/A',
+      favorite: coin.favorite || false,
+      potential: coin.potential || 0,
+      risk: coin.risk || 0,
+      href: coin.href || '',
+      imageUrl: coin.imageUrl
     };
   });
 };
 
-export const fetchTokenData = async (chain: string = 'flow'): Promise<FormattedMemecoin[]> => {
+export const fetchTokenData = async (chain?: string): Promise<FormattedMemecoin[]> => {
   try {
-    // Add cache-busting query param and chain param
-    const response = await fetch(`/api/token-data?chain=${encodeURIComponent(chain)}&_=${Date.now()}`, { cache: 'no-store' });
+    // Add cache-busting query param
+    const response = await fetch(`/api/token-data?_=${Date.now()}`, { cache: 'no-store' });
     if (!response.ok) {
       console.warn('API request failed, using fallback data');
       return [];
     }
     const raw = await response.json();
-    // Support both { data: [...] } and { tokens: [...] } formats
-    const tokens: TokenCoin[] = Array.isArray(raw.data)
-      ? raw.data
-      : Array.isArray(raw.tokens)
-        ? raw.tokens
-        : [];
+    // Support both { results: [...] }, { data: [...] } and { tokens: [...] } formats
+    const tokens: any[] = Array.isArray(raw.results)
+      ? raw.results
+      : Array.isArray(raw.data)
+        ? raw.data
+        : Array.isArray(raw.tokens)
+          ? raw.tokens
+          : [];
+    
     if (!tokens.length) {
       console.warn('No token data found in API response');
       return [];
     }
-    return processTokenData(tokens);
+    
+    let processedTokens = processTokenData(tokens);
+    
+    // Filter by chain if specified
+    if (chain && chain !== 'all') {
+      processedTokens = processedTokens.filter(token => 
+        token.chain.toLowerCase() === chain.toLowerCase()
+      );
+    }
+    
+    // Sort by chain name, then by potential (descending)
+    processedTokens.sort((a, b) => {
+      const chainCompare = a.chain.localeCompare(b.chain);
+      if (chainCompare !== 0) return chainCompare;
+      return b.potential - a.potential;
+    });
+    
+    return processedTokens;
   } catch (error) {
     console.error('Error fetching Token data:', error);
     return [];
