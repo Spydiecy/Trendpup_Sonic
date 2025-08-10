@@ -476,8 +476,8 @@ function HomeComponent() {
               
               <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Executive Summary</h2>
               <div className="prose prose-sm">
-                <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Solana and Ethereum ecosystems, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur. By leveraging AWS Bedrock for advanced AI analysis and the Eliza Agent for conversational intelligence, TrendPup synthesizes sophisticated social media analytics with on-chain Solana and Ethereum data to identify high-potential opportunities during their inception phase, allowing users to position themselves advantageously in the market.</p>
-                <p className="mb-3">Our platform democratizes access to valuable pre-pump intelligence previously available only to well-connected insiders and sophisticated traders within the Solana and Ethereum ecosystems. Powered by AWS Bedrock and Eliza, TrendPup's unique dual-access model provides free access on Solana and premium subscription-based access on Ethereum, ensuring accessibility while maintaining quality through economic incentives.</p>
+                <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Solana and Ethereum ecosystems, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur. By leveraging Google Vertex AI for advanced AI analysis and our agents for conversational intelligence, TrendPup synthesizes sophisticated social media analytics with on-chain Solana and Ethereum data to identify high-potential opportunities during their inception phase, allowing users to position themselves advantageously in the market.</p>
+                <p className="mb-3">Our platform democratizes access to valuable pre-pump intelligence previously available only to well-connected insiders and sophisticated traders within the Solana and Ethereum ecosystems. Powered by our multi agent system, TrendPup's unique dual-access model provides free access on Solana and premium subscription-based access on Ethereum, ensuring accessibility while maintaining quality through economic incentives.</p>
               </div>
 
               <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Technology Infrastructure</h2>
@@ -502,8 +502,8 @@ function HomeComponent() {
               <div className="prose prose-sm">
                 <ul className="list-disc pl-5 mb-4">
                   <li><strong>Data Aggregation:</strong> Scraper collects Solana and Ethereum token data from various DEXs and scrapes Twitter for token-related tweets and sentiment.</li>
-                  <li><strong>AI Analysis (AWS Bedrock):</strong> Reads tweets and token data, determines risk score, investment potential, and provides rationale for each token.</li>
-                  <li><strong>Eliza Agent (AWS Bedrock + RAG):</strong> Answers user queries with the latest token data and in-depth analysis using Retrieval-Augmented Generation.</li>
+                  <li><strong>AI Analysis:</strong> Reads tweets and token data, determines risk score, investment potential, etc for each token.</li>
+                  <li><strong>Multi-Agent System (Google ADK):</strong> Answers user queries with the latest token data and in-depth analysis using Retrieval-Augmented Generation, search tools and OKX DEX API MCP Server.</li>
                   <li><strong>Voice Interface:</strong> Natural speech input and output capabilities enabling hands-free interaction with AI analysis and trading insights.</li>
                 </ul>
               </div>
@@ -558,7 +558,7 @@ function HomeComponent() {
                   <li><strong>Dual-Network Strategy:</strong> Free access on Solana for broad adoption, premium access on Ethereum for quality assurance</li>
                   <li><strong>Early Signal Detection:</strong> Proprietary algorithms capable of identifying promising tokens hours or days before mainstream awareness</li>
                   <li><strong>Integrated Data Intelligence:</strong> Unified analysis combining social indicators with on-chain Solana and Ethereum metrics</li>
-                  <li><strong>Voice-Enabled AI Chat:</strong> Natural voice interaction with Eliza AI agent for hands-free trading insights and analysis</li>
+                  <li><strong>Voice-Enabled AI Chat:</strong> Natural voice interaction with AI agent for hands-free trading insights and analysis</li>
                   <li><strong>Scientific Methodology:</strong> Data-driven approach eliminating emotional decision-making</li>
                   <li><strong>Flexible Access Model:</strong> Choose between free Solana access or premium Ethereum features based on your needs</li>
                 </ul>
