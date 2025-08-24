@@ -1,8 +1,8 @@
-// Smart contract configuration for Ethereum and Solana chains
+// Smart contract configuration for Sei Network
 
-// Ethereum Sepolia contract configuration
-export const ETHEREUM_CONTRACT = {
-  address: '0x8D8c158a87D2722274F2Fa9339A13Bc8FB5Ebf18' as `0x${string}`,
+// Sei testnet contract configuration
+export const SEI_CONTRACT = {
+  address: '0x34c124f69e4ABd3D6C88F6f190b8e2f336084779' as `0x${string}`,
   abi: [
     {
       "inputs": [],
@@ -75,44 +75,44 @@ export const ETHEREUM_CONTRACT = {
       "type": "function"
     }
   ],
-  chainId: 11155111, // Sepolia testnet
+  chainId: 1328, // Sei testnet
 } as const;
 
 // Helper function to get contract config by chain
 export const getContractByChain = (chainId: number) => {
   switch (chainId) {
-    case 11155111: // Sepolia testnet
-      return ETHEREUM_CONTRACT;
+    case 1328: // Sei testnet
+      return SEI_CONTRACT;
     default:
-      return ETHEREUM_CONTRACT; // Default to Ethereum
+      return SEI_CONTRACT; // Default to Sei
   }
 };
 
 // Access fee amounts
-export const ETHEREUM_FEE_AMOUNT = '10000000000000000'; // 0.01 ETH in wei (0.01 * 10^18)
+export const SEI_FEE_AMOUNT = '100000000000000000'; // 0.1 SEI in wei (0.1 * 10^18)
 
 // Helper function to get fee amount by chain
 export const getFeeByChain = (chainId: number) => {
   switch (chainId) {
-    case 11155111: // Sepolia testnet
-      return ETHEREUM_FEE_AMOUNT;
+    case 1328: // Sei testnet
+      return SEI_FEE_AMOUNT;
     default:
-      return ETHEREUM_FEE_AMOUNT; // Default to Ethereum
+      return SEI_FEE_AMOUNT; // Default to Sei
   }
 };
 
-// Backward compatibility - defaults to Ethereum fee
-export const FEE_AMOUNT = ETHEREUM_FEE_AMOUNT;
+// Backward compatibility - defaults to Sei fee
+export const FEE_AMOUNT = SEI_FEE_AMOUNT;
 
 // Chain configurations
 export const SUPPORTED_CHAINS = {
-  ETHEREUM: {
-    name: 'Sepolia',
-    chainId: 11155111,
-    rpc: 'https://rpc.ankr.com/eth_sepolia/2bcd37b475fe8e8f8ef53b6dd6f6b3151859c4c825677067e55ab2e9e11a64aa',
-    blockExplorer: 'https://sepolia.etherscan.io',
-    currency: 'ETH',
-    feeAmount: ETHEREUM_FEE_AMOUNT,
-    feeAmountDisplay: '0.01 ETH',
+  SEI: {
+    name: 'Sei Testnet',
+    chainId: 1328,
+    rpc: 'https://evm-rpc-testnet.sei-apis.com',
+    blockExplorer: 'https://seitrace.com',
+    currency: 'SEI',
+    feeAmount: SEI_FEE_AMOUNT,
+    feeAmountDisplay: '0.1 SEI',
   },
 } as const;

@@ -1,20 +1,22 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useMemo } from 'react';
 
 interface ChainContextType {
-  selectedChain: 'solana' | 'ethereum' | null;
-  setSelectedChain: (chain: 'solana' | 'ethereum') => void;
-  resetChain: () => void;
+  connected: boolean;
+  setConnected: (connected: boolean) => void;
 }
 
 const ChainContext = createContext<ChainContextType | undefined>(undefined);
 
-export function ChainProvider({ children }: { children: ReactNode }) {
-  const [selectedChain, setSelectedChain] = useState<'solana' | 'ethereum' | null>(null);
+export function ChainProvider({ children }: Readonly<{ children: ReactNode }>) {
+  const [connected, setConnected] = useState(false);
 
-  const resetChain = () => setSelectedChain(null);
+  const value = useMemo(() => ({
+    connected,
+    setConnected,
+  }), [connected]);
 
   return (
-    <ChainContext.Provider value={{ selectedChain, setSelectedChain, resetChain }}>
+    <ChainContext.Provider value={value}>
       {children}
     </ChainContext.Provider>
   );

@@ -2,44 +2,115 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { FaSearch, FaRegStar, FaStar, FaInfoCircle, FaSpinner } from 'react-icons/fa';
-import { fetchTokenData, FormattedMemecoin } from '../services/TokenData';
 
-const CHAIN_OPTIONS = [
-  { label: 'All Chains', value: 'all' },
-  { label: 'Ethereum', value: 'ethereum' },
-  { label: 'Solana', value: 'solana' },
-  { label: 'Base', value: 'base' },
-  { label: 'BSC', value: 'bsc' },
-];
-
-interface MemecoinsExplorerProps {
-  selectedChain?: string;
+interface MemecoinData {
+  id: number;
+  symbol: string;
+  symbol1: string;
+  price: number;
+  marketCap: string;
+  volume: string;
+  change24h: number;
+  potential: number;
+  risk: number;
+  age: string;
+  favorite: boolean;
+  imageUrl?: string;
+  href?: string;
+  chain: string;
 }
 
-export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: MemecoinsExplorerProps) {
+// Sei Network memecoins data
+const seiMemecoins: MemecoinData[] = [
+  {
+    id: 1,
+    symbol: "SEIDOGE",
+    symbol1: "SEI",
+    price: 0.000045,
+    marketCap: "$2.1M",
+    volume: "$453K",
+    change24h: 15.67,
+    potential: 9,
+    risk: 3.5,
+    age: "2 days",
+    favorite: false,
+    chain: "sei",
+    href: "https://seistream.app/token/sei1abc123"
+  },
+  {
+    id: 2,
+    symbol: "SEICAT",
+    symbol1: "SEI",
+    price: 0.000023,
+    marketCap: "$890K",
+    volume: "$234K",
+    change24h: -5.32,
+    potential: 7,
+    risk: 4.2,
+    age: "1 week",
+    favorite: false,
+    chain: "sei",
+    href: "https://seistream.app/token/sei1def456"
+  },
+  {
+    id: 3,
+    symbol: "SEIPEPE",
+    symbol1: "SEI",
+    price: 0.000134,
+    marketCap: "$5.4M",
+    volume: "$987K",
+    change24h: 34.21,
+    potential: 8,
+    risk: 2.8,
+    age: "3 days",
+    favorite: false,
+    chain: "sei",
+    href: "https://seistream.app/token/sei1ghi789"
+  },
+  {
+    id: 4,
+    symbol: "MOONSEI",
+    symbol1: "SEI",
+    price: 0.000067,
+    marketCap: "$3.2M",
+    volume: "$567K",
+    change24h: 22.45,
+    potential: 6,
+    risk: 5.1,
+    age: "5 days",
+    favorite: false,
+    chain: "sei",
+    href: "https://seistream.app/token/sei1jkl012"
+  },
+  {
+    id: 5,
+    symbol: "SEIINU",
+    symbol1: "SEI",
+    price: 0.000089,
+    marketCap: "$4.7M",
+    volume: "$723K",
+    change24h: -12.34,
+    potential: 5,
+    risk: 6.3,
+    age: "1 week",
+    favorite: false,
+    chain: "sei",
+    href: "https://seistream.app/token/sei1mno345"
+  }
+];
+
+export default function MemecoinsExplorer() {
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('trending');
-  const [memecoins, setMemecoins] = useState<FormattedMemecoin[]>([]);
+  const [memecoins, setMemecoins] = useState<MemecoinData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedChain, setSelectedChain] = useState(propSelectedChain || 'all');
-
-  // Sync with prop changes
-  useEffect(() => {
-    if (propSelectedChain) {
-      setSelectedChain(propSelectedChain);
-    }
-  }, [propSelectedChain]);
 
   useEffect(() => {
     async function loadMemecoinsData() {
       try {
         setIsLoading(true);
-
-        // Use the token data service instead of JSON files
-        const data = await fetchTokenData(selectedChain === 'all' ? undefined : selectedChain);
-
-        setMemecoins(data);
+        setMemecoins(seiMemecoins);
         setError(null);
       } catch (err) {
         console.error('Failed to load memecoin data:', err);
@@ -50,7 +121,7 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
     }
 
     loadMemecoinsData();
-  }, [selectedChain]);
+  }, []);
 
   const toggleFavorite = (id: number) => {
     setMemecoins(prevCoins =>
@@ -67,36 +138,26 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
 
   const displayedCoins = activeTab === 'favorites'
     ? filteredCoins.filter(coin => coin.favorite)
-    : filteredCoins; // Show all coins for trending, safe, and default tabs
+    : filteredCoins;
 
-  // Sort based on different criteria, with chain-based sorting
-  let sortedCoins: FormattedMemecoin[];
+  // Sort based on different criteria
+  let sortedCoins: MemecoinData[];
   if (activeTab === 'safe') {
-    // Sort by chain, then by risk (descending - higher risk score = safer), then by potential (descending)
     sortedCoins = displayedCoins.slice().sort((a, b) => {
-      const chainCompare = a.chain.localeCompare(b.chain);
-      if (chainCompare !== 0) return chainCompare;
-      if (a.risk !== b.risk) return b.risk - a.risk; // Descending order for safety
+      if (a.risk !== b.risk) return a.risk - b.risk; // Ascending order for safety (lower risk = safer)
       return b.potential - a.potential;
     });
   } else if (activeTab === 'trending') {
-    // Sort by chain, then by potential (descending), then by change24h (descending)
     sortedCoins = displayedCoins.slice().sort((a, b) => {
-      const chainCompare = a.chain.localeCompare(b.chain);
-      if (chainCompare !== 0) return chainCompare;
       if (a.potential !== b.potential) return b.potential - a.potential; // Descending order
       return b.change24h - a.change24h;
     });
   } else {
-    // Default: sort by chain, then by potential (descending)
     sortedCoins = displayedCoins.slice().sort((a, b) => {
-      const chainCompare = a.chain.localeCompare(b.chain);
-      if (chainCompare !== 0) return chainCompare;
       return b.potential - a.potential;
     });
   }
 
-  // Create a helper function for opening links
   const openTokenLink = useCallback((url: string) => {
     if (!url) {
       console.error("Attempted to open empty URL");
@@ -113,28 +174,10 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
   return (
     <div className="bg-white rounded-xl shadow-lg border border-trendpup-brown/20 overflow-hidden">
       <div className="p-4 bg-trendpup-dark text-white">
-        <h2 className="text-xl font-bold">Memecoin Explorer</h2>
-        <p className="text-sm opacity-75">Discover trending memecoins with TrendPup intelligence</p>
+        <h2 className="text-xl font-bold">Sei Memecoin Explorer</h2>
+        <p className="text-sm opacity-75">Discover trending memecoins on Sei Network with TrendPup intelligence</p>
       </div>
       <div className="p-4">
-        {/* Chain Toggle - Hidden when controlled by parent */}
-        {!propSelectedChain && (
-          <div className="flex flex-wrap gap-2 mb-4">
-            {CHAIN_OPTIONS.map((chain) => (
-              <button
-                key={chain.value}
-                onClick={() => setSelectedChain(chain.value)}
-                className={`px-3 py-1 rounded-lg font-medium border transition-colors duration-150 ${selectedChain === chain.value
-                  ? 'bg-trendpup-orange text-white border-trendpup-orange'
-                  : 'bg-white text-trendpup-dark border-trendpup-brown/20 hover:bg-trendpup-beige'
-                  }`}
-              >
-                {chain.label}
-              </button>
-            ))}
-          </div>
-        )}
-
         <div className="relative mb-4">
           <input
             type="text"

@@ -1,22 +1,22 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { defineChain } from 'viem';
 
-// Define Sepolia testnet chain for Ethereum subscriptions
-export const sepolia = defineChain({
-  id: 11155111, // Sepolia testnet chain ID
-  name: 'Sepolia',
+// Define Sei testnet chain
+export const seiTestnet = defineChain({
+  id: 1328, // Sei testnet chain ID
+  name: 'Sei Testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'SepoliaETH',
-    symbol: 'ETH',
+    name: 'SEI',
+    symbol: 'SEI',
   },
   rpcUrls: {
     default: {
-      http: ['https://rpc.ankr.com/eth_sepolia/2bcd37b475fe8e8f8ef53b6dd6f6b3151859c4c825677067e55ab2e9e11a64aa'],
+      http: ['https://evm-rpc-testnet.sei-apis.com'],
     },
   },
   blockExplorers: {
-    default: { name: 'Etherscan', url: 'https://sepolia.etherscan.io' },
+    default: { name: 'SeiTrace', url: 'https://seitrace.com' },
   },
   testnet: true,
 });
@@ -24,6 +24,6 @@ export const sepolia = defineChain({
 export const config = getDefaultConfig({
   appName: 'TrendPup',
   projectId: 'YOUR_PROJECT_ID', // Replace with your WalletConnect project ID  
-  chains: [sepolia],
+  chains: [seiTestnet],
   ssr: true,
 });
