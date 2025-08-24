@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { FaTimes, FaDog, FaChartLine, FaWallet, FaFileAlt, FaComments, FaChartBar } from 'react-icons/fa';
+import { FaTimes, FaDog, FaChartLine, FaWallet, FaFileAlt, FaComments, FaChartBar, FaExpand } from 'react-icons/fa';
 import ChatInterface from './components/ChatInterface';
 import MemecoinsExplorer from './components/MemecoinsExplorer';
 import DualWalletButton from './components/DualWalletButton';
@@ -34,7 +34,9 @@ export default function Home() {
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
   const [nextZIndex, setNextZIndex] = useState(10);
   const [dragging, setDragging] = useState<string | null>(null);
+  const [resizing, setResizing] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<WindowPosition>({ x: 0, y: 0 });
+  const [resizeStart, setResizeStart] = useState<{start: WindowPosition, size: WindowSize} | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const menuItems = [
@@ -120,6 +122,22 @@ export default function Home() {
     bringToFront(id);
   };
 
+  const startResize = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Find the window
+    const window = openWindows.find(w => w.id === id);
+    if (!window) return;
+    
+    setResizeStart({
+      start: { x: e.clientX, y: e.clientY },
+      size: window.size
+    });
+    setResizing(id);
+    bringToFront(id);
+  };
+
   const onDrag = (e: MouseEvent) => {
     if (!dragging) return;
     
@@ -137,8 +155,33 @@ export default function Home() {
     }));
   };
 
+  const onResize = (e: MouseEvent) => {
+    if (!resizing || !resizeStart) return;
+    
+    const deltaX = e.clientX - resizeStart.start.x;
+    const deltaY = e.clientY - resizeStart.start.y;
+    
+    setOpenWindows(prevWindows => prevWindows.map(window => {
+      if (window.id === resizing) {
+        return {
+          ...window,
+          size: {
+            width: Math.max(300, resizeStart.size.width + deltaX),
+            height: Math.max(200, resizeStart.size.height + deltaY)
+          }
+        };
+      }
+      return window;
+    }));
+  };
+
   const stopDrag = () => {
     setDragging(null);
+  };
+
+  const stopResize = () => {
+    setResizing(null);
+    setResizeStart(null);
   };
 
   useEffect(() => {
@@ -152,6 +195,18 @@ export default function Home() {
       window.removeEventListener('mouseup', stopDrag);
     };
   }, [dragging, openWindows, dragOffset]);
+
+  useEffect(() => {
+    if (resizing) {
+      window.addEventListener('mousemove', onResize);
+      window.addEventListener('mouseup', stopResize);
+    }
+    
+    return () => {
+      window.removeEventListener('mousemove', onResize);
+      window.removeEventListener('mouseup', stopResize);
+    };
+  }, [resizing, openWindows, resizeStart]);
 
   const getWindowByID = (id: string) => {
     return openWindows.find(w => w.id === id);
