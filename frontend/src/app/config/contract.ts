@@ -1,8 +1,8 @@
-// Smart contract configuration for Sei Network
+// Smart contract configuration for Sonic Network
 
-// Sei testnet contract configuration
-export const SEI_CONTRACT = {
-  address: '0x34c124f69e4ABd3D6C88F6f190b8e2f336084779' as `0x${string}`,
+// Sonic testnet contract configuration
+export const SONIC_CONTRACT = {
+  address: '0x6Fe73C7F8b428417596E4276899De8Bb7101dDef' as `0x${string}`,
   abi: [
     {
       "inputs": [],
@@ -75,44 +75,44 @@ export const SEI_CONTRACT = {
       "type": "function"
     }
   ],
-  chainId: 1328, // Sei testnet
+  chainId: 1001, // Kaia Kairos testnet
 } as const;
 
 // Helper function to get contract config by chain
 export const getContractByChain = (chainId: number) => {
   switch (chainId) {
-    case 1328: // Sei testnet
-      return SEI_CONTRACT;
+    case 64165: // Sonic testnet
+      return SONIC_CONTRACT;
     default:
-      return SEI_CONTRACT; // Default to Sei
+      return SONIC_CONTRACT; // Default to Sonic
   }
 };
 
 // Access fee amounts
-export const SEI_FEE_AMOUNT = '100000000000000000'; // 0.1 SEI in wei (0.1 * 10^18)
+export const SONIC_FEE_AMOUNT = '1000000000000000000'; // 1 SONIC in wei (1 * 10^18)
 
 // Helper function to get fee amount by chain
 export const getFeeByChain = (chainId: number) => {
   switch (chainId) {
-    case 1328: // Sei testnet
-      return SEI_FEE_AMOUNT;
+    case 64165: // Sonic testnet
+      return SONIC_FEE_AMOUNT;
     default:
-      return SEI_FEE_AMOUNT; // Default to Sei
+      return SONIC_FEE_AMOUNT; // Default to Sonic
   }
 };
 
-// Backward compatibility - defaults to Sei fee
-export const FEE_AMOUNT = SEI_FEE_AMOUNT;
+// Backward compatibility - defaults to Sonic fee
+export const FEE_AMOUNT = SONIC_FEE_AMOUNT;
 
 // Chain configurations
 export const SUPPORTED_CHAINS = {
-  SEI: {
-    name: 'Sei Testnet',
-    chainId: 1328,
-    rpc: 'https://evm-rpc-testnet.sei-apis.com',
-    blockExplorer: 'https://seitrace.com',
-    currency: 'SEI',
-    feeAmount: SEI_FEE_AMOUNT,
-    feeAmountDisplay: '0.1 SEI',
+  SONIC: {
+    name: 'Sonic Testnet',
+    chainId: 64165,
+    rpc: 'https://rpc.testnet.soniclabs.com',
+    blockExplorer: 'https://testnet.soniclabs.com',
+    currency: 'SONIC',
+    feeAmount: SONIC_FEE_AMOUNT,
+    feeAmountDisplay: '1 SONIC',
   },
 } as const;

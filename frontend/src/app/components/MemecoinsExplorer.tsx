@@ -20,12 +20,12 @@ interface MemecoinData {
   chain: string;
 }
 
-// Sei Network memecoins data
-const seiMemecoins: MemecoinData[] = [
+// Kaia Network memecoins data
+const kaiaMemecoins: MemecoinData[] = [
   {
     id: 1,
-    symbol: "SEIDOGE",
-    symbol1: "SEI",
+    symbol: "KAIADOGE",
+    symbol1: "KAIA",
     price: 0.000045,
     marketCap: "$2.1M",
     volume: "$453K",
@@ -34,13 +34,13 @@ const seiMemecoins: MemecoinData[] = [
     risk: 3.5,
     age: "2 days",
     favorite: false,
-    chain: "sei",
-    href: "https://seistream.app/token/sei1abc123"
+    chain: "kaia",
+    href: "https://kaiadexscreener.com/token/kaia1abc123"
   },
   {
     id: 2,
-    symbol: "SEICAT",
-    symbol1: "SEI",
+    symbol: "KAIACAT",
+    symbol1: "KAIA",
     price: 0.000023,
     marketCap: "$890K",
     volume: "$234K",
@@ -49,13 +49,13 @@ const seiMemecoins: MemecoinData[] = [
     risk: 4.2,
     age: "1 week",
     favorite: false,
-    chain: "sei",
-    href: "https://seistream.app/token/sei1def456"
+    chain: "kaia",
+    href: "https://kaiadexscreener.com/token/kaia1def456"
   },
   {
     id: 3,
-    symbol: "SEIPEPE",
-    symbol1: "SEI",
+    symbol: "KAIAPEPE",
+    symbol1: "KAIA",
     price: 0.000134,
     marketCap: "$5.4M",
     volume: "$987K",
@@ -64,13 +64,13 @@ const seiMemecoins: MemecoinData[] = [
     risk: 2.8,
     age: "3 days",
     favorite: false,
-    chain: "sei",
-    href: "https://seistream.app/token/sei1ghi789"
+    chain: "kaia",
+    href: "https://kaiadexscreener.com/token/kaia1ghi789"
   },
   {
     id: 4,
-    symbol: "MOONSEI",
-    symbol1: "SEI",
+    symbol: "MOONKAIA",
+    symbol1: "KAIA",
     price: 0.000067,
     marketCap: "$3.2M",
     volume: "$567K",
@@ -79,13 +79,13 @@ const seiMemecoins: MemecoinData[] = [
     risk: 5.1,
     age: "5 days",
     favorite: false,
-    chain: "sei",
-    href: "https://seistream.app/token/sei1jkl012"
+    chain: "kaia",
+    href: "https://kaiadexscreener.com/token/kaia1jkl012"
   },
   {
     id: 5,
-    symbol: "SEIINU",
-    symbol1: "SEI",
+    symbol: "KAIAINU",
+    symbol1: "KAIA",
     price: 0.000089,
     marketCap: "$4.7M",
     volume: "$723K",
@@ -94,8 +94,8 @@ const seiMemecoins: MemecoinData[] = [
     risk: 6.3,
     age: "1 week",
     favorite: false,
-    chain: "sei",
-    href: "https://seistream.app/token/sei1mno345"
+    chain: "kaia",
+    href: "https://kaiadexscreener.com/token/kaia1mno345"
   }
 ];
 
@@ -110,7 +110,7 @@ export default function MemecoinsExplorer() {
     async function loadMemecoinsData() {
       try {
         setIsLoading(true);
-        setMemecoins(seiMemecoins);
+        setMemecoins(kaiaMemecoins);
         setError(null);
       } catch (err) {
         console.error('Failed to load memecoin data:', err);
@@ -174,8 +174,8 @@ export default function MemecoinsExplorer() {
   return (
     <div className="bg-white rounded-xl shadow-lg border border-trendpup-brown/20 overflow-hidden">
       <div className="p-4 bg-trendpup-dark text-white">
-        <h2 className="text-xl font-bold">Sei Memecoin Explorer</h2>
-        <p className="text-sm opacity-75">Discover trending memecoins on Sei Network with TrendPup intelligence</p>
+        <h2 className="text-xl font-bold">Kaia Memecoin Explorer</h2>
+        <p className="text-sm opacity-75">Discover trending memecoins on Kaia Network with TrendPup intelligence</p>
       </div>
       <div className="p-4">
         <div className="relative mb-4">

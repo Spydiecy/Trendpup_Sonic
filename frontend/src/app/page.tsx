@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { FaTimes, FaDog, FaChartLine, FaWallet, FaFileAlt, FaComments, FaChartBar } from 'react-icons/fa';
+import { FaTimes, FaDog, FaChartLine, FaWallet, FaFileAlt, FaComments, FaChartBar, FaExpand } from 'react-icons/fa';
 import ChatInterface from './components/ChatInterface';
 import MemecoinsExplorer from './components/MemecoinsExplorer';
 import DualWalletButton from './components/DualWalletButton';
@@ -35,6 +35,8 @@ export default function Home() {
   const [nextZIndex, setNextZIndex] = useState(10);
   const [dragging, setDragging] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<WindowPosition>({ x: 0, y: 0 });
+  const [resizing, setResizing] = useState<string | null>(null);
+  const [resizeStart, setResizeStart] = useState<{start: WindowPosition, size: WindowSize, clientX: number, clientY: number, direction: string} | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const menuItems = [
@@ -141,6 +143,70 @@ export default function Home() {
     setDragging(null);
   };
 
+  const startResize = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Find the window
+    const window = openWindows.find(w => w.id === id);
+    if (!window) return;
+    
+    setResizeStart({
+      start: window.position,
+      size: window.size,
+      clientX: e.clientX,
+      clientY: e.clientY,
+      direction: 'se' // Default to bottom-right but allow all directions
+    });
+    setResizing(id);
+    bringToFront(id);
+  };
+
+  const onResize = (e: MouseEvent) => {
+    if (!resizing || !resizeStart) return;
+    
+    const deltaX = e.clientX - resizeStart.clientX;
+    const deltaY = e.clientY - resizeStart.clientY;
+    
+    setOpenWindows(prevWindows => prevWindows.map(window => {
+      if (window.id === resizing) {
+        // Allow both expanding and shrinking from bottom-right handle
+        let newWidth = resizeStart.size.width + deltaX;
+        let newHeight = resizeStart.size.height + deltaY;
+        let newX = window.position.x;
+        let newY = window.position.y;
+
+        // If dragging left (negative deltaX), resize from right edge and move window
+        if (deltaX < 0) {
+          newWidth = Math.max(300, resizeStart.size.width - Math.abs(deltaX));
+          newX = resizeStart.start.x + (resizeStart.size.width - newWidth);
+        } else {
+          newWidth = Math.max(300, newWidth);
+        }
+
+        // If dragging up (negative deltaY), resize from bottom edge and move window  
+        if (deltaY < 0) {
+          newHeight = Math.max(200, resizeStart.size.height - Math.abs(deltaY));
+          newY = resizeStart.start.y + (resizeStart.size.height - newHeight);
+        } else {
+          newHeight = Math.max(200, newHeight);
+        }
+
+        return {
+          ...window,
+          position: { x: newX, y: newY },
+          size: { width: newWidth, height: newHeight }
+        };
+      }
+      return window;
+    }));
+  };
+
+  const stopResize = () => {
+    setResizing(null);
+    setResizeStart(null);
+  };
+
   useEffect(() => {
     if (dragging) {
       window.addEventListener('mousemove', onDrag);
@@ -152,6 +218,18 @@ export default function Home() {
       window.removeEventListener('mouseup', stopDrag);
     };
   }, [dragging, openWindows, dragOffset]);
+
+  useEffect(() => {
+    if (resizing) {
+      window.addEventListener('mousemove', onResize);
+      window.addEventListener('mouseup', stopResize);
+    }
+    
+    return () => {
+      window.removeEventListener('mousemove', onResize);
+      window.removeEventListener('mouseup', stopResize);
+    };
+  }, [resizing, resizeStart]);
 
   const getWindowByID = (id: string) => {
     return openWindows.find(w => w.id === id);
@@ -213,6 +291,16 @@ export default function Home() {
               </div>
             </div>
           </div>
+          {/* Resize handle */}
+          <button 
+            className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize z-30 flex items-center justify-center"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              startResize(e, id);
+            }}
+          >
+            <FaExpand className="text-black/50 rotate-45" size={14} />
+          </button>
         </div>
       );
     }
@@ -244,6 +332,16 @@ export default function Home() {
           <div className="p-4 max-h-[500px] overflow-auto">
             <MemecoinsExplorer />
           </div>
+          {/* Resize handle */}
+          <button 
+            className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize z-30 flex items-center justify-center"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              startResize(e, id);
+            }}
+          >
+            <FaExpand className="text-black/50 rotate-45" size={14} />
+          </button>
         </div>
       );
     }
@@ -283,6 +381,16 @@ export default function Home() {
           <div className="h-[calc(100%-48px)] overflow-hidden">
             <ChatInterface />
           </div>
+          {/* Resize handle */}
+          <button 
+            className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize z-30 flex items-center justify-center"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              startResize(e, id);
+            }}
+          >
+            <FaExpand className="text-black/50 rotate-45" size={14} />
+          </button>
         </div>
       );
     }
@@ -325,12 +433,22 @@ export default function Home() {
             />
             <h2 className="text-xl font-bold text-trendpup-dark mb-2">Connect Your Wallet</h2>
             <div className="space-y-4">
-              <p className="text-gray-600 mb-6">Connect your wallet to the Sei network to track your memecoin investments</p>
+              <p className="text-gray-600 mb-6">Connect your wallet to the Sonic network to track your memecoin investments</p>
               <div className="flex justify-center">
                 <DualWalletButton />
               </div>
             </div>
           </div>
+          {/* Resize handle */}
+          <button 
+            className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize z-30 flex items-center justify-center"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              startResize(e, id);
+            }}
+          >
+            <FaExpand className="text-black/50 rotate-45" size={14} />
+          </button>
         </div>
       );
     }
@@ -369,6 +487,16 @@ export default function Home() {
               <p className="text-gray-600">No data available</p>
             </div>
           </div>
+          {/* Resize handle */}
+          <button 
+            className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize z-30 flex items-center justify-center"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              startResize(e, id);
+            }}
+          >
+            <FaExpand className="text-black/50 rotate-45" size={14} />
+          </button>
         </div>
       );
     }
@@ -402,22 +530,22 @@ export default function Home() {
             </button>
           </button>
           <div className="p-6 overflow-auto max-h-[500px]">
-            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Sei</h1>
+            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Kaia</h1>
             
             <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Executive Summary</h2>
             <div className="prose prose-sm">
-              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Sei ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
+              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Kaia ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
             </div>
 
-            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Sei Integration</h2>
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Kaia Integration</h2>
             <div className="prose prose-sm">
               <ul className="list-disc pl-5 mb-4">
                 <li><strong>Network Details:</strong>
                   <ul className="list-disc pl-5 mt-1">
-                    <li>Network: Sei Testnet</li>
-                    <li>Native Currency: SEI</li>
-                    <li>Chain ID: 1328</li>
-                    <li>Access Fee: 0.1 SEI</li>
+                    <li>Network: Kaia Kairos Testnet</li>
+                    <li>Native Currency: KAIA</li>
+                    <li>Chain ID: 1001</li>
+                    <li>Access Fee: 1 KAIA</li>
                   </ul>
                 </li>
               </ul>
@@ -428,6 +556,16 @@ export default function Home() {
               <p className="italic mt-4">Email: tanishqgupta322@gmail.com | Twitter: @Trend_Pup</p>
             </div>
           </div>
+          {/* Resize handle */}
+          <button 
+            className="absolute bottom-0 right-0 w-8 h-8 cursor-nwse-resize z-30 flex items-center justify-center"
+            onMouseDown={(e) => {
+              e.stopPropagation();
+              startResize(e, id);
+            }}
+          >
+            <FaExpand className="text-black/50 rotate-45" size={14} />
+          </button>
         </div>
       );
     }
@@ -482,7 +620,7 @@ export default function Home() {
           
           <h1 className="text-3xl font-bold text-trendpup-dark mb-2">TrendPup AI</h1>
           <p className="text-gray-600 mb-8 md:mb-10 text-sm">
-            An autonomous AI agent that finds trending memecoins on Sei.
+            An autonomous AI agent that finds trending memecoins on Kaia.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

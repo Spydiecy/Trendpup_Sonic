@@ -1,22 +1,22 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { defineChain } from 'viem';
 
-// Define Sei testnet chain
-export const seiTestnet = defineChain({
-  id: 1328, // Sei testnet chain ID
-  name: 'Sei Testnet',
+// Define Kaia Kairos testnet chain
+export const kaiaTestnet = defineChain({
+  id: 1001, // Kaia Kairos testnet chain ID
+  name: 'Kaia Kairos Testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'SEI',
-    symbol: 'SEI',
+    name: 'KAIA',
+    symbol: 'KAIA',
   },
   rpcUrls: {
     default: {
-      http: ['https://evm-rpc-testnet.sei-apis.com'],
+      http: ['https://public-en-kairos.node.kaia.io'],
     },
   },
   blockExplorers: {
-    default: { name: 'SeiTrace', url: 'https://seitrace.com' },
+    default: { name: 'KaiaScope', url: 'https://kairos.kaiascope.com' },
   },
   testnet: true,
 });
@@ -24,6 +24,6 @@ export const seiTestnet = defineChain({
 export const config = getDefaultConfig({
   appName: 'TrendPup',
   projectId: 'YOUR_PROJECT_ID', // Replace with your WalletConnect project ID  
-  chains: [seiTestnet],
+  chains: [kaiaTestnet],
   ssr: true,
 });

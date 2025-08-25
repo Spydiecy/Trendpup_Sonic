@@ -34,9 +34,10 @@ export default function Home() {
   const [activeWindowId, setActiveWindowId] = useState<string | null>(null);
   const [nextZIndex, setNextZIndex] = useState(10);
   const [dragging, setDragging] = useState<string | null>(null);
-  const [resizing, setResizing] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState<WindowPosition>({ x: 0, y: 0 });
-  const [resizeStart, setResizeStart] = useState<{start: WindowPosition, size: WindowSize} | null>(null);
+  const [resizing, setResizing] = useState<string | null>(null);
+  const [resizeStartPosition, setResizeStartPosition] = useState<WindowPosition>({ x: 0, y: 0 });
+  const [resizeStartSize, setResizeStartSize] = useState<WindowSize>({ width: 0, height: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   const menuItems = [
@@ -122,22 +123,6 @@ export default function Home() {
     bringToFront(id);
   };
 
-  const startResize = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Find the window
-    const window = openWindows.find(w => w.id === id);
-    if (!window) return;
-    
-    setResizeStart({
-      start: { x: e.clientX, y: e.clientY },
-      size: window.size
-    });
-    setResizing(id);
-    bringToFront(id);
-  };
-
   const onDrag = (e: MouseEvent) => {
     if (!dragging) return;
     
@@ -155,19 +140,36 @@ export default function Home() {
     }));
   };
 
-  const onResize = (e: MouseEvent) => {
-    if (!resizing || !resizeStart) return;
+  const stopDrag = () => {
+    setDragging(null);
+  };
+
+  const startResize = (e: React.MouseEvent, id: string) => {
+    e.preventDefault();
+    e.stopPropagation();
     
-    const deltaX = e.clientX - resizeStart.start.x;
-    const deltaY = e.clientY - resizeStart.start.y;
+    const window = openWindows.find(w => w.id === id);
+    if (!window) return;
+    
+    setResizeStartPosition({ x: e.clientX, y: e.clientY });
+    setResizeStartSize(window.size);
+    setResizing(id);
+    bringToFront(id);
+  };
+
+  const onResize = (e: MouseEvent) => {
+    if (!resizing) return;
+    
+    const deltaX = e.clientX - resizeStartPosition.x;
+    const deltaY = e.clientY - resizeStartPosition.y;
     
     setOpenWindows(prevWindows => prevWindows.map(window => {
       if (window.id === resizing) {
         return {
           ...window,
           size: {
-            width: Math.max(300, resizeStart.size.width + deltaX),
-            height: Math.max(200, resizeStart.size.height + deltaY)
+            width: Math.max(300, resizeStartSize.width + deltaX),
+            height: Math.max(200, resizeStartSize.height + deltaY)
           }
         };
       }
@@ -175,13 +177,8 @@ export default function Home() {
     }));
   };
 
-  const stopDrag = () => {
-    setDragging(null);
-  };
-
   const stopResize = () => {
     setResizing(null);
-    setResizeStart(null);
   };
 
   useEffect(() => {
@@ -206,7 +203,7 @@ export default function Home() {
       window.removeEventListener('mousemove', onResize);
       window.removeEventListener('mouseup', stopResize);
     };
-  }, [resizing, openWindows, resizeStart]);
+  }, [resizing, resizeStartPosition, resizeStartSize, openWindows]);
 
   const getWindowByID = (id: string) => {
     return openWindows.find(w => w.id === id);
@@ -268,6 +265,15 @@ export default function Home() {
               </div>
             </div>
           </div>
+          {/* Resize handle */}
+          <div 
+            className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize bg-gray-400 hover:bg-gray-500 transition-colors z-10"
+            onMouseDown={(e) => startResize(e, id)}
+            style={{
+              clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+            }}
+            title="Resize window"
+          />
         </div>
       );
     }
@@ -299,6 +305,15 @@ export default function Home() {
           <div className="p-4 max-h-[500px] overflow-auto">
             <MemecoinsExplorer />
           </div>
+          {/* Resize handle */}
+          <div 
+            className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize bg-gray-400 hover:bg-gray-500 transition-colors z-10"
+            onMouseDown={(e) => startResize(e, id)}
+            style={{
+              clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+            }}
+            title="Resize window"
+          />
         </div>
       );
     }
@@ -309,8 +324,8 @@ export default function Home() {
           className={`bg-white rounded-xl shadow-2xl border-2 border-black overflow-hidden ${activeClass}`}
           style={{
             ...windowStyle,
-            width: `${Math.max(windowData.size.width, 500)}px`,
-            height: `${Math.max(windowData.size.height, 450)}px`,
+            width: '600px',
+            height: '600px',
           }}
         >
           <button 
@@ -338,6 +353,15 @@ export default function Home() {
           <div className="h-[calc(100%-48px)] overflow-hidden">
             <ChatInterface />
           </div>
+          {/* Resize handle */}
+          <div 
+            className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize bg-gray-400 hover:bg-gray-500 transition-colors z-10"
+            onMouseDown={(e) => startResize(e, id)}
+            style={{
+              clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+            }}
+            title="Resize window"
+          />
         </div>
       );
     }
@@ -380,12 +404,21 @@ export default function Home() {
             />
             <h2 className="text-xl font-bold text-trendpup-dark mb-2">Connect Your Wallet</h2>
             <div className="space-y-4">
-              <p className="text-gray-600 mb-6">Connect your wallet to the Sei network to track your memecoin investments</p>
+              <p className="text-gray-600 mb-6">Connect your wallet to the Kaia network to track your memecoin investments</p>
               <div className="flex justify-center">
                 <DualWalletButton />
               </div>
             </div>
           </div>
+          {/* Resize handle */}
+          <div 
+            className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize bg-gray-400 hover:bg-gray-500 transition-colors z-10"
+            onMouseDown={(e) => startResize(e, id)}
+            style={{
+              clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+            }}
+            title="Resize window"
+          />
         </div>
       );
     }
@@ -424,6 +457,15 @@ export default function Home() {
               <p className="text-gray-600">No data available</p>
             </div>
           </div>
+          {/* Resize handle */}
+          <div 
+            className="absolute bottom-0 right-0 w-6 h-6 cursor-se-resize bg-gray-400 hover:bg-gray-500 transition-colors z-10"
+            onMouseDown={(e) => startResize(e, id)}
+            style={{
+              clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+            }}
+            title="Resize window"
+          />
         </div>
       );
     }
@@ -457,22 +499,22 @@ export default function Home() {
             </button>
           </button>
           <div className="p-6 overflow-auto max-h-[500px]">
-            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Sei</h1>
+            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Kaia</h1>
             
             <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Executive Summary</h2>
             <div className="prose prose-sm">
-              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Sei ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
+              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Kaia ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
             </div>
 
-            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Sei Integration</h2>
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Kaia Integration</h2>
             <div className="prose prose-sm">
               <ul className="list-disc pl-5 mb-4">
                 <li><strong>Network Details:</strong>
                   <ul className="list-disc pl-5 mt-1">
-                    <li>Network: Sei Testnet</li>
-                    <li>Native Currency: SEI</li>
-                    <li>Chain ID: 1328</li>
-                    <li>Access Fee: 0.1 SEI</li>
+                    <li>Network: Kaia Kairos Testnet</li>
+                    <li>Native Currency: KAIA</li>
+                    <li>Chain ID: 1001</li>
+                    <li>Access Fee: 1 KAIA</li>
                   </ul>
                 </li>
               </ul>
@@ -483,6 +525,14 @@ export default function Home() {
               <p className="italic mt-4">Email: tanishqgupta322@gmail.com | Twitter: @Trend_Pup</p>
             </div>
           </div>
+          {/* Resize handle */}
+          <div 
+            className="absolute bottom-0 right-0 w-4 h-4 cursor-se-resize bg-gray-300 hover:bg-gray-400 transition-colors"
+            onMouseDown={(e) => startResize(e, id)}
+            style={{
+              clipPath: 'polygon(100% 0, 0 100%, 100% 100%)'
+            }}
+          />
         </div>
       );
     }

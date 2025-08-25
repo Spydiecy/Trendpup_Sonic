@@ -2,10 +2,44 @@
 
 import { useState, useEffect } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useChainId, useDisconnect, useSwitchChain } from 'wagmi';
-import { SEI_CONTRACT, SEI_FEE_AMOUNT } from '../config/contract';
 import { FaLock, FaSpinner, FaCheckCircle, FaWallet } from 'react-icons/fa';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
+
+// Import contract configuration directly
+const KAIA_CONTRACT = {
+  address: '0x6Fe73C7F8b428417596E4276899De8Bb7101dDef' as `0x${string}`,
+  abi: [
+    {
+      "inputs": [],
+      "name": "pay",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        }
+      ],
+      "name": "hasPaid",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+} as const;
+
+const KAIA_FEE_AMOUNT = '1000000000000000000'; // 1 KAIA in wei
 
 interface AccessControlProps {
   children: React.ReactNode;
@@ -20,31 +54,14 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
   // UI states
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [hasSeenWelcome, setHasSeenWelcome] = useState(false);
 
-  // Sei Testnet chain ID
-  const targetChainId = 1328;
-
-  // Check localStorage for previous welcome state
-  useEffect(() => {
-    const welcomeSeen = localStorage.getItem('trendpup_welcome_seen');
-    if (welcomeSeen === 'true') {
-      setHasSeenWelcome(true);
-    }
-  }, []);
-
-  // Store welcome state when user connects
-  useEffect(() => {
-    if (isConnected && address) {
-      localStorage.setItem('trendpup_welcome_seen', 'true');
-      setHasSeenWelcome(true);
-    }
-  }, [isConnected, address]);
+  // Kaia Kairos Testnet chain ID
+  const targetChainId = 1001;
   
   // Check if user has paid access fee
   const { data: hasAccess, isLoading: isCheckingAccess, refetch: refetchAccess } = useReadContract({
-    address: SEI_CONTRACT.address,
-    abi: SEI_CONTRACT.abi,
+    address: KAIA_CONTRACT.address,
+    abi: KAIA_CONTRACT.abi,
     functionName: 'hasPaid',
     args: address ? [address] : undefined,
     query: {
@@ -68,10 +85,10 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
 
     try {
       writeContract({
-        address: SEI_CONTRACT.address,
-        abi: SEI_CONTRACT.abi,
+        address: KAIA_CONTRACT.address,
+        abi: KAIA_CONTRACT.abi,
         functionName: 'pay',
-        value: BigInt(SEI_FEE_AMOUNT),
+        value: BigInt(KAIA_FEE_AMOUNT),
       });
     } catch (err) {
       setError('Payment failed. Please try again.');
@@ -84,13 +101,10 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
   // Handle disconnect
   const handleDisconnect = () => {
     disconnect();
-    // Optional: Clear welcome state if user explicitly disconnects
-    // localStorage.removeItem('trendpup_welcome_seen');
-    // setHasSeenWelcome(false);
   };
 
   // Handle chain switch
-  const handleSwitchToSei = () => {
+  const handleSwitchToKaia = () => {
     if (switchChain) {
       switchChain({ chainId: targetChainId });
     }
@@ -122,24 +136,6 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
     return <>{children}</>;
   }
 
-  // Skip wallet connection screen if user has connected before and just show reconnect button
-  if (!isConnected && hasSeenWelcome) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-trendpup-beige via-white to-trendpup-beige flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full text-center">
-          <div className="w-16 h-16 bg-trendpup-orange rounded-full flex items-center justify-center mx-auto mb-4">
-            <FaWallet className="text-white text-2xl" />
-          </div>
-          <h2 className="text-2xl font-bold text-trendpup-dark mb-2">Welcome Back!</h2>
-          <p className="text-gray-600 mb-6">Reconnect your wallet to continue using TrendPup</p>
-          <div className="flex justify-center">
-            <ConnectButton chainStatus="none" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   // Render connection component
   const renderConnectionFlow = () => {
     if (!isConnected) {
@@ -148,7 +144,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
           <div className="text-center">
             <FaWallet className="text-trendpup-orange text-3xl mx-auto mb-2" />
             <h3 className="font-semibold text-trendpup-dark">Connect Your Wallet</h3>
-            <p className="text-sm text-gray-600 mb-4">Connect to Sei Network to access TrendPup</p>
+            <p className="text-sm text-gray-600 mb-4">Connect to Kaia Network to access TrendPup</p>
           </div>
           <div className="flex justify-center">
             <ConnectButton chainStatus="none" />
@@ -165,13 +161,13 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
               <span className="text-yellow-600">⚠️</span>
             </div>
             <h3 className="font-semibold text-trendpup-dark">Wrong Network</h3>
-            <p className="text-sm text-gray-600 mb-4">Please switch to Sei Testnet</p>
+            <p className="text-sm text-gray-600 mb-4">Please switch to Kaia Kairos Testnet</p>
           </div>
           <button
-            onClick={handleSwitchToSei}
+            onClick={handleSwitchToKaia}
             className="w-full bg-trendpup-orange text-white py-2 px-4 rounded-lg font-medium hover:bg-trendpup-orange/90 transition-colors"
           >
-            Switch to Sei Testnet
+            Switch to Kaia Kairos Testnet
           </button>
           <button
             onClick={handleDisconnect}
@@ -187,7 +183,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
       const getButtonText = () => {
         if (isPaymentPending) return 'Confirm in Wallet...';
         if (isPaymentConfirming) return 'Processing Payment...';
-        return 'Pay 0.1 SEI for Access';
+        return 'Pay 1 KAIA for Access';
       };
 
       return (
@@ -197,13 +193,13 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
               <span className="text-white text-xl">💰</span>
             </div>
             <h3 className="font-semibold text-trendpup-dark">Premium Access Required</h3>
-            <p className="text-sm text-gray-600 mb-4">Pay 0.1 SEI for lifetime access to TrendPup</p>
+            <p className="text-sm text-gray-600 mb-4">Pay 1 KAIA for lifetime access to TrendPup</p>
           </div>
           
           <div className="bg-trendpup-beige rounded-lg p-4 mb-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-trendpup-dark">Access Fee:</span>
-              <span className="text-lg font-bold text-trendpup-orange">0.1 SEI</span>
+              <span className="text-lg font-bold text-trendpup-orange">1 KAIA</span>
             </div>
             <div className="text-xs text-gray-600">
               One-time payment for lifetime access to premium features
@@ -229,7 +225,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
             ) : (
               <>
                 <FaCheckCircle className="mr-2" />
-                Pay 0.1 SEI for Access
+                Pay 1 KAIA for Access
               </>
             )}
           </button>
@@ -256,15 +252,15 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
             <FaLock className="text-white text-2xl" />
           </div>
           <h1 className="text-2xl font-bold text-trendpup-dark mb-2">Access TrendPup</h1>
-          <p className="text-gray-600">Premium memecoin intelligence on Sei Network</p>
+          <p className="text-gray-600">Premium memecoin intelligence on Kaia Network</p>
         </div>
 
         {/* Network Selection */}
         <div className="mb-6">
           <div className="flex bg-gray-100 rounded-lg p-1">
-            <div className="flex-1 py-2 px-3 rounded-md text-sm font-medium bg-white text-red-600 shadow-sm flex items-center justify-center">
-              <Image src="/sei.svg" alt="Sei" width={16} height={16} className="mr-1" />
-              Sei Network
+            <div className="flex-1 py-2 px-3 rounded-md text-sm font-medium bg-white text-green-600 shadow-sm flex items-center justify-center">
+              <Image src="/kaia.svg" alt="Kaia" width={16} height={16} className="mr-1" />
+              Kaia Network
             </div>
           </div>
         </div>
@@ -273,7 +269,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
 
         <div className="mt-6 pt-6 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Secure payments powered by Sei Network
+            Secure payments powered by Kaia Network
           </p>
         </div>
       </div>
