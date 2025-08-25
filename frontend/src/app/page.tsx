@@ -530,22 +530,22 @@ export default function Home() {
             </button>
           </button>
           <div className="p-6 overflow-auto max-h-[500px]">
-            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Kaia</h1>
+            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Sonic</h1>
             
             <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Executive Summary</h2>
             <div className="prose prose-sm">
-              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Kaia ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
+              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Sonic ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
             </div>
 
-            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Kaia Integration</h2>
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Sonic Integration</h2>
             <div className="prose prose-sm">
               <ul className="list-disc pl-5 mb-4">
                 <li><strong>Network Details:</strong>
                   <ul className="list-disc pl-5 mt-1">
-                    <li>Network: Kaia Kairos Testnet</li>
-                    <li>Native Currency: KAIA</li>
-                    <li>Chain ID: 1001</li>
-                    <li>Access Fee: 1 KAIA</li>
+                    <li>Network: Sonic Testnet</li>
+                    <li>Native Currency: SONIC (S)</li>
+                    <li>Chain ID: 14601</li>
+                    <li>Access Fee: 1 SONIC</li>
                   </ul>
                 </li>
               </ul>
@@ -620,7 +620,7 @@ export default function Home() {
           
           <h1 className="text-3xl font-bold text-trendpup-dark mb-2">TrendPup AI</h1>
           <p className="text-gray-600 mb-8 md:mb-10 text-sm">
-            An autonomous AI agent that finds trending memecoins on Kaia.
+            An autonomous AI agent that finds trending memecoins on Sonic.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

@@ -20,12 +20,12 @@ interface MemecoinData {
   chain: string;
 }
 
-// Kaia Network memecoins data
-const kaiaMemecoins: MemecoinData[] = [
+// Sonic Network memecoins data
+const sonicMemecoins: MemecoinData[] = [
   {
     id: 1,
-    symbol: "KAIADOGE",
-    symbol1: "KAIA",
+    symbol: "SONICDOGE",
+    symbol1: "S",
     price: 0.000045,
     marketCap: "$2.1M",
     volume: "$453K",
@@ -34,13 +34,13 @@ const kaiaMemecoins: MemecoinData[] = [
     risk: 3.5,
     age: "2 days",
     favorite: false,
-    chain: "kaia",
-    href: "https://kaiadexscreener.com/token/kaia1abc123"
+    chain: "sonic",
+    href: "https://testnet.soniclabs.com/token/sonic1abc123"
   },
   {
     id: 2,
-    symbol: "KAIACAT",
-    symbol1: "KAIA",
+    symbol: "SONICCAT",
+    symbol1: "S",
     price: 0.000023,
     marketCap: "$890K",
     volume: "$234K",
@@ -49,13 +49,13 @@ const kaiaMemecoins: MemecoinData[] = [
     risk: 4.2,
     age: "1 week",
     favorite: false,
-    chain: "kaia",
-    href: "https://kaiadexscreener.com/token/kaia1def456"
+    chain: "sonic",
+    href: "https://testnet.soniclabs.com/token/sonic1def456"
   },
   {
     id: 3,
-    symbol: "KAIAPEPE",
-    symbol1: "KAIA",
+    symbol: "SONICPEPE",
+    symbol1: "S",
     price: 0.000134,
     marketCap: "$5.4M",
     volume: "$987K",
@@ -64,13 +64,13 @@ const kaiaMemecoins: MemecoinData[] = [
     risk: 2.8,
     age: "3 days",
     favorite: false,
-    chain: "kaia",
-    href: "https://kaiadexscreener.com/token/kaia1ghi789"
+    chain: "sonic",
+    href: "https://testnet.soniclabs.com/token/sonic1ghi789"
   },
   {
     id: 4,
-    symbol: "MOONKAIA",
-    symbol1: "KAIA",
+    symbol: "MOONSONIC",
+    symbol1: "S",
     price: 0.000067,
     marketCap: "$3.2M",
     volume: "$567K",
@@ -79,13 +79,13 @@ const kaiaMemecoins: MemecoinData[] = [
     risk: 5.1,
     age: "5 days",
     favorite: false,
-    chain: "kaia",
-    href: "https://kaiadexscreener.com/token/kaia1jkl012"
+    chain: "sonic",
+    href: "https://testnet.soniclabs.com/token/sonic1jkl012"
   },
   {
     id: 5,
-    symbol: "KAIAINU",
-    symbol1: "KAIA",
+    symbol: "SONICINU",
+    symbol1: "S",
     price: 0.000089,
     marketCap: "$4.7M",
     volume: "$723K",
@@ -94,8 +94,8 @@ const kaiaMemecoins: MemecoinData[] = [
     risk: 6.3,
     age: "1 week",
     favorite: false,
-    chain: "kaia",
-    href: "https://kaiadexscreener.com/token/kaia1mno345"
+    chain: "sonic",
+    href: "https://testnet.soniclabs.com/token/sonic1mno345"
   }
 ];
 
@@ -110,7 +110,7 @@ export default function MemecoinsExplorer() {
     async function loadMemecoinsData() {
       try {
         setIsLoading(true);
-        setMemecoins(kaiaMemecoins);
+        setMemecoins(sonicMemecoins);
         setError(null);
       } catch (err) {
         console.error('Failed to load memecoin data:', err);
@@ -174,8 +174,8 @@ export default function MemecoinsExplorer() {
   return (
     <div className="bg-white rounded-xl shadow-lg border border-trendpup-brown/20 overflow-hidden">
       <div className="p-4 bg-trendpup-dark text-white">
-        <h2 className="text-xl font-bold">Kaia Memecoin Explorer</h2>
-        <p className="text-sm opacity-75">Discover trending memecoins on Kaia Network with TrendPup intelligence</p>
+        <h2 className="text-xl font-bold">Sonic Memecoin Explorer</h2>
+        <p className="text-sm opacity-75">Discover trending memecoins on Sonic Network with TrendPup intelligence</p>
       </div>
       <div className="p-4">
         <div className="relative mb-4">

@@ -16,7 +16,7 @@ const inter = Inter({ subsets: ["latin"] });
 // Moved metadata to a separate file since this is now a client component
 // export const metadata: Metadata = {
 //   title: "TrendPup - Advanced Memecoin Intelligence",
-//   description: "Early access to emerging meme tokens on Kaia testnet with voice-enabled AI chat",
+//   description: "Early access to emerging meme tokens on Sonic testnet with voice-enabled AI chat",
 // };
 
 export default function RootLayout({

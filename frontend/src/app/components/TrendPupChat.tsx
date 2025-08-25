@@ -699,7 +699,7 @@ export default function TrendPupChat() {
                         </div>
                         <h3 className="text-xl font-bold text-trendpup-dark mb-2">Welcome to TrendPup!</h3>
                         <p className="text-gray-600 mb-4">
-                            Your AI-powered memecoin investment assistant for Kaia Network
+                            Your AI-powered memecoin investment assistant for Sonic Network
                         </p>
                         <div className="text-sm text-gray-500 space-y-1">
                             <p>• Get specific investment recommendations</p>

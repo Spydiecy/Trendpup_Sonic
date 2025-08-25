@@ -404,7 +404,7 @@ export default function Home() {
             />
             <h2 className="text-xl font-bold text-trendpup-dark mb-2">Connect Your Wallet</h2>
             <div className="space-y-4">
-              <p className="text-gray-600 mb-6">Connect your wallet to the Kaia network to track your memecoin investments</p>
+              <p className="text-gray-600 mb-6">Connect your wallet to the Sonic network to track your memecoin investments</p>
               <div className="flex justify-center">
                 <DualWalletButton />
               </div>
@@ -499,27 +499,24 @@ export default function Home() {
             </button>
           </button>
           <div className="p-6 overflow-auto max-h-[500px]">
-            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Kaia</h1>
+            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Sonic</h1>
             
             <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Executive Summary</h2>
             <div className="prose prose-sm">
-              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Kaia ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
+              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Sonic ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
             </div>
 
-            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Kaia Integration</h2>
-            <div className="prose prose-sm">
-              <ul className="list-disc pl-5 mb-4">
-                <li><strong>Network Details:</strong>
-                  <ul className="list-disc pl-5 mt-1">
-                    <li>Network: Kaia Kairos Testnet</li>
-                    <li>Native Currency: KAIA</li>
-                    <li>Chain ID: 1001</li>
-                    <li>Access Fee: 1 KAIA</li>
-                  </ul>
-                </li>
-              </ul>
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Sonic Integration</h2>
+            <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Network Details:</h3>
+                <ul className="list-disc list-inside text-sm space-y-1">
+                    <li>Network: Sonic Testnet</li>
+                    <li>Native Currency: S</li>
+                    <li>Chain ID: 14601</li>
+                    <li>Access Fee: 1 SONIC</li>
+                </ul>
             </div>
-
+            
             <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Contact Information</h2>
             <div className="prose prose-sm">
               <p className="italic mt-4">Email: tanishqgupta322@gmail.com | Twitter: @Trend_Pup</p>

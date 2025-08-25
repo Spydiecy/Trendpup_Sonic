@@ -1,8 +1,8 @@
 // Smart contract configuration for Sonic Network
 
-// Sonic testnet contract configuration
+// Sonic Testnet contract configuration
 export const SONIC_CONTRACT = {
-  address: '0x6Fe73C7F8b428417596E4276899De8Bb7101dDef' as `0x${string}`,
+  address: '0xCa36dD890F987EDcE1D6D7C74Fb9df627c216BF6' as `0x${string}`,
   abi: [
     {
       "inputs": [],
@@ -75,31 +75,23 @@ export const SONIC_CONTRACT = {
       "type": "function"
     }
   ],
-  chainId: 1001, // Kaia Kairos testnet
+  chainId: 14601, // Sonic Testnet
 } as const;
 
 // Helper function to get contract config by chain
-export const getContractByChain = (chainId: number) => {
-  switch (chainId) {
-    case 64165: // Sonic testnet
-      return SONIC_CONTRACT;
-    default:
-      return SONIC_CONTRACT; // Default to Sonic
-  }
-};
+export function getContractAddress(chainId: number): string {
+  // Only Sonic Testnet is supported
+  return SONIC_CONTRACT.address;
+}
 
 // Access fee amounts
 export const SONIC_FEE_AMOUNT = '1000000000000000000'; // 1 SONIC in wei (1 * 10^18)
 
 // Helper function to get fee amount by chain
-export const getFeeByChain = (chainId: number) => {
-  switch (chainId) {
-    case 64165: // Sonic testnet
-      return SONIC_FEE_AMOUNT;
-    default:
-      return SONIC_FEE_AMOUNT; // Default to Sonic
-  }
-};
+export function getFeeAmount(chainId: number): string {
+  // Only Sonic Testnet is supported  
+  return SONIC_FEE_AMOUNT;
+}
 
 // Backward compatibility - defaults to Sonic fee
 export const FEE_AMOUNT = SONIC_FEE_AMOUNT;
@@ -108,10 +100,10 @@ export const FEE_AMOUNT = SONIC_FEE_AMOUNT;
 export const SUPPORTED_CHAINS = {
   SONIC: {
     name: 'Sonic Testnet',
-    chainId: 64165,
+    chainId: 14601,
     rpc: 'https://rpc.testnet.soniclabs.com',
     blockExplorer: 'https://testnet.soniclabs.com',
-    currency: 'SONIC',
+    currency: 'S',
     feeAmount: SONIC_FEE_AMOUNT,
     feeAmountDisplay: '1 SONIC',
   },

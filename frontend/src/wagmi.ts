@@ -1,22 +1,22 @@
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { defineChain } from 'viem';
 
-// Define Kaia Kairos testnet chain
-export const kaiaTestnet = defineChain({
-  id: 1001, // Kaia Kairos testnet chain ID
-  name: 'Kaia Kairos Testnet',
+// Define Sonic Testnet chain
+export const sonicTestnet = defineChain({
+  id: 14601, // Sonic Testnet chain ID
+  name: 'Sonic Testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'KAIA',
-    symbol: 'KAIA',
+    name: 'Sonic',
+    symbol: 'S',
   },
   rpcUrls: {
     default: {
-      http: ['https://public-en-kairos.node.kaia.io'],
+      http: ['https://rpc.testnet.soniclabs.com'],
     },
   },
   blockExplorers: {
-    default: { name: 'KaiaScope', url: 'https://kairos.kaiascope.com' },
+    default: { name: 'Sonic Explorer', url: 'https://testnet.soniclabs.com' },
   },
   testnet: true,
 });
@@ -24,6 +24,6 @@ export const kaiaTestnet = defineChain({
 export const config = getDefaultConfig({
   appName: 'TrendPup',
   projectId: 'YOUR_PROJECT_ID', // Replace with your WalletConnect project ID  
-  chains: [kaiaTestnet],
+  chains: [sonicTestnet],
   ssr: true,
 });

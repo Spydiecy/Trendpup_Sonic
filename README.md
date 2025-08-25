@@ -1,11 +1,11 @@
 # TrendPup 🐕 - AI Memecoin Investment Assistant
 
-**Advanced AI-powered memecoin intelligence system for Kaia blockchain with real-time trading capabilities, wallet integration, and comprehensive investment analysis.**
+**Advanced AI-powered memecoin intelligence system for Sonic blockchain with real-time trading capabilities, wallet integration, and comprehensive investment analysis.**
 
 ## Supported Chains & Networks
 
-- **Kaia Kairos Testnet** - Chain ID: 1001 - Native KAIA and KIP-7 token support - **Premium Access (1 KAIA)**
-- **Kaia Network Integration** - Professional-grade blockchain infrastructure for testnet environments  
+- **Sonic Testnet** - Chain ID: 14601 - Native S and ERC-20 token support - **Premium Access (1 SONIC)**
+- **Sonic Network Integration** - Professional-grade blockchain infrastructure for testnet environments  
 - **EVM Compatibility** - Full Ethereum Virtual Machine compatibility with enhanced performance
 - **Multi-Wallet Support** - Native integration with MetaMask and other EVM-compatible wallets
 
@@ -13,12 +13,12 @@
 
 - 🤖 **AI-Powered Investment Advice** - Provides specific memecoin recommendations and trading strategies
 - 💰 **Financial Advisory Services** - Authorized to give investment advice and portfolio recommendations
-- 🔗 **Kaia Network Support** - Native Kaia Kairos testnet integration with EVM compatibility
-- 💳 **Wallet Balance Checking** - Real-time balance queries for any Kaia wallet address
+- 🔗 **Sonic Network Support** - Native Sonic testnet integration with EVM compatibility
+- 💳 **Wallet Balance Checking** - Real-time balance queries for any Sonic wallet address
 - 🔄 **Live Trading Execution** - Execute swaps and trades directly through the platform
-- 🌉 **Cross-Chain Bridging** - Bridge tokens between Kaia and other EVM networks
-- 📊 **Real-Time Market Data** - Live token prices, liquidity, and trading pairs on Kaia
-- 🔍 **Advanced Token Search** - Find tokens by name, symbol, or contract address on Kaia
+- 🌉 **Cross-Chain Bridging** - Bridge tokens between Sonic and other EVM networks
+- 📊 **Real-Time Market Data** - Live token prices, liquidity, and trading pairs on Sonic
+- 🔍 **Advanced Token Search** - Find tokens by name, symbol, or contract address on Sonic
 - 🛡️ **Security Analysis** - Comprehensive risk assessment and scam detection
 - 💬 **Conversational AI** - Natural language interaction with dog-themed personality
 - 🎤 **Voice Interface** - Speech-to-text input and text-to-speech responses
@@ -28,32 +28,32 @@
 
 ## Current Capabilities & Functions
 
-### 🔧 **Kaia Network Operations**
+### 🔧 **Sonic Network Operations**
 
 **Token Operations:**
-- `get_tokens(chainId, searchTerm)` - List supported tokens for Kaia Kairos (1001)
-- `get_liquidity(chainId)` - Get available liquidity pools for trading on Kaia
-- `get_chain_data(chainId)` - Retrieve Kaia chain-specific configuration and data
-- `get_quote(chainId, fromToken, toToken, amount)` - Get swap quotes for token pairs on Kaia
+- `get_tokens(chainId, searchTerm)` - List supported tokens for Sonic Testnet (14601)
+- `get_liquidity(chainId)` - Get available liquidity pools for trading on Sonic
+- `get_chain_data(chainId)` - Retrieve Sonic chain-specific configuration and data
+- `get_quote(chainId, fromToken, toToken, amount)` - Get swap quotes for token pairs on Sonic
 - `get_swap_data(chainId, fromToken, toToken, amount, walletAddress)` - Get transaction data for swaps
-- `execute_swap(chainId, fromToken, toToken, amount, privateKey)` - Execute token swaps on Kaia
+- `execute_swap(chainId, fromToken, toToken, amount, privateKey)` - Execute token swaps on Sonic
 
 **Wallet Operations:**
 - `get_wallet_balance(walletAddress, chainId, tokenAddress?)` - Check wallet balances
-  - Native tokens: KAIA balance on Kaia network
-  - Specific tokens: Any KIP-7 token on Kaia
+  - Native tokens: S balance on Sonic network
+  - Specific tokens: Any ERC-20 token on Sonic
   - EVM compatibility: Full Ethereum address format support
 - `store_wallet_credentials(privateKey, chainId)` - Securely store wallet credentials for trading
 
 **Advanced Search:**
-- `search_trading_pairs(pairQuery, chainId)` - Find trading pairs (e.g., "MEME/KAIA", "TOKEN/USDT")
+- `search_trading_pairs(pairQuery, chainId)` - Find trading pairs (e.g., "MEME/S", "TOKEN/USDT")
 - `find_token_by_name(tokenQuery, chainId, searchType)` - Search tokens by name/symbol
   - Search types: "exact", "contains", "starts_with"
 
 **Cross-Chain Bridge Operations:**
-- `get_supported_tokens(chainId?)` - List bridgeable tokens on Kaia network
-- `get_supported_bridges()` - Available bridge protocols for Kaia
-- `get_bridge_token_pairs(fromChainId, toChainId)` - Bridge token pairs between Kaia and other EVM chains
+- `get_supported_tokens(chainId?)` - List bridgeable tokens on Sonic network
+- `get_supported_bridges()` - Available bridge protocols for Sonic
+- `get_bridge_token_pairs(fromChainId, toChainId)` - Bridge token pairs between Sonic and other EVM chains
 - `get_cross_chain_quote(fromChainId, toChainId, fromToken, toToken, amount)` - Cross-chain quotes
 - `build_cross_chain_swap(fromChainId, toChainId, fromToken, toToken, amount)` - Execute cross-chain swaps
 
@@ -61,39 +61,39 @@
 
 **Multi-Agent System:**
 1. **README Context Agent** - Provides project context and detects crypto queries
-2. **Kaia Network Agent** - Handles live blockchain data and trading operations on Kaia
+2. **Sonic Network Agent** - Handles live blockchain data and trading operations on Sonic
 3. **Google Search Agent** - Provides market intelligence and news analysis
 4. **Root Agent (TrendPup)** - Coordinates all agents and provides final recommendations
 
 **Agent Flow:**
 ```
-User Query → README Context → [Kaia Network + Google Search in parallel] → Combined Analysis & Recommendations
+User Query → README Context → [Sonic Network + Google Search in parallel] → Combined Analysis & Recommendations
 ```
 
 ### 💡 **Investment Advisory Features**
 
 **Financial Advice Authorization:**
-- ✅ Provides specific memecoin investment recommendations on Kaia
+- ✅ Provides specific memecoin investment recommendations on Sonic
 - ✅ Gives clear BUY/SELL/HOLD advice with reasoning
 - ✅ Suggests portfolio allocation and position sizing
 - ✅ Analyzes risk levels and entry strategies
 - ✅ Recommends 2-3 specific tokens with contract addresses
 
 **Risk Assessment Framework:**
-- Liquidity analysis and slippage risk evaluation on Kaia DEXs
-- Token age and security assessment for KIP-7 tokens
+- Liquidity analysis and slippage risk evaluation on Sonic DEXs
+- Token age and security assessment for ERC-20 tokens
 - Community sentiment and authenticity verification
 - Contract security and audit status review
 - Market volatility and manipulation detection
 
 ### 🔍 **Supported Wallet Address Formats**
 
-**Kaia Addresses (Kairos Testnet):**
+**Sonic Addresses (Sonic Testnet):**
 - Format: `0x` prefix + 40 hexadecimal characters (EVM compatible)
 - Example: `0xF977814e90dA44bFA03b6295A0616a897441aceC`
-- Chain ID: "1001" for Kaia Kairos testnet
-- Native Currency: KAIA
-- RPC URL: https://public-en-kairos.node.kaia.io
+- Chain ID: "14601" for Sonic Testnet
+- Native Currency: S
+- RPC URL: https://rpc.testnet.soniclabs.com
 
 ## Our Memecoin Analysis Methodology
 
@@ -176,21 +176,21 @@ Our system immediately warns users about:
 
 ## Problem It Solves
 
-An **AI-powered memecoin investment assistant** that provides **specific investment recommendations** and **executes trades** on the **Kaia blockchain ecosystem**, combining live blockchain data with comprehensive market intelligence.
+An **AI-powered memecoin investment assistant** that provides **specific investment recommendations** and **executes trades** on the **Sonic blockchain ecosystem**, combining live blockchain data with comprehensive market intelligence.
 
-Our **professional-grade trading platform** offers **direct financial advice** and **automated trading execution** on Kaia Kairos testnet, democratizing access to institutional-level memecoin analysis and trading capabilities with **premium access (1 KAIA fee)** on the high-performance Kaia network.
+Our **professional-grade trading platform** offers **direct financial advice** and **automated trading execution** on Sonic testnet, democratizing access to institutional-level memecoin analysis and trading capabilities with **premium access (1 SONIC fee)** on the high-performance Sonic network.
 
 ## What Users Can Use It For
 
 ### 💰 **Investment & Trading**
-- **Get specific memecoin recommendations** - TrendPup provides 2-3 specific token suggestions with contract addresses, risk levels, and entry strategies on Kaia
-- **Execute trades directly** - Swap tokens, bridge between chains, and manage positions through integrated Kaia DEX
-- **Check wallet balances** - Real-time balance queries for any Kaia wallet address
+- **Get specific memecoin recommendations** - TrendPup provides 2-3 specific token suggestions with contract addresses, risk levels, and entry strategies on Sonic
+- **Execute trades directly** - Swap tokens, bridge between chains, and manage positions through integrated Sonic DEX
+- **Check wallet balances** - Real-time balance queries for any Sonic wallet address
 - **Portfolio management** - Position sizing recommendations and risk assessment for optimal allocation
 
 ### 🔍 **Research & Analysis**
-- **Kaia ecosystem token discovery** - Find tokens across Kaia network with advanced search capabilities
-- **Live market data** - Real-time prices, liquidity, trading pairs, and volume analysis on Kaia
+- **Sonic ecosystem token discovery** - Find tokens across Sonic network with advanced search capabilities
+- **Live market data** - Real-time prices, liquidity, trading pairs, and volume analysis on Sonic
 - **Security assessment** - Comprehensive risk analysis including contract audits and scam detection
 - **Market intelligence** - Combined blockchain data with Google Search for complete market context
 
@@ -199,13 +199,13 @@ Our **professional-grade trading platform** offers **direct financial advice** a
 - **Financial advisory** - Speech-to-text input and text-to-speech responses with voice mode toggle
 - **Financial advisory** - Authorized to provide investment advice and trading recommendations
 - **Multi-agent analysis** - Combines technical blockchain data with market sentiment and news
-- **Automated research** - Parallel data gathering from Kaia network and Google Search for comprehensive analysis
+- **Automated research** - Parallel data gathering from Sonic network and Google Search for comprehensive analysis
 - **Real-time TTS** - AI responses are spoken aloud when voice mode is enabled
 
 ### 🔗 **Cross-Chain Operations**
-- **Bridge tokens** - Move assets between Kaia and other EVM-compatible chains seamlessly
+- **Bridge tokens** - Move assets between Sonic and other EVM-compatible chains seamlessly
 - **Multi-chain wallet support** - Manage wallets and check balances across EVM ecosystems
-- **Chain-specific insights** - Specialized analysis for Kaia KIP-7 tokens and EVM compatibility features
+- **Chain-specific insights** - Specialized analysis for Sonic ERC-20 tokens and EVM compatibility features
 
 ## AI Analysis Pipeline
 
@@ -218,20 +218,20 @@ flowchart TB
     
     subgraph "AI Agent System"
         C[README Context Agent]
-        D[Kaia Network Agent]
+        D[Sonic Network Agent]
         E[Google Search Agent]
         F[Root Agent - TrendPup 🐕]
     end
     
     subgraph "Data Sources"
-        G[Kaia Network]
-        H[Kaia Kairos Testnet]
+        G[Sonic Network]
+        H[Sonic Testnet]
         I[EVM Compatible Chains]
         J[Google Search API]
         K[README Documentation]
     end
     
-    subgraph "Kaia Tools"
+    subgraph "Sonic Tools"
         L[Wallet Balance Checker]
         M[Token Search Engine]
         N[DEX Trading Tools]
@@ -298,10 +298,10 @@ Traditional memecoin research and trading methods have major limitations:
 ### ✅ **TrendPup Solutions:**
 - **Direct financial advice** - Provides specific BUY/SELL/HOLD recommendations with reasoning
 - **Automated research** - AI agents gather and analyze data from multiple sources simultaneously
-- **Unified intelligence** - Combines Kaia blockchain data with Google Search market intelligence
+- **Unified intelligence** - Combines Sonic blockchain data with Google Search market intelligence
 - **Integrated trading** - Execute swaps, bridges, and trades directly through the platform
-- **Kaia network focus** - Native Kaia integration with EVM compatibility and enhanced performance
-- **Professional-grade premium access** - Institutional-level analysis with affordable 1 KAIA fee
+- **Sonic network focus** - Native Sonic integration with EVM compatibility and enhanced performance
+- **Professional-grade premium access** - Institutional-level analysis with affordable 1 SONIC fee
 - **Complete wallet integration** - Check balances, store credentials, and execute trades seamlessly
 - **Early detection** - AI-powered analysis identifies opportunities before mainstream discovery
 
@@ -317,7 +317,7 @@ pie title Memecoin Market Distribution
 
 ```mermaid
 graph TD
-    A[Kaia Ecosystem Growth] --> B[10x Token Launches Daily]
+    A[Sonic Ecosystem Growth] --> B[10x Token Launches Daily]
     A --> C[EVM Compatibility Advantage]
     A --> D[Institutional Adoption]
     
@@ -326,7 +326,7 @@ graph TD
     D --> G[Professional Competition]
     
     E --> H[TrendPup AI Filter]
-    F --> I[Kaia Smart Contract Analysis]
+    F --> I[Sonic Smart Contract Analysis]
     G --> J[Democratized Intelligence]
     
     H --> K[Early Detection]
@@ -346,12 +346,12 @@ flowchart TD
     A[User Query] --> B[TrendPup Root Agent 🐕]
     B --> C[README Context Agent]
     C --> D{Crypto Query?}
-    D -- Yes --> E[Kaia Network Agent]
+    D -- Yes --> E[Sonic Network Agent]
     D -- Yes --> F[Google Search Agent]
     D -- No --> G[General Response]
     
-    E --> H[Kaia Network]
-    H --> I[Kaia Kairos Testnet]
+    E --> H[Sonic Network]
+    H --> I[Sonic Testnet]
     H --> J[EVM Compatible Chains]
     
     F --> K[Google Search API]
@@ -385,13 +385,13 @@ flowchart TD
 
 **Frontend Layer:**
 - Natural language interface for user queries
-- Multi-chain wallet integration (Kaia & EVM networks)
+- Multi-chain wallet integration (Sonic & EVM networks)
 - Real-time balance display and trading interface
 
 **AI Agent Layer:**
 - **Root Agent (TrendPup)** - Coordinates all operations and provides final recommendations
 - **README Context Agent** - Provides up-to-date project context and capability information
-- **Kaia Network Agent** - Handles live blockchain data and trading operations on Kaia
+- **Sonic Network Agent** - Handles live blockchain data and trading operations on Sonic
 - **Google Search Agent** - Provides market intelligence and news analysis
 
 **Network Integration Layer:**

@@ -7,8 +7,8 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
 
 // Import contract configuration directly
-const KAIA_CONTRACT = {
-  address: '0x6Fe73C7F8b428417596E4276899De8Bb7101dDef' as `0x${string}`,
+const SONIC_CONTRACT = {
+  address: '0xCa36dD890F987EDcE1D6D7C74Fb9df627c216BF6' as `0x${string}`,
   abi: [
     {
       "inputs": [],
@@ -39,7 +39,7 @@ const KAIA_CONTRACT = {
   ],
 } as const;
 
-const KAIA_FEE_AMOUNT = '1000000000000000000'; // 1 KAIA in wei
+const SONIC_FEE_AMOUNT = '1000000000000000000'; // 1 SONIC in wei
 
 interface AccessControlProps {
   children: React.ReactNode;
@@ -55,13 +55,13 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Kaia Kairos Testnet chain ID
-  const targetChainId = 1001;
+  // Sonic Testnet chain ID
+  const targetChainId = 14601;
   
   // Check if user has paid access fee
   const { data: hasAccess, isLoading: isCheckingAccess, refetch: refetchAccess } = useReadContract({
-    address: KAIA_CONTRACT.address,
-    abi: KAIA_CONTRACT.abi,
+    address: SONIC_CONTRACT.address,
+    abi: SONIC_CONTRACT.abi,
     functionName: 'hasPaid',
     args: address ? [address] : undefined,
     query: {
@@ -85,10 +85,10 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
 
     try {
       writeContract({
-        address: KAIA_CONTRACT.address,
-        abi: KAIA_CONTRACT.abi,
+        address: SONIC_CONTRACT.address,
+        abi: SONIC_CONTRACT.abi,
         functionName: 'pay',
-        value: BigInt(KAIA_FEE_AMOUNT),
+        value: BigInt(SONIC_FEE_AMOUNT),
       });
     } catch (err) {
       setError('Payment failed. Please try again.');
@@ -104,7 +104,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
   };
 
   // Handle chain switch
-  const handleSwitchToKaia = () => {
+  const handleSwitchToSonic = () => {
     if (switchChain) {
       switchChain({ chainId: targetChainId });
     }
@@ -144,7 +144,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
           <div className="text-center">
             <FaWallet className="text-trendpup-orange text-3xl mx-auto mb-2" />
             <h3 className="font-semibold text-trendpup-dark">Connect Your Wallet</h3>
-            <p className="text-sm text-gray-600 mb-4">Connect to Kaia Network to access TrendPup</p>
+            <p className="text-sm text-gray-600 mb-4">Connect to Sonic Network to access TrendPup</p>
           </div>
           <div className="flex justify-center">
             <ConnectButton chainStatus="none" />
@@ -161,13 +161,13 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
               <span className="text-yellow-600">⚠️</span>
             </div>
             <h3 className="font-semibold text-trendpup-dark">Wrong Network</h3>
-            <p className="text-sm text-gray-600 mb-4">Please switch to Kaia Kairos Testnet</p>
+            <p className="text-sm text-gray-600 mb-4">Please switch to Sonic Testnet</p>
           </div>
           <button
-            onClick={handleSwitchToKaia}
+            onClick={handleSwitchToSonic}
             className="w-full bg-trendpup-orange text-white py-2 px-4 rounded-lg font-medium hover:bg-trendpup-orange/90 transition-colors"
           >
-            Switch to Kaia Kairos Testnet
+            Switch to Sonic Testnet
           </button>
           <button
             onClick={handleDisconnect}
@@ -183,7 +183,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
       const getButtonText = () => {
         if (isPaymentPending) return 'Confirm in Wallet...';
         if (isPaymentConfirming) return 'Processing Payment...';
-        return 'Pay 1 KAIA for Access';
+        return 'Pay 1 SONIC for Access';
       };
 
       return (
@@ -193,13 +193,13 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
               <span className="text-white text-xl">💰</span>
             </div>
             <h3 className="font-semibold text-trendpup-dark">Premium Access Required</h3>
-            <p className="text-sm text-gray-600 mb-4">Pay 1 KAIA for lifetime access to TrendPup</p>
+            <p className="text-sm text-gray-600 mb-4">Pay 1 SONIC for lifetime access to TrendPup</p>
           </div>
           
           <div className="bg-trendpup-beige rounded-lg p-4 mb-4">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-trendpup-dark">Access Fee:</span>
-              <span className="text-lg font-bold text-trendpup-orange">1 KAIA</span>
+              <span className="text-lg font-bold text-trendpup-orange">1 SONIC</span>
             </div>
             <div className="text-xs text-gray-600">
               One-time payment for lifetime access to premium features
@@ -225,7 +225,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
             ) : (
               <>
                 <FaCheckCircle className="mr-2" />
-                Pay 1 KAIA for Access
+                Pay 1 SONIC for Access
               </>
             )}
           </button>
@@ -252,15 +252,15 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
             <FaLock className="text-white text-2xl" />
           </div>
           <h1 className="text-2xl font-bold text-trendpup-dark mb-2">Access TrendPup</h1>
-          <p className="text-gray-600">Premium memecoin intelligence on Kaia Network</p>
+          <p className="text-gray-600">Premium memecoin intelligence on Sonic Network</p>
         </div>
 
         {/* Network Selection */}
         <div className="mb-6">
           <div className="flex bg-gray-100 rounded-lg p-1">
-            <div className="flex-1 py-2 px-3 rounded-md text-sm font-medium bg-white text-green-600 shadow-sm flex items-center justify-center">
-              <Image src="/kaia.svg" alt="Kaia" width={16} height={16} className="mr-1" />
-              Kaia Network
+            <div className="flex-1 py-2 px-3 rounded-md text-sm font-medium bg-white text-blue-600 shadow-sm flex items-center justify-center">
+              <Image src="/sonic.svg" alt="Sonic" width={16} height={16} className="mr-1" />
+              Sonic Network
             </div>
           </div>
         </div>
@@ -269,7 +269,7 @@ export default function AccessControl({ children }: Readonly<AccessControlProps>
 
         <div className="mt-6 pt-6 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
-            Secure payments powered by Kaia Network
+            Secure payments powered by Sonic Network
           </p>
         </div>
       </div>
