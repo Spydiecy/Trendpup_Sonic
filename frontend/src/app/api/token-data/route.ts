@@ -4,11 +4,10 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 export async function GET() {
   try {
-    const backendUrl = 'http://localhost:3001/api/token-data';
-    console.log('Fetching from backend:', backendUrl);
+    const backendUrl = 'http://localhost:3001/analyzer';
     const response = await fetch(backendUrl, {
       next: { 
-        tags: ['token-data'],
+        tags: ['analyzer'],
         revalidate: 0
       },
       cache: 'no-store',
