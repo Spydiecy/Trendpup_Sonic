@@ -40,5 +40,14 @@ fi
 
 
 
+if ! tmux has-session -t scraper 2>/dev/null; then
+  tmux new-session -d -s scraper "bash -c 'while true; do cd $HOME/trendpup/backend && pnpm start:scraper; echo \"scraper crashed. Restarting in 3s...\"; sleep 3; done'"
+  echo "Started tmux session: scraper"
+else
+  echo "tmux session 'scraper' already exists."
+fi
+
+
+
 sleep 1
 tmux ls

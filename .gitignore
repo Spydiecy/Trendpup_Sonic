@@ -7,8 +7,5 @@
 *__pycache__/
 *venv/
 *pnpm-lock.yaml
-backend/ai_analyzer.json
-backend/cookies.json
-backend/solana_tokens.json
-backend/tweets.json
-backend/ethereum_tokens.json
+*package-lock.json
+backend/data*
