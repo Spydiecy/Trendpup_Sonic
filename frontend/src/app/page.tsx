@@ -530,30 +530,102 @@ export default function Home() {
             </button>
           </button>
           <div className="p-6 overflow-auto max-h-[500px]">
-            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: Advanced Memecoin Intelligence System for Sonic</h1>
+            <h1 className="text-2xl font-bold text-trendpup-dark mb-3">TrendPup: AI-Powered Memecoin Intelligence System for Sonic Blockchain</h1>
             
             <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Executive Summary</h2>
             <div className="prose prose-sm">
-              <p className="mb-3">TrendPup is a revolutionary AI-powered platform engineered specifically for the Sonic ecosystem, providing traders with unprecedented early access to emerging meme tokens before significant price movements occur.</p>
+              <p className="mb-3">TrendPup is a revolutionary AI-powered memecoin intelligence system engineered specifically for the Sonic blockchain ecosystem, providing comprehensive risk assessment and investment analysis through real-time Twitter sentiment analysis and advanced AI evaluation.</p>
+              <p className="mb-3">Our system combines automated DexScreener monitoring, real-time Twitter intelligence, and Google Gemini 2.5 Flash AI models to provide institutional-level memecoin research with detailed reasoning and professional risk assessment.</p>
             </div>
 
-            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Sonic Integration</h2>
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Core Technology</h2>
+            <div className="prose prose-sm">
+              <h3 className="text-lg font-semibold text-trendpup-dark mt-4 mb-2">🐦 Twitter Intelligence Engine</h3>
+              <ul className="list-disc pl-5 mb-4">
+                <li><strong>Real-Time Scraping:</strong> Automated collection of token-specific tweets using $SYMBOL searches</li>
+                <li><strong>Engagement Analysis:</strong> Tracks likes, retweets, replies, and author credibility</li>
+                <li><strong>AI Sentiment Processing:</strong> Google Gemini 2.5 Flash models analyze tweet content for investment sentiment</li>
+                <li><strong>Community Authentication:</strong> Detects organic engagement vs. bot activity patterns</li>
+              </ul>
+
+              <h3 className="text-lg font-semibold text-trendpup-dark mt-4 mb-2">🤖 AI Analysis Engine</h3>
+              <ul className="list-disc pl-5 mb-4">
+                <li><strong>Google Gemini 2.5 Flash:</strong> Advanced AI models for comprehensive sentiment analysis</li>
+                <li><strong>Multi-Factor Scoring:</strong> Combines liquidity, age, volatility, volume, and social sentiment</li>
+                <li><strong>Investment Reasoning:</strong> Detailed AI-generated explanations for each recommendation</li>
+                <li><strong>Real-time Analysis:</strong> Continuous monitoring and analysis coordination</li>
+              </ul>
+
+              <h3 className="text-lg font-semibold text-trendpup-dark mt-4 mb-2">🛡️ Comprehensive Risk Assessment</h3>
+              <ul className="list-disc pl-5 mb-4">
+                <li><strong>Liquidity Analysis:</strong> Pool size and slippage risk evaluation</li>
+                <li><strong>Age-Based Security:</strong> Token maturity and rug pull risk assessment</li>
+                <li><strong>Volatility Patterns:</strong> Price movement and manipulation detection</li>
+                <li><strong>Social Sentiment:</strong> Community engagement and authenticity verification</li>
+              </ul>
+            </div>
+
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Data Collection Pipeline</h2>
             <div className="prose prose-sm">
               <ul className="list-disc pl-5 mb-4">
-                <li><strong>Network Details:</strong>
+                <li><strong>DexScreener Scraper:</strong> Automated monitoring of Sonic chain token data using Playwright</li>
+                <li><strong>Twitter Scraper:</strong> Real-time collection of token-specific social sentiment data</li>
+                <li><strong>AI Analyzer:</strong> Processes all data to generate investment recommendations with detailed rationale</li>
+                <li><strong>Professional Interface:</strong> Desktop-style window management for efficient token research</li>
+              </ul>
+            </div>
+
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Premium Access System</h2>
+            <div className="prose prose-sm">
+              <ul className="list-disc pl-5 mb-4">
+                <li><strong>Sonic Network Integration:</strong> Native payment system using Sonic blockchain smart contracts</li>
+                <li><strong>Access Fee:</strong> 1 SONIC token for premium analysis features and professional interface</li>
+                <li><strong>Smart Contract Verification:</strong> Automated access control through Sonic testnet smart contracts</li>
+                <li><strong>Contract Details:</strong>
                   <ul className="list-disc pl-5 mt-1">
-                    <li>Network: Sonic Testnet</li>
-                    <li>Native Currency: SONIC (S)</li>
-                    <li>Chain ID: 14601</li>
-                    <li>Access Fee: 1 SONIC</li>
+                    <li>Address: 0xCa36dD890F987EDcE1D6D7C74Fb9df627c216BF6</li>
+                    <li>Network: Sonic Testnet (Chain ID: 14601)</li>
+                    <li>Payment: 1 SONIC token (1,000,000,000,000,000,000 wei)</li>
                   </ul>
                 </li>
+                <li><strong>Wallet Integration:</strong> MetaMask and Rainbow Kit support for seamless premium payments</li>
+              </ul>
+            </div>
+
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Technical Architecture</h2>
+            <div className="prose prose-sm">
+              <h3 className="text-lg font-semibold text-trendpup-dark mt-4 mb-2">Analysis Flow</h3>
+              <p className="mb-3">Sonic DexScreener → Token Extraction → Twitter Search ($TOKEN) → Tweet Collection → AI Sentiment Analysis → Risk Assessment → Investment Recommendations</p>
+              
+              <h3 className="text-lg font-semibold text-trendpup-dark mt-4 mb-2">Data Processing</h3>
+              <ul className="list-disc pl-5 mb-4">
+                <li>1. Monitor DexScreener for new Sonic tokens</li>
+                <li>2. Extract token symbols from trading pairs</li>
+                <li>3. Search Twitter for $TOKEN patterns</li>
+                <li>4. Collect tweets with engagement metrics</li>
+                <li>5. AI analyzes sentiment and community authenticity</li>
+                <li>6. Generate comprehensive risk and potential scores with rationale</li>
+              </ul>
+            </div>
+
+            <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Competitive Advantages</h2>
+            <div className="prose prose-sm">
+              <ul className="list-disc pl-5 mb-4">
+                <li><strong>Early Detection:</strong> Twitter sentiment analysis before mainstream discovery</li>
+                <li><strong>Sonic-Native:</strong> Built specifically for Sonic blockchain ecosystem</li>
+                <li><strong>Real-Time Intelligence:</strong> Live scraping and analysis coordination</li>
+                <li><strong>AI-Powered Analysis:</strong> Google Gemini models for advanced sentiment processing</li>
+                <li><strong>Direct Financial Advice:</strong> Specific BUY/SELL/HOLD recommendations</li>
+                <li><strong>Integrated Trading:</strong> Execute trades directly through Sonic DEXs</li>
               </ul>
             </div>
 
             <h2 className="text-xl font-bold text-trendpup-dark mt-6 mb-3">Contact Information</h2>
             <div className="prose prose-sm">
-              <p className="italic mt-4">Email: tanishqgupta322@gmail.com | Twitter: @Trend_Pup</p>
+              <p className="mb-2"><strong>Email:</strong> tanishqgupta322@gmail.com</p>
+              <p className="mb-2"><strong>Twitter:</strong> @Trend_Pup</p>
+              <p className="mb-2"><strong>GitHub:</strong> Spydiecy/Trendpup_Sonic</p>
+              <p className="italic mt-4 text-sm">© 2025 TrendPup AI - Advanced Memecoin Intelligence for Sonic Blockchain</p>
             </div>
           </div>
           {/* Resize handle */}

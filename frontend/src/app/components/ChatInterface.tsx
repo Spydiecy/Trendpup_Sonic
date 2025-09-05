@@ -726,8 +726,8 @@ export default function ChatInterface({ fullPage = false }: ChatInterfaceProps) 
               </h3>
               <p className="text-gray-600 mb-4">
                 {activeTab === 'mcp' 
-                  ? 'Your AI-powered blockchain data assistant for DuckChain Network'
-                  : 'Your AI-powered memecoin investment assistant for DuckChain Network'
+                  ? 'Your AI-powered blockchain data assistant for Sonic Network'
+                  : 'Your AI-powered memecoin investment assistant for Sonic Network'
                 }
               </p>
               <div className="text-sm text-gray-500 space-y-1">

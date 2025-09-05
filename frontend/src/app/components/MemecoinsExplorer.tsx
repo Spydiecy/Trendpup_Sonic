@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { FaSearch, FaRegStar, FaStar, FaInfoCircle, FaSpinner, FaTimes, FaExternalLinkAlt, FaChartLine, FaUsers, FaClock, FaCoins } from 'react-icons/fa';
-import { fetchTokenData, FormattedMemecoin } from '../services/TokenData';
+import { fetchTokenData, FormattedMemecoin, formatSmallNumber } from '../services/TokenData';
 
 interface MemecoinsExplorerProps {
   selectedChain?: string;
@@ -19,23 +19,9 @@ function TokenDetailModal({ token, isOpen, onClose, onToggleFavorite }: TokenDet
   if (!isOpen) return null;
 
   const openDexLink = () => {
-    if (token.dexUrl || token.href) {
-      window.open(token.dexUrl || token.href, '_blank', 'noopener,noreferrer');
+    if (token.href) {
+      window.open(token.href, '_blank', 'noopener,noreferrer');
     }
-  };
-
-  const getSentimentColor = (score: number) => {
-    if (score > 0.2) return 'text-green-600 bg-green-50';
-    if (score < -0.2) return 'text-red-600 bg-red-50';
-    return 'text-gray-600 bg-gray-50';
-  };
-
-  const getSentimentLabel = (score: number) => {
-    if (score > 0.5) return 'Very Bullish';
-    if (score > 0.2) return 'Bullish';
-    if (score > -0.2) return 'Neutral';
-    if (score > -0.5) return 'Bearish';
-    return 'Very Bearish';
   };
 
   return (
@@ -90,17 +76,17 @@ function TokenDetailModal({ token, isOpen, onClose, onToggleFavorite }: TokenDet
                 <FaCoins className="mr-1" />
                 Price
               </div>
-              <div className="text-xl font-bold">
-                ${token.price < 0.001 ? token.price.toFixed(8) : token.price.toFixed(6)}
+              <div className="text-xl font-bold whitespace-pre-line">
+                {formatSmallNumber(token.price, 'price')}
               </div>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
-              <div className="text-gray-600 text-sm mb-1">FDV</div>
-              <div className="text-xl font-bold">{token.fdv}</div>
+              <div className="text-gray-600 text-sm mb-1">Market Cap</div>
+              <div className="text-xl font-bold whitespace-pre-line">{formatSmallNumber(token.marketCap, 'marketCap')}</div>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="text-gray-600 text-sm mb-1">Volume 24h</div>
-              <div className="text-xl font-bold">{token.volume}</div>
+              <div className="text-xl font-bold whitespace-pre-line">{formatSmallNumber(token.volume, 'volume')}</div>
             </div>
             <div className="bg-gray-50 p-4 rounded-lg">
               <div className="text-gray-600 text-sm mb-1">24h Change</div>
@@ -158,80 +144,44 @@ function TokenDetailModal({ token, isOpen, onClose, onToggleFavorite }: TokenDet
             </div>
           </div>
 
-          {/* Community Sentiment */}
-          {token.communitySentiment && token.communitySentiment !== 'N/A' && (
-            <div className="bg-gray-50 p-4 rounded-lg">
+          {/* AI Analysis Rationale */}
+          {token.rationale && token.rationale !== 'No analysis available' && (
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <FaUsers className="mr-2" />
-                  Community Sentiment
+                <h3 className="text-lg font-semibold flex items-center text-blue-900">
+                  <FaInfoCircle className="mr-2" />
+                  AI Analysis
                 </h3>
-                {token.sentimentScore !== undefined && (
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getSentimentColor(token.sentimentScore)}`}>
-                    {getSentimentLabel(token.sentimentScore)} ({token.sentimentScore > 0 ? '+' : ''}{token.sentimentScore.toFixed(2)})
-                  </span>
-                )}
+                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-medium">
+                  TrendPup AI
+                </span>
               </div>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                {token.communitySentiment}
+              <p className="text-blue-900 text-sm leading-relaxed">
+                {token.rationale}
               </p>
             </div>
           )}
 
-          {/* Trading Activity */}
-          {(token.buys24h > 0 || token.sells24h > 0) && (
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-lg font-semibold mb-3 flex items-center">
-                <FaChartLine className="mr-2" />
-                Trading Activity (24h)
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-green-600">{token.buys24h}</div>
-                  <div className="text-sm text-gray-600">Buys</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-red-600">{token.sells24h}</div>
-                  <div className="text-sm text-gray-600">Sells</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-blue-600">{token.buyers24h}</div>
-                  <div className="text-sm text-gray-600">Buyers</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-purple-600">{token.sellers24h}</div>
-                  <div className="text-sm text-gray-600">Sellers</div>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Community Sentiment - removed since not in current data structure */}
+
+          {/* Trading Activity - removed since not in current data structure */}
 
           {/* Additional Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {token.poolAge && (
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <span className="flex items-center text-gray-600">
-                  <FaClock className="mr-2" />
-                  Pool Age
-                </span>
-                <span className="font-medium">{token.poolAge}</span>
-              </div>
-            )}
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <span className="flex items-center text-gray-600">
+                <FaClock className="mr-2" />
+                Age
+              </span>
+              <span className="font-medium">{token.age}</span>
+            </div>
             <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
               <span className="text-gray-600">Chain</span>
               <span className="font-medium capitalize">{token.chain}</span>
             </div>
           </div>
 
-          {/* Pool Address */}
-          {token.poolAddress && (
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="text-sm font-medium text-gray-600 mb-2">Pool Contract Address</h4>
-              <code className="text-xs bg-white p-2 rounded border block overflow-x-auto">
-                {token.poolAddress}
-              </code>
-            </div>
-          )}
+          {/* Contract Address - removed since not in current data structure */}
         </div>
 
         {/* Footer with Action Buttons */}
@@ -239,7 +189,7 @@ function TokenDetailModal({ token, isOpen, onClose, onToggleFavorite }: TokenDet
           <div className="flex space-x-3">
             <button
               onClick={openDexLink}
-              disabled={!token.dexUrl && !token.href}
+              disabled={!token.href}
               className="flex-1 bg-trendpup-orange text-white px-6 py-3 rounded-lg font-medium hover:bg-trendpup-orange/90 disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center"
             >
               <FaExternalLinkAlt className="mr-2" />
@@ -418,7 +368,7 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-trendpup-dark uppercase tracking-wider">Symbol</th>
                     <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Price</th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">FDV</th>
+                    <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Market Cap</th>
                     <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">Volume</th>
                     <th className="px-4 py-3 text-right text-xs font-medium text-trendpup-dark uppercase tracking-wider">24h Change</th>
                     <th className="px-4 py-3 text-center text-xs font-medium text-trendpup-dark uppercase tracking-wider">Potential</th>
@@ -456,11 +406,11 @@ export default function MemecoinsExplorer({ selectedChain: propSelectedChain }: 
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          ${coin.price < 0.001 ? coin.price.toFixed(8) : coin.price.toFixed(6)}
+                        <td className="px-4 py-4 text-right text-sm font-medium whitespace-pre-line">
+                          {formatSmallNumber(coin.price, 'price')}
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium">{coin.fdv}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right text-sm text-gray-500">{coin.volume}</td>
+                        <td className="px-4 py-4 text-right text-sm font-medium whitespace-pre-line">{formatSmallNumber(coin.marketCap, 'marketCap')}</td>
+                        <td className="px-4 py-4 text-right text-sm text-gray-500 whitespace-pre-line">{formatSmallNumber(coin.volume, 'volume')}</td>
                         <td className={`px-4 py-4 whitespace-nowrap text-right text-sm font-medium ${coin.change24h >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                           {coin.change24h >= 0 ? '+' : ''}{coin.change24h.toFixed(2)}%
                         </td>

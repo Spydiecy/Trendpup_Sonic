@@ -16,42 +16,30 @@ interface TokenCoin {
 }
 
 interface TokenDataResponse {
-  results: any[]; // Updated to match ai_analyzer.json structure
+  data: TokenCoin[];
 }
 
 export interface FormattedMemecoin {
   id: number;
+  name?: string;
   symbol: string;
-  name: string; // Added name field from AI analyzer
   symbol1: string;
   chain: string;
   price: number;
   volume: string;
-  marketCap: string; // Now populated with FDV data
-  fdv: string; // Added FDV field from AI analyzer
+  marketCap: string;
   change24h: number;
   age: string;
-  poolAge: string; // Added poolAge field from AI analyzer
   favorite: boolean;
   potential: number;
   risk: number;
+  rationale?: string;
   href: string;
-  dexUrl: string; // Added dexUrl field from AI analyzer
-  poolAddress: string; // Added poolAddress field from AI analyzer
   imageUrl?: string;
-  buys24h: number; // Added trading activity fields from AI analyzer
-  sells24h: number;
-  buyers24h: number;
-  sellers24h: number;
-  communitySentiment: string; // Added community sentiment from AI analyzer
-  sentimentScore: number; // Added sentiment score from AI analyzer
-  searchSources: string[]; // Added search sources from AI analyzer
 }
 
 // Function to parse price strings, handling various formats
-const parsePrice = (priceStr: string | number): number => {
-  if (typeof priceStr === 'number') return priceStr;
-  
+const parsePrice = (priceStr: string): number => {
   // Remove commas and any non-numeric characters except dots
   const cleaned = priceStr.replace(/,/g, '').replace(/[^\d.-]/g, '');
   
@@ -63,8 +51,7 @@ const parsePrice = (priceStr: string | number): number => {
 };
 
 // Function to parse percentage change
-const parseChange = (changeStr: string | number): number => {
-  if (typeof changeStr === 'number') return changeStr;
+const parseChange = (changeStr: string): number => {
   if (changeStr === 'N/A') return 0;
   
   // Extract the number and remove the % sign
@@ -100,18 +87,64 @@ const calculatePotential = (price: number, changeStr: string): number => {
 };
 
 // Helper function to parse price strings to numbers
-const parseNumericValue = (valueStr: string | number | undefined): number => {
-  if (typeof valueStr === 'number') return valueStr;
-  if (!valueStr || valueStr === 'N/A') return 0;
+const parseNumericValue = (valueStr: string | undefined): number => {
+  if (!valueStr || valueStr === 'N/A' || valueStr === '-') return 0;
   
-  // Remove commas, currency symbols, and any non-numeric characters except dots
+  // Handle pre-formatted strings like "$20K", "$5.4M", "$1.2B"
+  const formattedMatch = valueStr.match(/\$?([0-9,.]+)([KMB]?)/i);
+  if (formattedMatch) {
+    const [, numberPart, suffix] = formattedMatch;
+    const baseValue = parseFloat(numberPart.replace(/,/g, ''));
+    if (isNaN(baseValue)) return 0;
+    
+    const multiplier = {
+      'K': 1000,
+      'M': 1000000,
+      'B': 1000000000
+    }[suffix.toUpperCase()] || 1;
+    
+    return baseValue * multiplier;
+  }
+  
+  // Fallback: remove commas, currency symbols, and any non-numeric characters except dots
   const cleaned = valueStr.replace(/,/g, '').replace(/[^\d.-]/g, '');
-  
-  // Parse the cleaned string
   const value = parseFloat(cleaned);
   
   // If parsing fails or results in NaN, return 0
   return isNaN(value) ? 0 : value;
+};
+
+// Function to format small numbers for display
+export const formatSmallNumber = (value: number | string, type: 'price' | 'volume' | 'fdv' | 'marketCap' = 'price'): string => {
+  if (typeof value === 'string') {
+    if (value === 'N/A' || value === '-' || value === '') return 'N/A';
+    value = parseNumericValue(value);
+  }
+  
+  if (value === 0) return 'N/A';
+  
+  if (type === 'price') {
+    if (value < 0.000001) {
+      return value.toExponential(2);
+    } else if (value < 0.001) {
+      return value.toFixed(6);
+    } else if (value < 1) {
+      return value.toFixed(4);
+    } else {
+      return value.toFixed(2);
+    }
+  }
+  
+  // For volume, fdv, marketCap
+  if (value >= 1000000000) {
+    return `$${(value / 1000000000).toFixed(1)}B`;
+  } else if (value >= 1000000) {
+    return `$${(value / 1000000).toFixed(1)}M`;
+  } else if (value >= 1000) {
+    return `$${(value / 1000).toFixed(1)}K`;
+  } else {
+    return `$${value.toFixed(0)}`;
+  }
 };
 
 const processTokenData = (data: any[]): FormattedMemecoin[] => {
@@ -119,31 +152,21 @@ const processTokenData = (data: any[]): FormattedMemecoin[] => {
     const price = typeof coin.price === 'number' ? coin.price : parsePrice(coin.price || '0');
     return {
       id: coin.id || index + 1,
+      name: coin.name || coin.symbol,
       symbol: coin.symbol,
-      name: coin.name || coin.symbol, // Use name from AI analyzer
-      symbol1: coin.symbol1 || coin.symbol,
-      chain: coin.chain || 'ethereum',
+      symbol1: coin.symbol1,
+      chain: coin.chain || 'unknown',
       price,
       volume: coin.volume || 'N/A',
-      marketCap: coin.fdv || coin.marketCap || 'N/A', // Prioritize FDV over marketCap
-      fdv: coin.fdv || 'N/A', // FDV from AI analyzer
-      change24h: typeof coin.change24h === 'number' ? coin.change24h : parseChange(coin.change24h || coin['change-24h'] || '0'),
-      age: coin.age || coin.poolAge || 'N/A', // Use poolAge if available
-      poolAge: coin.poolAge || 'N/A', // Pool age from AI analyzer
+      marketCap: coin.marketCap || 'N/A',
+      change24h: typeof coin.change24h === 'number' ? coin.change24h : parseChange(coin['change-24h'] || '0'),
+      age: coin.age || 'N/A',
       favorite: coin.favorite || false,
-      potential: coin.potential || 0, // From AI analysis
-      risk: coin.risk || 0, // From AI analysis
-      href: coin.href || coin.dexUrl || '', // Use dexUrl if href not available
-      dexUrl: coin.dexUrl || '', // DEX URL from AI analyzer
-      poolAddress: coin.poolAddress || '', // Pool address from AI analyzer
-      imageUrl: coin.imageUrl,
-      buys24h: coin.buys24h || 0, // Trading activity from AI analyzer
-      sells24h: coin.sells24h || 0,
-      buyers24h: coin.buyers24h || 0,
-      sellers24h: coin.sellers24h || 0,
-      communitySentiment: coin.communitySentiment || 'N/A', // Community sentiment from AI analyzer
-      sentimentScore: typeof coin.sentimentScore === 'number' ? coin.sentimentScore : 0, // Sentiment score from AI analyzer
-      searchSources: Array.isArray(coin.searchSources) ? coin.searchSources : [] // Search sources from AI analyzer
+      potential: coin.potential || 0,
+      risk: coin.risk || 0,
+      rationale: coin.rationale || 'No analysis available',
+      href: coin.href || '',
+      imageUrl: coin.imageUrl
     };
   });
 };
@@ -157,7 +180,7 @@ export const fetchTokenData = async (chain?: string): Promise<FormattedMemecoin[
       return [];
     }
     const raw = await response.json();
-    // Support the AI analyzer format with 'results' array
+    // Support both { results: [...] }, { data: [...] } and { tokens: [...] } formats
     const tokens: any[] = Array.isArray(raw.results)
       ? raw.results
       : Array.isArray(raw.data)
@@ -180,10 +203,10 @@ export const fetchTokenData = async (chain?: string): Promise<FormattedMemecoin[
       );
     }
     
-    // Sort by risk (ascending), then by potential (descending) - matches AI analyzer sorting
+    // Sort by chain name, then by potential (descending)
     processedTokens.sort((a, b) => {
-      const riskCompare = a.risk - b.risk;
-      if (riskCompare !== 0) return riskCompare;
+      const chainCompare = a.chain.localeCompare(b.chain);
+      if (chainCompare !== 0) return chainCompare;
       return b.potential - a.potential;
     });
     
@@ -194,13 +217,11 @@ export const fetchTokenData = async (chain?: string): Promise<FormattedMemecoin[
   }
 };
 
-// AI analysis route: risk, potential, and sentiment scores
+// AI analysis route: only risk and potential scores
 export interface MemecoinAIAnalysis {
   symbol: string;
   risk: number;
   potential: number;
-  sentiment: number; // Added sentiment score
-  communitySentiment: string; // Added community sentiment text
 }
 
 export const fetchTokenAIAnalysis = async (): Promise<MemecoinAIAnalysis[]> => {
@@ -212,8 +233,8 @@ export const fetchTokenAIAnalysis = async (): Promise<MemecoinAIAnalysis[]> => {
       return [];
     }
     const raw = await response.json();
-    // The AI analyzer file has 'results' array
-    const aiData = Array.isArray(raw.results) ? raw.results : Array.isArray(raw.data) ? raw.data : [];
+    // The AI analyzer file is an array of objects with symbol, risk, investmentPotential
+    const aiData = Array.isArray(raw.data) ? raw.data : [];
     if (!aiData.length) {
       console.warn('No AI analysis data found in API response');
       return [];
@@ -221,9 +242,7 @@ export const fetchTokenAIAnalysis = async (): Promise<MemecoinAIAnalysis[]> => {
     return aiData.map((item: any) => ({
       symbol: item.symbol,
       risk: typeof item.risk === 'number' ? item.risk : 0,
-      potential: typeof item.potential === 'number' ? item.potential : 0,
-      sentiment: typeof item.sentimentScore === 'number' ? item.sentimentScore : 0, // Sentiment score from AI analyzer
-      communitySentiment: item.communitySentiment || 'N/A' // Community sentiment text from AI analyzer
+      potential: typeof item.investmentPotential === 'number' ? item.investmentPotential : 0
     }));
   } catch (error) {
     console.error('Error fetching Token AI analysis:', error);
