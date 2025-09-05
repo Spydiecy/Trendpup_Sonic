@@ -1,0 +1,30 @@
+{
+  "bin": {
+    "sonic-mcp-server": "./bin/cli.js"
+  },
+  "main": "build/index.js",
+  "files": [
+    "build/",
+    "bin/"
+  ],
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "start:http": "node dist/server/http-server.js"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^4.21.2",
+    "viem": "^2.23.9",
+    "zod": "^3.24.2"
+  }
+}
