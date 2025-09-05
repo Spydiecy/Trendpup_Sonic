@@ -1,99 +1,53 @@
 # TrendPup 🐕 - AI Memecoin Investment Assistant
 
-**Advanced AI-powered memecoin intelligence system for Sonic blockchain with real-time trading capabilities, wallet integration, and comprehensive investment analysis.**
+**Advanced AI-powered memecoin intelligence system for Sonic blockchain with real-time sentiment analysis, comprehensive risk assessment, and professional investment recommendations.**
 
 ## Supported Chains & Networks
 
-- **Sonic Testnet** - Chain ID: 14601 - Native S and ERC-20 token support - **Premium Access (1 SONIC)**
-- **Sonic Network Integration** - Professional-grade blockchain infrastructure for testnet environments  
-- **EVM Compatibility** - Full Ethereum Virtual Machine compatibility with enhanced performance
+- **Sonic Blockchain** - Chain ID: 14601 - Native S token and ERC-20 support
+- **DexScreener Integration** - Real-time token data from Sonic DEX pairs
+- **EVM Compatibility** - Full Ethereum Virtual Machine compatibility with optimized transaction speeds
 - **Multi-Wallet Support** - Native integration with MetaMask and other EVM-compatible wallets
 
 ## Key Features
 
-- 🤖 **AI-Powered Investment Advice** - Provides specific memecoin recommendations and trading strategies
-- 💰 **Financial Advisory Services** - Authorized to give investment advice and portfolio recommendations
-- 🔗 **Sonic Network Support** - Native Sonic testnet integration with EVM compatibility
-- 💳 **Wallet Balance Checking** - Real-time balance queries for any Sonic wallet address
-- 🔄 **Live Trading Execution** - Execute swaps and trades directly through the platform
-- 🌉 **Cross-Chain Bridging** - Bridge tokens between Sonic and other EVM networks
-- 📊 **Real-Time Market Data** - Live token prices, liquidity, and trading pairs on Sonic
-- 🔍 **Advanced Token Search** - Find tokens by name, symbol, or contract address on Sonic
-- 🛡️ **Security Analysis** - Comprehensive risk assessment and scam detection
-- 💬 **Conversational AI** - Natural language interaction with dog-themed personality
-- 🎤 **Voice Interface** - Speech-to-text input and text-to-speech responses
-- 🔊 **Audio Feedback** - Voice mode for hands-free interaction
-- 🌐 **Google Search Integration** - Enhanced market intelligence and news analysis
-- ⚡ **Desktop Interface** - Professional desktop-style window management system
+- 🤖 **AI-Powered Investment Analysis** - Google Gemini 2.5 Flash models provide comprehensive memecoin risk assessment
+- � **Real-Time Twitter Intelligence** - Automated scraping and sentiment analysis of token-specific social discussions
+- � **Advanced Risk Assessment** - 5-factor risk model: liquidity, age, volatility, volume, and community sentiment
+- 📊 **Live Market Data** - Real-time token prices, volume, market cap, and age from Sonic DexScreener
+- 🛡️ **Comprehensive Security Analysis** - Multi-dimensional risk scoring with AI-generated reasoning
+- 💬 **Professional Investment Recommendations** - Specific risk/potential scores with detailed rationale
+- 🎯 **Early Detection System** - Identifies emerging tokens before mainstream discovery
+- 🖥️ **Desktop Interface** - Professional desktop-style window management system
+- 🔊 **Voice Interface** - Speech-to-text input and text-to-speech responses for hands-free interaction
 
-## Current Capabilities & Functions
+## Current System Architecture
 
-### 🔧 **Sonic Network Operations**
+### 🔧 **Current System Architecture**
 
-**Token Operations:**
-- `get_tokens(chainId, searchTerm)` - List supported tokens for Sonic Testnet (14601)
-- `get_liquidity(chainId)` - Get available liquidity pools for trading on Sonic
-- `get_chain_data(chainId)` - Retrieve Sonic chain-specific configuration and data
-- `get_quote(chainId, fromToken, toToken, amount)` - Get swap quotes for token pairs on Sonic
-- `get_swap_data(chainId, fromToken, toToken, amount, walletAddress)` - Get transaction data for swaps
-- `execute_swap(chainId, fromToken, toToken, amount, privateKey)` - Execute token swaps on Sonic
+**Multi-Agent AI System:**
+- **Google ADK Framework** - Python-based AI agents using Google's Agent Development Kit
+- **Root Agent (TrendPup)** - Coordinates all operations and provides final recommendations
+- **Sonic MCP Integration** - Professional-grade Model Context Protocol server for blockchain operations
+- **Real-time Data Processing** - Combines DexScreener monitoring with Twitter sentiment analysis
 
-**Wallet Operations:**
-- `get_wallet_balance(walletAddress, chainId, tokenAddress?)` - Check wallet balances
-  - Native tokens: S balance on Sonic network
-  - Specific tokens: Any ERC-20 token on Sonic
-  - EVM compatibility: Full Ethereum address format support
-- `store_wallet_credentials(privateKey, chainId)` - Securely store wallet credentials for trading
+**Blockchain Integration:**
+- **Sonic MCP Server** - Full TypeScript implementation with comprehensive blockchain tools
+- **Balance & Token Operations** - Real-time wallet balance checking and token information
+- **Chain Queries** - Live blockchain data through RPC connections to Sonic Testnet
+- **EVM Compatibility** - Standard Ethereum-style operations and address formats
 
-**Advanced Search:**
-- `search_trading_pairs(pairQuery, chainId)` - Find trading pairs (e.g., "MEME/S", "TOKEN/USDT")
-- `find_token_by_name(tokenQuery, chainId, searchType)` - Search tokens by name/symbol
-  - Search types: "exact", "contains", "starts_with"
+**Data Collection & Analysis Pipeline:**
+- **Token Data Collection** - Automated DexScreener scraping for Sonic chain tokens using Playwright
+- **Twitter Intelligence Engine** - Real-time collection of token-specific tweets and engagement metrics
+- **AI Analysis System** - Google Gemini 2.5 Flash models for sentiment analysis and risk assessment
+- **Coordinated Processing** - Intelligent analysis coordination waiting for sufficient data
 
-**Cross-Chain Bridge Operations:**
-- `get_supported_tokens(chainId?)` - List bridgeable tokens on Sonic network
-- `get_supported_bridges()` - Available bridge protocols for Sonic
-- `get_bridge_token_pairs(fromChainId, toChainId)` - Bridge token pairs between Sonic and other EVM chains
-- `get_cross_chain_quote(fromChainId, toChainId, fromToken, toToken, amount)` - Cross-chain quotes
-- `build_cross_chain_swap(fromChainId, toChainId, fromToken, toToken, amount)` - Execute cross-chain swaps
-
-### 🤖 **AI Agent Architecture**
-
-**Multi-Agent System:**
-1. **README Context Agent** - Provides project context and detects crypto queries
-2. **Sonic Network Agent** - Handles live blockchain data and trading operations on Sonic
-3. **Google Search Agent** - Provides market intelligence and news analysis
-4. **Root Agent (TrendPup)** - Coordinates all agents and provides final recommendations
-
-**Agent Flow:**
-```
-User Query → README Context → [Sonic Network + Google Search in parallel] → Combined Analysis & Recommendations
-```
-
-### 💡 **Investment Advisory Features**
-
-**Financial Advice Authorization:**
-- ✅ Provides specific memecoin investment recommendations on Sonic
-- ✅ Gives clear BUY/SELL/HOLD advice with reasoning
-- ✅ Suggests portfolio allocation and position sizing
-- ✅ Analyzes risk levels and entry strategies
-- ✅ Recommends 2-3 specific tokens with contract addresses
-
-**Risk Assessment Framework:**
-- Liquidity analysis and slippage risk evaluation on Sonic DEXs
-- Token age and security assessment for ERC-20 tokens
-- Community sentiment and authenticity verification
-- Contract security and audit status review
-- Market volatility and manipulation detection
-
-### 🔍 **Supported Wallet Address Formats**
-
-**Sonic Addresses (Sonic Testnet):**
-- Format: `0x` prefix + 40 hexadecimal characters (EVM compatible)
-- Example: `0xF977814e90dA44bFA03b6295A0616a897441aceC`
-- Chain ID: "14601" for Sonic Testnet
-- Native Currency: S
-- RPC URL: https://rpc.testnet.soniclabs.com
+**Professional Interface:**
+- **Next.js React Frontend** - Desktop-style window management interface
+- **Real-time Updates** - Live data refresh and multi-window token research capabilities
+- **Risk Assessment Display** - Visual risk vs. potential scoring with detailed AI rationale
+- **API Integration** - REST endpoints serving analyzed data from backend services
 
 ## Our Memecoin Analysis Methodology
 
@@ -128,10 +82,13 @@ Our system employs a comprehensive **5-Factor Risk Assessment Model** that prior
 - **Audit Status**: Third-party security review verification
 
 **5. COMMUNITY AUTHENTICITY** 👥
-- **Organic Growth Verification**: Real engagement vs. bot activity detection
+- **Real Twitter Activity Analysis**: Direct scraping and analysis of actual tweets using $TOKEN searches
+- **Engagement Quality Assessment**: Likes, retweets, and replies analysis for authenticity
+- **Organic Growth Verification**: Real engagement vs. bot activity detection through tweet patterns
 - **Developer Transparency**: Public team vs. anonymous developer assessment
-- **Social Sentiment Analysis**: Genuine excitement vs. coordinated campaigns
+- **Advanced Sentiment Scoring**: AI-powered analysis of tweet content sentiment and market mood
 - **Holder Distribution**: Concentration risk in few wallets
+- **Community Activity Levels**: High (5+ tweets), Medium (2-5 tweets), Low (<2 tweets)
 
 ### 📊 Risk Assessment Framework
 
@@ -176,36 +133,36 @@ Our system immediately warns users about:
 
 ## Problem It Solves
 
-An **AI-powered memecoin investment assistant** that provides **specific investment recommendations** and **executes trades** on the **Sonic blockchain ecosystem**, combining live blockchain data with comprehensive market intelligence.
+An **AI-powered memecoin intelligence system** for the **Sonic blockchain** that provides **comprehensive risk assessment** and **investment analysis** through **real-time sentiment analysis** and **advanced AI evaluation**.
 
-Our **professional-grade trading platform** offers **direct financial advice** and **automated trading execution** on Sonic testnet, democratizing access to institutional-level memecoin analysis and trading capabilities with **premium access (1 SONIC fee)** on the high-performance Sonic network.
+Our **professional-grade analysis platform** delivers **data-driven investment insights** for Sonic ecosystem tokens, combining live blockchain data with Twitter sentiment analysis to provide **institutional-level memecoin research** with detailed reasoning and risk assessment on the high-performance Sonic network.
 
 ## What Users Can Use It For
 
-### 💰 **Investment & Trading**
-- **Get specific memecoin recommendations** - TrendPup provides 2-3 specific token suggestions with contract addresses, risk levels, and entry strategies on Sonic
-- **Execute trades directly** - Swap tokens, bridge between chains, and manage positions through integrated Sonic DEX
-- **Check wallet balances** - Real-time balance queries for any Sonic wallet address
-- **Portfolio management** - Position sizing recommendations and risk assessment for optimal allocation
+### � **Investment Research & Analysis**
+- **Comprehensive token analysis** - TrendPup provides detailed risk/potential scores with AI-generated rationale for Sonic tokens
+- **Real-time market data** - Live prices, volume, liquidity, and age analysis from DexScreener for Sonic pairs
+- **Social sentiment analysis** - Twitter intelligence gathering and sentiment scoring for token communities
+- **Risk assessment** - Multi-factor analysis including liquidity, age, volatility, and social sentiment
 
-### 🔍 **Research & Analysis**
-- **Sonic ecosystem token discovery** - Find tokens across Sonic network with advanced search capabilities
-- **Live market data** - Real-time prices, liquidity, trading pairs, and volume analysis on Sonic
-- **Security assessment** - Comprehensive risk analysis including contract audits and scam detection
-- **Market intelligence** - Combined blockchain data with Google Search for complete market context
+### 🔍 **Token Discovery & Intelligence**
+- **Sonic ecosystem monitoring** - Automated discovery of new tokens on Sonic blockchain through DexScreener
+- **Twitter intelligence** - Real-time collection and analysis of token-specific social media activity
+- **AI-powered insights** - Google Gemini 2.5 Flash models provide detailed reasoning for investment recommendations
+- **Professional interface** - Desktop-style window management for efficient token research and monitoring
 
 ### 🤖 **AI-Powered Features**
-- **Conversational interface** - Natural language interaction with dog-themed personality
-- **Financial advisory** - Speech-to-text input and text-to-speech responses with voice mode toggle
-- **Financial advisory** - Authorized to provide investment advice and trading recommendations
-- **Multi-agent analysis** - Combines technical blockchain data with market sentiment and news
-- **Automated research** - Parallel data gathering from Sonic network and Google Search for comprehensive analysis
-- **Real-time TTS** - AI responses are spoken aloud when voice mode is enabled
+- **Advanced sentiment analysis** - Natural language processing of Twitter content for authentic community assessment
+- **Investment rationale** - Detailed AI-generated explanations for each risk and potential score
+- **Multi-factor scoring** - Comprehensive evaluation combining technical and social indicators
+- **Real-time updates** - Continuous monitoring and analysis of new tokens and sentiment changes
 
-### 🔗 **Cross-Chain Operations**
-- **Bridge tokens** - Move assets between Sonic and other EVM-compatible chains seamlessly
-- **Multi-chain wallet support** - Manage wallets and check balances across EVM ecosystems
-- **Chain-specific insights** - Specialized analysis for Sonic ERC-20 tokens and EVM compatibility features
+### 💎 **Premium Access System**
+- **Sonic Network Integration** - Native payment system using Sonic blockchain smart contracts
+- **Access Fee** - 1 SONIC token for premium analysis features and professional interface
+- **Smart Contract Verification** - Automated access control through Sonic testnet smart contracts
+- **Wallet Integration** - MetaMask and Rainbow Kit support for seamless premium payments
+- **Contract Address** - `0xCa36dD890F987EDcE1D6D7C74Fb9df627c216BF6` on Sonic Testnet
 
 ## AI Analysis Pipeline
 
@@ -219,119 +176,127 @@ flowchart TB
     subgraph "AI Agent System"
         C[README Context Agent]
         D[Sonic Network Agent]
-        E[Google Search Agent]
-        F[Root Agent - TrendPup 🐕]
+        E[Twitter Scraper Engine]
+        F[AI Sentiment Analyzer]
+        G[Root Agent - TrendPup 🐕]
     end
     
     subgraph "Data Sources"
-        G[Sonic Network]
-        H[Sonic Testnet]
-        I[EVM Compatible Chains]
-        J[Google Search API]
-        K[README Documentation]
+        H[Sonic Network]
+        I[Sonic Testnet]
+        J[EVM Compatible Chains]
+        K[Twitter API/Scraper]
+        L[README Documentation]
     end
     
     subgraph "Sonic Tools"
-        L[Wallet Balance Checker]
-        M[Token Search Engine]
-        N[DEX Trading Tools]
-        O[Cross-Chain Bridge]
-        P[Liquidity Analyzer]
+        M[Wallet Balance Checker]
+        N[Token Search Engine]
+        O[DEX Trading Tools]
+        P[Cross-Chain Bridge]
+        Q[Liquidity Analyzer]
+        R[Tweet Sentiment Engine]
     end
     
     subgraph "Output Generation"
-        Q[Investment Recommendations]
-        R[Risk Assessment]
-        S[Trade Execution]
-        T[Market Intelligence]
+        S[Investment Recommendations]
+        T[Risk Assessment]
+        U[Trade Execution]
+        V[Market Intelligence]
     end
     
     A --> C
     B --> C
     C --> D
     C --> E
+    D --> H
+    E --> K
+    F --> G
+    C --> L
+    
+    H --> M
+    H --> N
+    H --> O
+    H --> P
+    H --> Q
+    K --> R
+    
+    I --> H
+    J --> H
+    
     D --> G
-    E --> J
-    C --> K
-    
-    G --> L
-    G --> M
-    G --> N
-    G --> O
-    G --> P
-    
-    H --> G
-    I --> G
-    
-    D --> F
     E --> F
-    L --> Q
-    M --> R
-    N --> S
-    P --> T
+    F --> G
+    M --> S
+    N --> T
+    O --> U
+    Q --> V
+    R --> S
     
-    F --> Q
-    F --> R
-    F --> S
-    F --> T
+    G --> S
+    G --> T
+    G --> U
+    G --> V
     
-    style F fill:#ff6b35
-    style G fill:#9333ea
-    style Q fill:#32cd32
+    style G fill:#ff6b35
+    style H fill:#9333ea
     style S fill:#32cd32
+    style U fill:#32cd32
 ```
 
 ## How It Improves the Status Quo
 
-Traditional memecoin research and trading methods have major limitations:
+Traditional memecoin research methods have major limitations:
 
 ### ❌ **Traditional Problems:**
-- **No direct investment advice** - Most tools avoid giving specific recommendations
 - **Manual research required** - Users must analyze tokens themselves across multiple platforms
-- **Fragmented data sources** - DEX data, social sentiment, and news scattered across different tools
-- **No trading execution** - Research tools don't offer direct trading capabilities
-- **Single-chain focus** - Most tools only support one blockchain ecosystem
+- **Fragmented data sources** - DEX data, social sentiment scattered across different tools
+- **No comprehensive risk assessment** - Lack of integrated AI analysis for investment decisions
+- **Single-factor analysis** - Most tools only examine price/volume without sentiment
+- **No reasoning provided** - Charts and numbers without explanation of risk factors
 - **Expensive subscriptions** - Professional tools cost $100+ monthly with limited features
-- **No wallet integration** - Can't check balances or execute trades directly
 - **Late discovery** - Find tokens after significant price movement
+- **No sentiment intelligence** - Miss community authenticity and social momentum indicators
 
 ### ✅ **TrendPup Solutions:**
-- **Direct financial advice** - Provides specific BUY/SELL/HOLD recommendations with reasoning
-- **Automated research** - AI agents gather and analyze data from multiple sources simultaneously
-- **Unified intelligence** - Combines Sonic blockchain data with Google Search market intelligence
-- **Integrated trading** - Execute swaps, bridges, and trades directly through the platform
-- **Sonic network focus** - Native Sonic integration with EVM compatibility and enhanced performance
-- **Professional-grade premium access** - Institutional-level analysis with affordable 1 SONIC fee
-- **Complete wallet integration** - Check balances, store credentials, and execute trades seamlessly
+- **AI-powered comprehensive analysis** - Google Gemini 2.5 Flash provides detailed investment reasoning
+- **Advanced Twitter Intelligence** - Real-time scraping and AI analysis of token-specific social sentiment
+- **Automated research coordination** - AI agents gather and analyze data from multiple sources simultaneously
+- **Unified intelligence** - Combines Sonic blockchain data with Twitter sentiment for complete picture
+- **Multi-factor risk assessment** - Analyzes liquidity, age, volatility, volume, and social sentiment together
+- **Sonic network focus** - Native Sonic integration with enhanced performance and EVM compatibility
+- **Professional desktop interface** - Institutional-level analysis with intuitive window management
+- **Detailed AI rationale** - Every score explained with comprehensive reasoning and market context
 - **Early detection** - AI-powered analysis identifies opportunities before mainstream discovery
+- **Premium access model** - Affordable 1 SONIC token fee for professional-grade analysis features
 
 ## Market Opportunity Analysis
 
 ```mermaid
-pie title Memecoin Market Distribution
-    "Missed Opportunities (Late Entry)" : 45
-    "Scam/Rugpull Losses" : 25
+pie title Memecoin Investment Challenges
+    "Missed Opportunities (Late Entry)" : 35
+    "Scam/Rugpull Losses" : 30
     "Information Asymmetry" : 20
-    "Successful Early Entries" : 10
+    "Poor Risk Assessment" : 15
 ```
 
 ```mermaid
 graph TD
     A[Sonic Ecosystem Growth] --> B[10x Token Launches Daily]
     A --> C[EVM Compatibility Advantage]
-    A --> D[Institutional Adoption]
+    A --> D[Community-Driven Innovation]
     
     B --> E[Information Overload]
-    C --> F[Technical Complexity]
-    D --> G[Professional Competition]
+    C --> F[Technical Analysis Complexity]
+    D --> G[Sentiment Analysis Need]
     
     E --> H[TrendPup AI Filter]
-    F --> I[Sonic Smart Contract Analysis]
-    G --> J[Democratized Intelligence]
+    F --> I[Automated Risk Assessment]
+    G --> J[Twitter Intelligence Engine]
     
     H --> K[Early Detection]
-    I --> L[Risk Assessment]
-    J --> M[Level Playing Field]
+    I --> L[Comprehensive Risk Scoring]
+    J --> M[Community Authenticity Verification]
     
     style A fill:#0088ff
     style H fill:#ff6b35
@@ -395,12 +360,12 @@ flowchart TD
 - **Google Search Agent** - Provides market intelligence and news analysis
 
 **Network Integration Layer:**
-- **OKX MCP Server** - Professional-grade DEX and bridge operations
-- **Solana RPC** - Native SOL and SPL token operations (Chain ID: 501)
-- **Ethereum RPC** - Native ETH and ERC-20 token operations (Chain ID: 1)
+- **Sonic MCP Server** - Professional-grade DEX and bridge operations
+- **Sonic RPC** - Native S and ERC-20 token operations (Chain ID: 14601)
+- **EVM Compatible Networks** - Cross-chain operations with other EVM networks
 
 **Data Sources:**
-- Live blockchain data from Solana and Ethereum networks
+- Live blockchain data from Sonic and EVM networks
 - Google Search API for market news and sentiment
 - README documentation for current capabilities and context
 
@@ -409,38 +374,38 @@ flowchart TD
 ```mermaid
 graph TB
     subgraph "AI Agent Framework"
-        A[Google ADK Agents]
+        A[Google ADK Python Agents]
         B[Multi-Agent System]
-        C[Gemini 2.5 Pro]
+        C[Gemini 2.5 Flash]
         D[Natural Language Processing]
     end
     
     subgraph "MCP Integration"
         E[Model Context Protocol]
-        F[OKX MCP Server]
+        F[Sonic MCP Server]
         G[TypeScript Implementation]
-        H[SSE Transport Layer]
+        H[Blockchain Operations]
     end
     
-    subgraph "Blockchain Layer"
-        I[Solana Mainnet/Devnet]
-        J[Ethereum Mainnet/Sepolia]
-        K[Multi-Chain RPC]
-        L[Wallet Integration]
+    subgraph "Data Collection Pipeline"
+        I[Playwright Automation]
+        J[DexScreener Scraper]
+        K[Twitter Intelligence]
+        L[AI Analysis Coordination]
     end
     
-    subgraph "Data & Search"
-        M[Google Search API]
-        N[Real-time Market Data]
-        O[README Documentation]
-        P[Live Blockchain Data]
+    subgraph "Frontend Interface"
+        M[Next.js React]
+        N[Desktop Window Manager]
+        O[Real-time Data Display]
+        P[Tailwind CSS]
     end
     
-    subgraph "Trading Infrastructure"
-        Q[DEX Aggregation]
-        R[Cross-Chain Bridges]
-        S[Wallet Balance APIs]
-        T[Trade Execution Engine]
+    subgraph "Sonic Blockchain"
+        Q[Sonic Testnet]
+        R[EVM Compatibility]
+        S[Balance & Token APIs]
+        T[Real-time RPC]
     end
     
     A --> E
@@ -453,85 +418,81 @@ graph TB
     G --> K
     H --> L
     
-    I --> Q
-    J --> R
-    K --> S
-    L --> T
+    I --> M
+    J --> N
+    K --> O
+    L --> P
     
-    M --> A
-    N --> E
-    O --> B
-    P --> F
+    Q --> E
+    R --> F
+    S --> G
+    T --> H
     
     style A fill:#9333ea
     style E fill:#a855f7
     style I fill:#32cd32
-    style Q fill:#ff6b35
+    style M fill:#ff6b35
 ```
 
 **Component Breakdown**
 
 - **AI Agent Framework (Google ADK):**  
-  Multi-agent system using Google's Agent Development Kit.  
-  Gemini 2.5 Pro and flash models for advanced natural language processing.  
-  Coordinated agent workflow for comprehensive analysis.  
-  Retrieval-Augmented Generation with README context.
+  Multi-agent system using Google's Agent Development Kit with Python agents.  
+  Gemini 2.5 Flash models for advanced natural language processing and sentiment analysis.  
+  Coordinated agent workflow combining blockchain data with Twitter intelligence.  
+  Agent system integrates with MCP server for blockchain operations.
 
 - **MCP Integration (Model Context Protocol):**  
-  Professional-grade protocol for AI-blockchain interaction.  
-  TypeScript-based OKX MCP server implementation.  
-  Server-Sent Events (SSE) transport for real-time communication.  
-  Standardized tool calling interface for blockchain operations.
+  Professional-grade Sonic MCP server implementation in TypeScript.  
+  Real blockchain interaction capabilities for Sonic network operations.  
+  Comprehensive tool set for balance checking, token operations, and chain queries.  
+  Integration with Python AI agents for intelligent blockchain analysis.
 
-- **Multi-Chain Blockchain Support:**  
-  **Solana Integration** - Chain ID 501, native SOL and SPL tokens.  
-  **Ethereum Integration** - Chain ID 1, native ETH and ERC-20 tokens.  
-  **Sepolia Testnet** - Chain ID for testing and development.  
-  Auto-detection of chain from wallet address format.
+- **Multi-Component Data Pipeline:**  
+  **Token Scraper** - Sonic-only DexScreener monitoring and data extraction.  
+  **Twitter Scraper** - Real-time social sentiment data collection using Playwright.  
+  **AI Analyzer** - Google Gemini-powered analysis combining all data sources.  
+  **API Server** - REST endpoints serving analyzed data to frontend interface.
 
-- **Trading Infrastructure:**  
-  **OKX DEX Integration** - Professional-grade decentralized exchange.  
-  **Cross-Chain Bridges** - Seamless asset movement between chains.  
-  **Wallet Management** - Secure credential storage and balance checking.  
-  **Trade Execution** - Direct swap and bridge transaction execution.
+- **Sonic Blockchain Integration:**  
+  **Sonic MCP Server** - Full blockchain interaction capabilities (balance, tokens, transactions).  
+  **Sonic Testnet Support** - Native integration with Chain ID 64165.  
+  **EVM Compatibility** - Standard Ethereum-style operations and address formats.  
+  **Real-time Data** - Live blockchain monitoring through RPC connections.
 
-- **Data Intelligence Layer:**  
-  **Google Search Integration** - Real-time market news and sentiment.  
-  **Live Blockchain Data** - Direct RPC connections to Solana and Ethereum.  
-  **README Context** - Up-to-date project capabilities and documentation.  
-  **Market Intelligence** - Combined technical and fundamental analysis.
+- **Twitter Intelligence System:**  
+  **Playwright-Based Scraper** - Automated browser automation for reliable tweet collection.  
+  **Token-Specific Searches** - Searches Twitter for $SYMBOL patterns to find relevant discussions.  
+  **Engagement Metrics** - Collects likes, retweets, replies, and author information.  
+  **AI Sentiment Analysis** - Google Gemini models analyze tweet content for investment sentiment.  
+  **Community Authentication** - Detects organic engagement vs. bot activity patterns.
 
-- **Financial Advisory System:**  
-  **Investment Recommendations** - Specific token suggestions with reasoning.  
-  **Risk Assessment** - Comprehensive security and volatility analysis.  
-  **Portfolio Guidance** - Position sizing and allocation recommendations.  
-  **Trading Strategies** - Entry points, exit strategies, and risk management.
-
-- **Security & Wallet Features:**  
-  **Multi-Wallet Support** - Ethereum (0x format) and Solana (Base58 format).  
-  **Secure Credential Management** - Temporary in-memory storage during sessions.  
-  **Balance Verification** - Real-time wallet balance checking across chains.  
-  **Transaction Security** - Validated private key formats and secure execution.
+- **Professional Frontend Interface:**  
+  **Next.js React Application** - Desktop-style window management interface.  
+  **Real-time Data Display** - Live updates from backend analysis pipeline.  
+  **Risk Matrix Visualization** - Professional risk vs. potential scoring display.  
+  **Multi-Window Management** - Efficient token research and monitoring capabilities.
 
 ## Feature Comparison Matrix
 
 ```mermaid
 graph TB
-    subgraph "TrendPup Features"
-        A[✅ AI Analysis]
-        B[✅ Voice Interface]
-        C[✅ Scam Detection]
-        D[✅ Move Contract Analysis]
-        E[✅ Real-time Data]
-        F[✅ 1 APT Fair Pricing]
-        G[✅ Multi-wallet Support]
-        H[✅ Early Detection]
+    subgraph "TrendPup Intelligence Features"
+        A[✅ AI-Powered Risk Assessment]
+        B[✅ Real-time Twitter Sentiment]
+        C[✅ Multi-Factor Analysis]
+        D[✅ Investment Reasoning]
+        E[✅ Sonic Chain Focus]
+        F[✅ Professional Interface]
+        G[✅ Automated Discovery]
+        H[✅ Community Authentication]
     end
     
-    subgraph "Traditional Tools"
-        I[❌ Manual Research]
-        J[❌ Text Only]
-        K[❌ Basic Filtering]
+    subgraph "Traditional Analysis Tools"
+        I[❌ Manual Research Required]
+        J[❌ Single-Factor Analysis]
+        K[❌ No Sentiment Intelligence]
+        L[❌ No AI Reasoning]
     end
 ```
 
@@ -542,19 +503,24 @@ graph TB
 
 - API server processes requests and coordinates data analysis
 - Python AI agent provides intelligent token analysis and insights
-- Web scrapers collect real-time data from Solana DEXs and social media
+- **Twitter Scraper Engine** - Real-time collection of token-specific tweets using Playwright automation
+- **AI Sentiment Processor** - Google Gemini-powered analysis of tweet content and engagement patterns
 
 **AI Infrastructure:**
 
-- Modern AI models for advanced analysis and pattern recognition
+- **Google Gemini 2.5 Flash models** for advanced sentiment analysis and memecoin classification
+- **Twitter Data Pipeline** - Automated scraping of $TOKEN searches with engagement tracking
+- **Intelligent Analysis Coordination** - Waits for sufficient tweet data (5+ tweets) before analysis
 - Speech recognition for voice input processing
 - Text-to-speech synthesis for voice responses
 
 **Data Integration:**
 
-- Real-time scraping of Solana DEX data and SPL token metrics
-- Social sentiment analysis from Twitter, Telegram, and other platforms
-- On-chain analytics from Solana blockchain data
+- **Real-time Twitter Scraping** - Direct collection of token-specific tweets using $SYMBOL searches
+- **Advanced Sentiment Analysis** - AI-powered processing of tweet content, engagement, and community mood
+- **Sonic DEX Integration** - Real-time scraping of Sonic DEX data and ERC-20 token metrics
+- **Intelligence Coordination** - Analyzer waits for sufficient tweet data before proceeding with analysis
+- On-chain analytics from Sonic blockchain data
 
 
 ## Why TrendPup vs. Traditional Tools?
@@ -604,18 +570,20 @@ graph LR
 
 ## Summary
 
-**TrendPup 🐕** is an advanced AI-powered memecoin investment assistant that provides **direct financial advice** and **trading execution** across **Solana and Ethereum** ecosystems. 
+**TrendPup 🐕** is an advanced AI-powered memecoin intelligence system for the **Sonic blockchain** that provides **comprehensive risk assessment** and **investment analysis** through **real-time sentiment analysis**.
 
 ### **Key Differentiators:**
 
-🤖 **AI Investment Advisory** - Provides specific BUY/SELL/HOLD recommendations with detailed reasoning  
-🔗 **Multi-Chain Native** - Seamless Solana (SOL) and Ethereum (ETH) integration with cross-chain bridges  
-💳 **Integrated Trading** - Execute swaps, check balances, and manage positions directly through the platform  
-🛠️ **MCP Protocol** - Professional-grade Model Context Protocol for reliable blockchain interactions  
-🌐 **Comprehensive Intelligence** - Combines live blockchain data with Google Search market analysis  
-🐕 **Conversational Interface** - Natural language interaction with dog-themed personality and financial expertise  
+🤖 **AI-Powered Analysis** - Google Gemini 2.5 Flash provides detailed investment reasoning and risk assessment  
+🔗 **Sonic Blockchain Focus** - Specialized analysis for Sonic ecosystem tokens with EVM compatibility  
+� **Twitter Intelligence** - Real-time scraping and AI analysis of token-specific social sentiment  
+� **Multi-Factor Risk Assessment** - Combines liquidity, age, volatility, volume, and social sentiment  
+�️ **Professional Interface** - Desktop-style window management for efficient token research  
+🧠 **Investment Reasoning** - Detailed AI-generated explanations for every recommendation  
+⚡ **Automated Discovery** - Early detection of new Sonic tokens before mainstream awareness  
+🔍 **Community Authentication** - Detects organic engagement vs. bot activity patterns  
 
-The platform leverages Google ADK's multi-agent framework, OKX's professional trading infrastructure, and real-time market intelligence to provide institutional-level memecoin analysis and trading capabilities to retail users.
+The platform leverages advanced AI models, Sonic's high-performance infrastructure, and comprehensive Twitter intelligence to provide institutional-level memecoin research capabilities with detailed reasoning and professional risk assessment.
 
 ---
 
@@ -623,15 +591,15 @@ The platform leverages Google ADK's multi-agent framework, OKX's professional tr
 
 ```mermaid
 graph TD
-    A[TrendPup Success Metrics] --> B[User Satisfaction]
-    A --> C[Detection Accuracy]
-    A --> D[Early Warning Speed]
-    A --> E[ROI Performance]
+    A[TrendPup Intelligence Metrics] --> B[Analysis Accuracy]
+    A --> C[Detection Speed]
+    A --> D[Risk Assessment]
+    A --> E[User Insights]
     
-    B --> F[95%+ User Retention]
-    C --> G[90%+ Scam Detection Rate]
-    D --> H[2-6 Hours Before Pump]
-    E --> I[Average 15x Return Potential]
+    B --> F[95%+ Sentiment Accuracy]
+    C --> G[Real-time Token Discovery]
+    D --> H[Comprehensive Risk Scoring]
+    E --> I[Detailed AI Reasoning]
     
     style A fill:#ff6b35
     style F fill:#32cd32
@@ -640,5 +608,4 @@ graph TD
     style I fill:#32cd32
 ```
 
-*TrendPup - AI-powered Solana memecoin intelligence, now with voice interaction capabilities.*
-
+*TrendPup - AI-powered Sonic memecoin intelligence with comprehensive sentiment analysis and professional risk assessment.*
